@@ -19,11 +19,16 @@ server = app.server
 
 from apps import home, datos, ayuda
 
+# Connect to config
+
+from config import user, password
+
+
 # Login
 
 auth = dash_auth.BasicAuth(
     app,
-    {config.user: config.password}
+    {user: password}
     
 )
 
