@@ -24,7 +24,7 @@ from apps import home, datos, ayuda
 
 auth = dash_auth.BasicAuth(
     app,
-    {'implang': 'aracataca'}
+    {'cgm': 'MovC42021'}
     
 )
 
