@@ -29,7 +29,7 @@ def ayuda():
                     ),
                     dbc.CardBody(html.Div(id="content"))
                 ]), 
-                xl=11
+                xl=10
             ),
             justify = 'center'
         ),
