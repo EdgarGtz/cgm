@@ -13,8 +13,8 @@ layout = html.Div([
 
     dbc.Row(
         dbc.Col([
-            html.Img(src='../assets/sanpedro.jpg', style={'max-width':'100%', 'height':'auto'}),
-             html.H2('Centro de Gestión de Movilidad',
+            html.Img(src='../assets/sanpedro.jpg', style={'width':'100%', 'height':'auto'}),
+            html.H2('Centro de Gestión de Movilidad',
                 style={'position': 'absolute', 'top': '50%', 'left': '50%',
                 'transform': 'translate(-50%, -50%)','color': 'white','text-align':'center'})
         ])
@@ -23,15 +23,12 @@ layout = html.Div([
 
     # Footer 
 
-    dbc.Container(
-
     dbc.Row(
         dbc.Col(
             html.H6('San Pedro Garza García, Nuevo León, México')
         ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
     )
 
-    )
 
 ])
 

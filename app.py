@@ -7,9 +7,9 @@ import dash_auth
 
 
 app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
-				external_stylesheets=[dbc.themes.BOOTSTRAP],
-				meta_tags=[{'name': 'viewport',
-                             'content': 'width=device-width, initial-scale=1.0'}])
+				external_stylesheets=[dbc.themes.BOOTSTRAP])
+				#meta_tags=[{'name': 'viewport',
+                             #'content': 'width=device-width, initial-scale=1.0'}])
 
 
 
@@ -34,7 +34,7 @@ auth = dash_auth.BasicAuth(
 
 # App Layout
 
-app.layout = dbc.Container([
+app.layout = html.Div([
 
 	dbc.NavbarSimple(
 		[
@@ -42,8 +42,6 @@ app.layout = dbc.Container([
         	dbc.DropdownMenu([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
                 		href='https://www.waze.com/en-GB/trafficview', target='blank'),
-                	dbc.DropdownMenuItem('Comunicar Incidentes',
-                		href='https://www.waze.com/reporting', target='blank'),
                 	dbc.DropdownMenuItem('Cerrar Vialidades',
                 		href='https://www.waze.com/editor', target='blank')
 	            ],

@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import plotly.express as px
+from dash.dependencies import Input, Output
 
 
 # App Layout
@@ -13,8 +14,8 @@ layout = html.Div([
 
     dbc.Row(
         dbc.Col([
-            html.Img(src='../assets/sanpedro.jpg', style={'max-width':'100%', 'height':'auto'}),
-             html.H2('AYUDA',
+            html.Img(src='../assets/sanpedro.jpg', style={'width':'100%', 'height':'auto'}),
+            html.H2('Ayuda',
                 style={'position': 'absolute', 'top': '50%', 'left': '50%',
                 'transform': 'translate(-50%, -50%)','color': 'white','text-align':'center'})
         ])
@@ -23,15 +24,18 @@ layout = html.Div([
 
     # Footer 
 
-    dbc.Container(
-
     dbc.Row(
         dbc.Col(
             html.H6('San Pedro Garza García, Nuevo León, México')
         ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
     )
 
-    )
-
 ])
+
+
+
+
+
+
+
 
