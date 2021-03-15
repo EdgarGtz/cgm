@@ -9,17 +9,22 @@ import plotly.express as px
 
 layout = html.Div([
 
-    # Banner Principal
-
-    dbc.Row(
-        dbc.Col([
-            html.Img(src='../assets/sanpedro.jpg', style={'width':'100%', 'height':'auto'}),
-            html.H2('Datos',
-                style={'position': 'absolute', 'top': '50%', 'left': '50%',
-                'transform': 'translate(-50%, -50%)','color': 'white','text-align':'center'})
-        ])
-    ),
-
+    dbc.Card(
+    [
+        dbc.CardHeader(
+            dbc.Tabs(
+                [
+                    dbc.Tab(label="Tab 1", tab_id="tab-1"),
+                    dbc.Tab(label="Tab 2", tab_id="tab-2"),
+                ],
+                id="card-tabs",
+                card=True,
+                active_tab="tab-1",
+            )
+        ),
+        dbc.CardBody(html.P(id="card-content", className="card-text")),
+    ]
+    ),  
 
     # Footer 
 

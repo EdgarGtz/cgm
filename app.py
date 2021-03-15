@@ -11,6 +11,7 @@ app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
 				meta_tags=[{'name': 'viewport',
                              'content': 'width=device-width, initial-scale=1.0'}])
 
+app.config['suppress_callback_exceptions'] = True
 
 
 server = app.server
@@ -18,6 +19,7 @@ server = app.server
 # Connect to app pages
 
 from apps import home, datos, ayuda
+from apps.ayuda import ayuda, render_ayuda
 
 # Connect to config
 
@@ -73,9 +75,16 @@ def display_page(pathname):
 	if pathname == '/apps/datos':
 		return datos.layout
 	if pathname == '/apps/ayuda':
-		return ayuda.layout
+		return ayuda()
 	else:
 		return home.layout
+
+
+@app.callback(Output('content', 'children'), [Input('tabs', 'active_tab')])
+
+def get_ayuda(tab):
+    return render_ayuda(tab)
+
 
 
 if __name__ == '__main__':

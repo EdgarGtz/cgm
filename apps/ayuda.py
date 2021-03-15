@@ -6,36 +6,56 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 
 
+
+
 # App Layout
 
-layout = html.Div([
+def ayuda():
 
-    # Banner Principal
+    return html.Div([
 
-    dbc.Row(
-        dbc.Col([
-            html.Img(src='../assets/sanpedro.jpg', style={'width':'100%', 'height':'auto'}),
-            html.H2('Ayuda',
-                style={'position': 'absolute', 'top': '50%', 'left': '50%',
-                'transform': 'translate(-50%, -50%)','color': 'white','text-align':'center'})
-        ])
-    ),
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader(
+                        dbc.Tabs([
+                            dbc.Tab(label="Generales", tab_id="tab-1"),
+                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="tab-2"),
+                            dbc.Tab(label='Cerrar Vialidades', tab_id="tab-3")],
+                            id='tabs',
+                            active_tab="tab-1",
+                            card=True
+                        )
+                    ),
+                    dbc.CardBody(html.Div(id="content"))
+                ]), 
+                xl=11
+            ),
+            justify = 'center'
+        ),
+
+        
+
+        #Footer 
+
+        dbc.Row(
+            dbc.Col(
+                html.H6('San Pedro Garza García, Nuevo León, México')
+            ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
+        )
+
+    ])
 
 
-    # Footer 
-
-    dbc.Row(
-        dbc.Col(
-            html.H6('San Pedro Garza García, Nuevo León, México')
-        ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
-    )
-
-])
-
-
-
-
-
-
+def render_ayuda(tab):
+    if tab == 'tab-1':
+        return html.Iframe(width='100%', height='590',
+                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
+    elif tab == 'tab-2':
+        return html.Iframe(width='100%', height='390',
+                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
+    elif tab == 'tab-3':
+        return html.Iframe(width='100%', height='190',
+                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
 
 
