@@ -31,12 +31,9 @@ def ayuda():
                         )
                     ),
                     dbc.CardBody(html.Div(id="content"))
-                ], style={'min-height': '550px'}), 
-                xl=10
-            ),
-            justify = 'center'
+                ], style={'min-height': '100vh'}), xl=10
+            ), justify = 'center'
         ),
-
 
         #Footer 
 
@@ -54,8 +51,10 @@ def ayuda_generales():
 
         dbc.Row(
             dbc.Col([
-                html.P('Utiliza el grupo de whatsapp oficial del Centro de Gestión de Movilidad para cualquier duda o aclaración.'),
-                html.P('Envía un correo a edgar.gutierrez@sanpedro.gob.mx.')
+                html.H5('Para cualquier duda o aclaración:'),
+                html.Br(),
+                html.P('1. Envía un mensaje al grupo de whatsapp oficial del Centro de Gestión de Movilidad.'),
+                html.P('2. Envía un correo a edgar.gutierrez@sanpedro.gob.mx.')
             ])
         )    
 
@@ -67,7 +66,18 @@ def ayuda_monitoreo():
 
         dbc.Row(
             dbc.Col([
-                html.H6('Ayudas monitoreo'),
+                html.H5('Objetivo'),
+                html.Br(),
+                html.P('Utiliza el mapa de Waze para identificar percances viales, semáforos descompuestos y otros eventos que tengan afectación en la vialidad del municipio.'),
+                html.Br(),
+                html.H5('Pasos'),
+                html.Br(),
+                html.P('1. Manten en todo momento el mapa de Waze abierto para visualizar los eventos en tiempo real.'),
+                html.P('2. Observa y revisa la veracidad de eventos que aparezcan en el mapa, como percances viales, semáforos descompuestos o cualquier otro congestionamiento relevante.'),
+                html.P('3. En caso de que uno de estos eventos no se ha reportado en el C4, levanta el reporte.'),
+                html.Br(),
+                html.H5('Video Tutorial'),
+                html.Br(),
                 html.Iframe(width='100%', height='590',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
             ])
