@@ -31,7 +31,7 @@ def ayuda():
                         )
                     ),
                     dbc.CardBody(html.Div(id="content"))
-                ], style={'height':'800px'}), 
+                ], style={'min-height': '550px'}), 
                 xl=10
             ),
             justify = 'center'
