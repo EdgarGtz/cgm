@@ -74,9 +74,9 @@ def ayuda_monitoreo():
                 html.Br(),
                 html.P('1. Manten en todo momento el mapa de Waze abierto para visualizar los eventos en tiempo real.'),
                 html.P('2. Observa y revisa la veracidad de eventos que aparezcan en el mapa, como percances viales, semáforos descompuestos o cualquier otro congestionamiento relevante.'),
-                html.P('3. En caso de que uno de estos eventos no se ha reportado en el C4, levanta el reporte.'),
+                html.P('3. En caso de que uno de estos eventos no se haya reportado en el C4, levanta el reporte. Recuerda ingresar a Waze como fuente del reporte.'),
                 html.Br(),
-                html.H5('Video Tutorial'),
+                html.H5('¿Cómo utilizar el mapa de Waze para monitorear tráfico?'),
                 html.Br(),
                 html.Iframe(width='100%', height='590',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
