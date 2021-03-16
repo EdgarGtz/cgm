@@ -21,16 +21,17 @@ def ayuda():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Generales", tab_id="Generales"),
-                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="Monitoreo de Tráfico"),
-                            dbc.Tab(label='Cerrar Vialidades', tab_id="Cerrar Vialidades")],
+                            dbc.Tab(label="Generales", tab_id="generales"),
+                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="monitoreo"),
+                            dbc.Tab(label='Cerrar Vialidades', tab_id="cerrar_vialidades",
+                                disabled=True)],
                             id='tabs',
-                            active_tab="Generales",
+                            active_tab="generales",
                             card=True
                         )
                     ),
                     dbc.CardBody(html.Div(id="content"))
-                ]), 
+                ], style={'height':'800px'}), 
                 xl=10
             ),
             justify = 'center'
@@ -47,32 +48,40 @@ def ayuda():
 
     ])
 
-
 def ayuda_generales():
 
     return html.Div([
 
         dbc.Row(
             dbc.Col([
-                html.H6('Ayudas generales'),
+                html.P('Utiliza el grupo de whatsapp oficial del Centro de Gestión de Movilidad para cualquier duda o aclaración.'),
+                html.P('Envía un correo a edgar.gutierrez@sanpedro.gob.mx.')
+            ])
+        )    
+
+    ])
+
+def ayuda_monitoreo():
+
+    return html.Div([
+
+        dbc.Row(
+            dbc.Col([
+                html.H6('Ayudas monitoreo'),
                 html.Iframe(width='100%', height='590',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
             ])
         )    
 
-
     ])
 
 
 def render_ayuda(tab):
-    if tab == 'Generales':
+    if tab == 'generales':
         return ayuda_generales()
-    elif tab == 'Monitoreo de Tráfico':
-        return html.Iframe(width='100%', height='390',
-                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
-    elif tab == 'Cerrar Vialidades':
-        return html.Iframe(width='100%', height='190',
-                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
+    elif tab == 'monitoreo':
+        return ayuda_monitoreo()
+   
 
 
 
