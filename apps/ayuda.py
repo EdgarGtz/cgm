@@ -14,16 +14,18 @@ def ayuda():
 
     return html.Div([
 
+        # Tabs
+
         dbc.Row(
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Generales", tab_id="tab-1"),
-                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="tab-2"),
-                            dbc.Tab(label='Cerrar Vialidades', tab_id="tab-3")],
+                            dbc.Tab(label="Generales", tab_id="Generales"),
+                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="Monitoreo de Tráfico"),
+                            dbc.Tab(label='Cerrar Vialidades', tab_id="Cerrar Vialidades")],
                             id='tabs',
-                            active_tab="tab-1",
+                            active_tab="Generales",
                             card=True
                         )
                     ),
@@ -34,7 +36,6 @@ def ayuda():
             justify = 'center'
         ),
 
-        
 
         #Footer 
 
@@ -47,15 +48,39 @@ def ayuda():
     ])
 
 
-def render_ayuda(tab):
-    if tab == 'tab-1':
-        return html.Iframe(width='100%', height='590',
+def ayuda_generales():
+
+    return html.Div([
+
+        dbc.Row(
+            dbc.Col([
+                html.H6('Ayudas generales'),
+                html.Iframe(width='100%', height='590',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
-    elif tab == 'tab-2':
+            ])
+        )    
+
+
+    ])
+
+
+def render_ayuda(tab):
+    if tab == 'Generales':
+        return ayuda_generales()
+    elif tab == 'Monitoreo de Tráfico':
         return html.Iframe(width='100%', height='390',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
-    elif tab == 'tab-3':
+    elif tab == 'Cerrar Vialidades':
         return html.Iframe(width='100%', height='190',
                            src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
+
+
+
+
+
+
+
+
+
 
 
