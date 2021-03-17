@@ -6,10 +6,6 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 
 
-
-
-# App Layout
-
 def ayuda():
 
     return html.Div([
@@ -21,17 +17,17 @@ def ayuda():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Generales", tab_id="generales"),
-                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="monitoreo"),
-                            dbc.Tab(label='Cerrar Vialidades', tab_id="cerrar_vialidades",
+                            dbc.Tab(label="Generales", tab_id="ayuda_generales"),
+                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo"),
+                            dbc.Tab(label='Cerrar Vialidades', tab_id="ayuda__vialidades",
                                 disabled=True)],
                             id='tabs',
-                            active_tab="generales",
+                            active_tab="ayuda_generales",
                             card=True
                         )
                     ),
-                    dbc.CardBody(html.Div(id="content"))
-                ], style={'min-height': '100vh'}), xl=10
+                    dbc.CardBody(html.Div(id="ayuda_content"))
+                ], style={'min-height': '100vh'})
             ), justify = 'center'
         ),
 
@@ -78,18 +74,20 @@ def ayuda_monitoreo():
                 html.Br(),
                 html.H5('¿Cómo utilizar el mapa de Waze para monitorear tráfico?'),
                 html.Br(),
-                html.Iframe(width='100%', height='590',
-                           src='https://edgargtzgzz.carto.com/builder/47ec8c81-6afb-41bc-9946-5096f6223149/embed')
+                html.Iframe(width='100%', height='560', 
+                           src='https://www.youtube.com/embed/YNjFngFhts8')
             ])
         )    
 
     ])
 
 
+
+
 def render_ayuda(tab):
-    if tab == 'generales':
+    if tab == 'ayuda_generales':
         return ayuda_generales()
-    elif tab == 'monitoreo':
+    elif tab == 'ayuda_monitoreo':
         return ayuda_monitoreo()
    
 

@@ -20,6 +20,7 @@ server = app.server
 
 from apps import home, datos, ayuda
 from apps.ayuda import ayuda, render_ayuda
+from apps.datos import datos, render_datos
 
 # Connect to config
 
@@ -73,17 +74,26 @@ app.layout = html.Div([
 
 def display_page(pathname):
 	if pathname == '/apps/datos':
-		return datos.layout
+		return datos()
 	if pathname == '/apps/ayuda':
 		return ayuda()
 	else:
 		return home.layout
 
 
-@app.callback(Output('content', 'children'), [Input('tabs', 'active_tab')])
+# Ayuda
+
+@app.callback(Output('ayuda_content', 'children'), [Input('tabs', 'active_tab')])
 
 def get_ayuda(tab):
     return render_ayuda(tab)
+
+# Datos
+
+@app.callback(Output('datos_content', 'children'), [Input('tabs', 'active_tab')])
+
+def get_datos(tab):
+    return render_datos(tab)
 
 
 
