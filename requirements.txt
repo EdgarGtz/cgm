@@ -8,3 +8,4 @@ dash-table==4.11.2
 dash_auth==1.4.1
 gunicorn==20.0.4
 gspread==3.7.0
+os==0.1.4
