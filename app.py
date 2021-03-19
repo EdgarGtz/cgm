@@ -4,16 +4,12 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc 
 from dash.dependencies import Input, Output
 import dash_auth
-import os
 
 
 app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
 				external_stylesheets=[dbc.themes.BOOTSTRAP],
 				meta_tags=[{'name': 'viewport',
                              'content': 'width=device-width, initial-scale=1.0'}])
-
-app.config['suppress_callback_exceptions'] = True
-
 
 server = app.server
 
@@ -34,8 +30,6 @@ auth = dash_auth.BasicAuth(
     app,
     {user: password}
 )
-
-
 
 
 # App Layout
