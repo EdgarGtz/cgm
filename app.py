@@ -4,6 +4,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc 
 from dash.dependencies import Input, Output
 import dash_auth
+import os
 
 
 app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
