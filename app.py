@@ -55,7 +55,7 @@ app.layout = html.Div([
         	dbc.Button('Ayuda', href='/apps/ayuda', color='light')
 
 		],
-		brand='CGM',
+		brand='CGMovilidad',
 		brand_href='/apps/home'
 	),
 
