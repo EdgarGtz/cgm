@@ -24,13 +24,12 @@ from apps.datos import datos, render_datos
 
 from config import user, password
 
-
 # Login
 
-auth = dash_auth.BasicAuth(
-    app,
-    {user: password}
-)
+# auth = dash_auth.BasicAuth(
+#     app,
+#     {user: password}
+# )
 
 
 # App Layout
