@@ -28,7 +28,7 @@ monitoreo = monitoreo.get_all_values()
 
 monitoreo = pd.DataFrame(monitoreo[1:], columns = monitoreo[0])
 
-monitoreo = px.histogram(monitoreo, x = 'fuente', y = 'reportes', marker_color='#EB89B5')
+monitoreo = px.histogram(monitoreo, x = 'fuente', y = 'reportes')
 
 
 # Generate table function
