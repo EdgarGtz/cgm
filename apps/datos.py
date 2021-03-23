@@ -87,14 +87,28 @@ def datos_monitoreo():
     return html.Div([
 
         dbc.Row([
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Todos"),
+                    dbc.CardBody([
+                        html.H1("500", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(100%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ])  
+                ])
+            ),
+
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader("#911 (C5)"),
                     dbc.CardBody([
-                        html.P("Reportes", className="card-title"),
-                        html.H2("50",
-                            className="card-text")
-                    ])  
+                        html.H1("150", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(30%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
                 ])
             ),
 
@@ -102,10 +116,11 @@ def datos_monitoreo():
                 dbc.Card([
                     dbc.CardHeader("Agentes de Tránsito"),
                     dbc.CardBody([
-                        html.P("Reportes", className="card-title"),
-                        html.H2("37",
-                            className="card-text")
-                    ])  
+                        html.H1("276", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(55%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
                 ])
             ),
 
@@ -113,10 +128,11 @@ def datos_monitoreo():
                 dbc.Card([
                     dbc.CardHeader("CIAC"),
                     dbc.CardBody([
-                        html.P("Reportes", className="card-title"),
-                        html.H2("10",
-                            className="card-text")
-                    ])  
+                        html.H1("55", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(11%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
                 ])
             ),
 
@@ -124,10 +140,11 @@ def datos_monitoreo():
                 dbc.Card([
                     dbc.CardHeader("Waze"),
                     dbc.CardBody([
-                        html.P("Reportes", className="card-title"),
-                        html.H2("3",
-                            className="card-text")
-                    ])  
+                        html.H1("19", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(4%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
                 ])
             )
 
@@ -155,69 +172,8 @@ def datos_monitoreo():
             )
         ),
 
-        html.Br(),
+        html.Br()
 
-        dbc.Row([
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Card header"),
-                    dbc.CardBody([
-                        html.H5("Card title", className="card-title"),
-                        html.P("This is some card content that we'll reuse",
-                            className="card-text")
-                    ])  
-                ])
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Card header"),
-                    dbc.CardBody([
-                        html.H5("Card title", className="card-title"),
-                        html.P("This is some card content that we'll reuse",
-                            className="card-text")
-                    ])  
-                ])
-            )
-        ]),
-
-        html.Br(),
-
-        dbc.Row([
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Card header"),
-                    dbc.CardBody([
-                        html.H5("Card title", className="card-title"),
-                        html.P("This is some card content that we'll reuse",
-                            className="card-text")
-                    ])  
-                ])
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Card header"),
-                    dbc.CardBody([
-                        html.H5("Card title", className="card-title"),
-                        html.P("This is some card content that we'll reuse",
-                            className="card-text")
-                    ])  
-                ])
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Card header"),
-                    dbc.CardBody([
-                        html.H5("Card title", className="card-title"),
-                        html.P("This is some card content that we'll reuse",
-                            className="card-text")
-                    ])  
-                ])
-            )
-
-        ])
 
     ])
 
