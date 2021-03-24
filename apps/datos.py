@@ -235,7 +235,7 @@ def datos_monitoreo():
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Tiempo de Respuesta por Fuente"),
+                    dbc.CardHeader("Tiempo de Respuesta por Fuente (Momento 1)"),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'reportes_tiempo',
