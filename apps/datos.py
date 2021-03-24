@@ -7,45 +7,36 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
-# Connect to Google Drive
+
+
+
+# Connect to to data
+
+    # Connect to Google Drive
 
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
 gc = gspread.authorize(credentials)
 
-## Connect to the spreadsheet
+    # Connect to the spreadsheet
 
 spreadsheet_key = '1BgqV1yRoBot-EcGNySlkUA2PjwU56HP7mekxXDMt3qA'
 book = gc.open_by_key(spreadsheet_key)
 
-## Connect to the tabs
+    # Connect to the tabs
 
 monitoreo = book.worksheet('monitoreo')
 monitoreo = monitoreo.get_all_values()
 
 
-# Monitoreo de Tráfico
+    # Monitoreo de Tráfico
 
 monitoreo = pd.DataFrame(monitoreo[1:], columns = monitoreo[0])
 
 monitoreo = px.histogram(monitoreo, x = 'fuente', y = 'reportes')
 
 
-# Generate table function
-
-# def generate_table(dataframe, max_rows=20):
-
-#     return html.Table([
-#         html.Thead(
-#             html.Tr([html.Th(col) for col in dataframe.columns])
-#         ),
-#         html.Tbody([
-#             html.Tr([
-#                 html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-#             ]) for i in range(min(len(dataframe), max_rows))
-#         ])
-#     ])
-
+# Layout
 
 def datos():
 
@@ -58,7 +49,7 @@ def datos():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="datos_monitoreo"),
+                            dbc.Tab(label='Monitoreo de Tráfico', tab_id='datos_monitoreo'),
                             dbc.Tab(label='Cerrar Vialidades', tab_id="datos_vialidades",
                                 disabled=True)],
                             id='tabs',
@@ -82,9 +73,43 @@ def datos():
     ])
 
 
+# Monitoreo de Tráfico
+
 def datos_monitoreo():
 
     return html.Div([
+
+        # Título y Fecha
+
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        html.H4('Reportes Totales', 
+                            style={'text-align':'left'})
+                    )
+                )
+            ),
+
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        html.P('12 de abril al 18 de abril 2021', 
+                            style={'text-align':'center'})
+                    )
+                ), lg=4
+            )
+
+        ]),
+
+        html.Br(),
+
+
+
+
+
+
+        # Número de reportes
 
         dbc.Row([
 
@@ -153,7 +178,7 @@ def datos_monitoreo():
 
         html.Br(),
 
-        # Reportes por Fuente
+        # Reportes por fuente
 
         dbc.Row(
             dbc.Col(
@@ -178,16 +203,7 @@ def datos_monitoreo():
     ])
 
 
-
-
-
-
-
-
-
-
-
-
+# Render página
 
 def render_datos(tab):
     if tab == 'datos_monitoreo':
