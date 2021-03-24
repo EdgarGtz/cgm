@@ -23,20 +23,20 @@ gc = gspread.authorize(credentials)
 spreadsheet_key = '1BgqV1yRoBot-EcGNySlkUA2PjwU56HP7mekxXDMt3qA'
 book = gc.open_by_key(spreadsheet_key)
 
-    # Connect to the tabs
 
-monitoreo = book.worksheet('reportes_dia')
-monitoreo = monitoreo.get_all_values()
+# Reportes por fuente - Stacked Histogram
 
+reportes_dia = book.worksheet('reportes_dia')
 
-# Reportes por fuente - stacked bar
+reportes_dia = reportes_dia.get_all_values()
 
-monitoreo = pd.DataFrame(monitoreo[1:], columns = monitoreo[0])
+reportes_dia = pd.DataFrame(reportes_dia[1:], columns = reportes_dia[0])
 
-monitoreo = px.histogram(monitoreo, x = 'fecha', y = 'reportes', color='Fuente',
+reportes_dia = px.histogram(reportes_dia, x = 'fecha', y = 'reportes', color='Fuente',
                 labels={
-                    'fecha':'',
-                    'reportes':'reportes' 
+                'fecha':'',
+                'reportes':'reportes',
+                'Fuente': '' 
                 },
                 color_discrete_map={
                 'Waze': '#00CC96',
@@ -45,6 +45,30 @@ monitoreo = px.histogram(monitoreo, x = 'fecha', y = 'reportes', color='Fuente',
                 'CIAC':'#FECB52'
                 }
             )
+
+# Tiempos de Respuesta por fuente - Histogram
+
+
+reportes_tiempo = book.worksheet('reportes_tiempo')
+
+reportes_tiempo = reportes_tiempo.get_all_values()
+
+reportes_tiempo = pd.DataFrame(reportes_tiempo[1:], columns = reportes_tiempo[0])
+
+reportes_tiempo = px.histogram(reportes_tiempo, x = 'Tiempo de Respuesta Promedio (minutos)',
+                    y = 'Fuente', orientation = 'h', color = 'Fuente', 
+                    color_discrete_map={
+                    'Waze': '#00CC96',
+                    '#911 (C5)': '#EF553B',
+                    'Agentes de Tránsito': '#636EFA',
+                    'CIAC':'#FECB52'
+                    },
+                    labels={
+                    'Fuente': '',
+                    'Tiempo de Respuesta Promedio (minutos)': 'Minutos'
+                },
+                )
+
 
 
 # Layout
@@ -193,8 +217,29 @@ def datos_monitoreo():
                     dbc.CardHeader("Reportes por Día"),
                     dbc.CardBody(
                         dcc.Graph(
-                            id = 'monitoreo',
-                            figure = monitoreo,
+                            id = 'reportes_fuente',
+                            figure = reportes_dia,
+                            config={
+                            'displayModeBar': False
+                            }
+                        ) 
+                    )  
+                ])
+            )
+        ),
+
+        html.Br(),
+
+        # Tiempos de respuesta por fuente - histogram
+
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Tiempo de Respuesta por Fuente"),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'reportes_tiempo',
+                            figure = reportes_tiempo,
                             config={
                             'displayModeBar': False
                             }
