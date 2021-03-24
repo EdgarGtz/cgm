@@ -25,15 +25,26 @@ book = gc.open_by_key(spreadsheet_key)
 
     # Connect to the tabs
 
-monitoreo = book.worksheet('monitoreo')
+monitoreo = book.worksheet('reportes_dia')
 monitoreo = monitoreo.get_all_values()
 
 
-    # Monitoreo de Tráfico
+# Reportes por fuente - stacked bar
 
 monitoreo = pd.DataFrame(monitoreo[1:], columns = monitoreo[0])
 
-monitoreo = px.histogram(monitoreo, x = 'fuente', y = 'reportes')
+monitoreo = px.histogram(monitoreo, x = 'fecha', y = 'reportes', color='Fuente',
+                labels={
+                    'fecha':'',
+                    'reportes':'reportes' 
+                },
+                color_discrete_map={
+                'Waze': '#00CC96',
+                '#911 (C5)': '#EF553B',
+                'Agentes de Tránsito': '#636EFA',
+                'CIAC':'#FECB52'
+                }
+            )
 
 
 # Layout
@@ -79,7 +90,7 @@ def datos_monitoreo():
 
     return html.Div([
 
-        # Título y Fecha
+        # Header
 
         dbc.Row([
             dbc.Col(
@@ -105,11 +116,7 @@ def datos_monitoreo():
         html.Br(),
 
 
-
-
-
-
-        # Número de reportes
+        # Reportes por fuente - tarjetas
 
         dbc.Row([
 
@@ -117,7 +124,7 @@ def datos_monitoreo():
                 dbc.Card([
                     dbc.CardHeader("Todos"),
                     dbc.CardBody([
-                        html.H1("500", className="card-text",
+                        html.H1("300", className="card-text",
                             style={'display':'inline-block'}),
                         html.P("(100%)", style={'display':'inline-block'},
                             className='pl-2')
@@ -129,48 +136,48 @@ def datos_monitoreo():
                 dbc.Card([
                     dbc.CardHeader("#911 (C5)"),
                     dbc.CardBody([
-                        html.H1("150", className="card-text",
+                        html.H1("90", className="card-text",
                             style={'display':'inline-block'}),
                         html.P("(30%)", style={'display':'inline-block'},
                             className='pl-2')
                     ]) 
-                ])
+                ], color='danger', outline='true')
             ),
 
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader("Agentes de Tránsito"),
                     dbc.CardBody([
-                        html.H1("276", className="card-text",
+                        html.H1("165", className="card-text",
                             style={'display':'inline-block'}),
                         html.P("(55%)", style={'display':'inline-block'},
                             className='pl-2')
                     ]) 
-                ])
+                ], color='primary', outline='True')
             ),
 
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader("CIAC"),
                     dbc.CardBody([
-                        html.H1("55", className="card-text",
+                        html.H1("33", className="card-text",
                             style={'display':'inline-block'}),
                         html.P("(11%)", style={'display':'inline-block'},
                             className='pl-2')
                     ]) 
-                ])
+                ], color='warning', outline='True')
             ),
 
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader("Waze"),
                     dbc.CardBody([
-                        html.H1("19", className="card-text",
+                        html.H1("12", className="card-text",
                             style={'display':'inline-block'}),
                         html.P("(4%)", style={'display':'inline-block'},
                             className='pl-2')
                     ]) 
-                ])
+                ], color='success', outline='True')
             )
 
         ]),
@@ -178,12 +185,12 @@ def datos_monitoreo():
 
         html.Br(),
 
-        # Reportes por fuente
+        # Reportes por fuente - stacked bar
 
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Reportes por Fuente"),
+                    dbc.CardHeader("Reportes por Día"),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'monitoreo',
