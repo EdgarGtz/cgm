@@ -19,6 +19,8 @@ def ayuda():
                         dbc.Tabs([
                             dbc.Tab(label="Generales", tab_id="ayuda_generales"),
                             dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo"),
+                            dbc.Tab(label='Reporte de Eventos', tab_id="ayuda__eventos",
+                                disabled=True),
                             dbc.Tab(label='Cerrar Vialidades', tab_id="ayuda__vialidades",
                                 disabled=True)],
                             id='tabs',

@@ -85,6 +85,8 @@ def datos():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='Monitoreo de Tráfico', tab_id='datos_monitoreo'),
+                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos",
+                                disabled=True),
                             dbc.Tab(label='Cerrar Vialidades', tab_id="datos_vialidades",
                                 disabled=True)],
                             id='tabs',
