@@ -87,7 +87,7 @@ def datos():
                             dbc.Tab(label='Monitoreo de Tráfico', tab_id='datos_monitoreo'),
                             dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos",
                                 disabled=True),
-                            dbc.Tab(label='Cerrar Vialidades', tab_id="datos_vialidades",
+                            dbc.Tab(label='Cierre de Vialidades', tab_id="datos_vialidades",
                                 disabled=True)],
                             id='tabs',
                             active_tab="datos_monitoreo",
