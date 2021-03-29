@@ -85,10 +85,14 @@ def datos():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='Monitoreo de Tráfico', tab_id='datos_monitoreo'),
-                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos",
-                                disabled=True),
+                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos"),
                             dbc.Tab(label='Cierre de Vialidades', tab_id="datos_vialidades",
-                                disabled=True)],
+                                disabled=True),
+                            dbc.Tab(label='Hechos Viales', tab_id="datos_hechos",
+                                disabled=True),
+                            dbc.Tab(label='Alfonso Reyes', tab_id="datos_alfonso",
+                                disabled=True),
+                            ],
                             id='tabs',
                             active_tab="datos_monitoreo",
                             card=True
@@ -122,7 +126,7 @@ def datos_monitoreo():
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody(
-                        html.H4('Reportes Totales', 
+                        html.H4('Reportes Totales - C4', 
                             style={'text-align':'left'})
                     )
                 )
@@ -257,11 +261,170 @@ def datos_monitoreo():
     ])
 
 
+# Reporte de Eventos
+
+def datos_eventos():
+
+    return html.Div([
+
+        # Header
+
+        dbc.Row([
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        html.H4('Reportes Totales - Waze', 
+                            style={'text-align':'left'})
+                    )
+                )
+            ),
+
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        html.P('12 de abril al 18 de abril 2021', 
+                            style={'text-align':'center'})
+                    )
+                ), lg=4
+            )
+
+        ]),
+
+        html.Br(),
+
+
+        # Reportes por fuente - tarjetas
+
+        dbc.Row([
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Todos"),
+                    dbc.CardBody([
+                        html.H1("300", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(100%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ])  
+                ])
+            ),
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("#911 (C5)"),
+                    dbc.CardBody([
+                        html.H1("90", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(30%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
+                ], color='danger', outline='true')
+            ),
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Agentes de Tránsito"),
+                    dbc.CardBody([
+                        html.H1("165", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(55%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
+                ], color='primary', outline='True')
+            ),
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("CIAC"),
+                    dbc.CardBody([
+                        html.H1("33", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(11%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
+                ], color='warning', outline='True')
+            ),
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Waze"),
+                    dbc.CardBody([
+                        html.H1("12", className="card-text",
+                            style={'display':'inline-block'}),
+                        html.P("(4%)", style={'display':'inline-block'},
+                            className='pl-2')
+                    ]) 
+                ], color='success', outline='True')
+            )
+
+        ]),
+
+
+        html.Br(),
+
+        # Reportes por fuente - stacked bar
+
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Reportes por Día"),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'reportes_fuente',
+                            figure = reportes_dia,
+                            config={
+                            'displayModeBar': False
+                            }
+                        ) 
+                    )  
+                ])
+            )
+        ),
+
+        html.Br(),
+
+        # Tiempos de respuesta por fuente - histogram
+
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Tiempo de Respuesta por Fuente (Momento 1)"),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'reportes_tiempo',
+                            figure = reportes_tiempo,
+                            config={
+                            'displayModeBar': False
+                            }
+                        ) 
+                    )  
+                ])
+            )
+        ),
+
+        html.Br()
+
+
+    ])
+
+
+
+
+
+
+
+
+
+
+
 # Render página
 
 def render_datos(tab):
     if tab == 'datos_monitoreo':
         return datos_monitoreo()
+    elif tab == 'datos_eventos':
+        return datos_eventos()
+
 
 
 

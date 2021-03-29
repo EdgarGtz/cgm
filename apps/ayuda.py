@@ -19,9 +19,8 @@ def ayuda():
                         dbc.Tabs([
                             dbc.Tab(label="Generales", tab_id="ayuda_generales"),
                             dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo"),
-                            dbc.Tab(label='Reporte de Eventos', tab_id="ayuda__eventos",
-                                disabled=True),
-                            dbc.Tab(label='Cierre de Vialidades', tab_id="ayuda__vialidades",
+                            dbc.Tab(label='Reporte de Eventos', tab_id="ayuda_eventos"),
+                            dbc.Tab(label='Cierre de Vialidades', tab_id="ayuda_vialidades",
                                 disabled=True)],
                             id='tabs',
                             active_tab="ayuda_generales",
@@ -84,6 +83,32 @@ def ayuda_monitoreo():
     ])
 
 
+def ayuda_eventos():
+
+    return html.Div([
+
+        dbc.Row(
+            dbc.Col([
+                html.H5('Objetivo'),
+                html.Br(),
+                html.P('Utiliza el mapa de Waze para reportar percances viales, congestionamientos y otros eventos que tengan afectación en la vialidad del municipio. Al realizar el reporte, los ciudadanos que utilicen la aplicación de Waze recibirán la actualización del reporte en su celular.'),
+                html.Br(),
+                html.H5('Pasos'),
+                html.Br(),
+                html.P('1. Ingresa al mapa de Reporte de Eventos y da click en el punto en donde ocurrió el evento a reportar.'),
+                html.P('2. Selecciona el tipo de reporte, subtipo, comentarios y fecha de inicio y fin del mismo.'),
+                html.P('3. Da click en el botón de "Submit" para finalizar el reporte del evento.'),
+                html.Br(),
+                html.H5('¿Cómo utilizar la herramienta de Reporte de Eventos?'),
+                html.Br(),
+                html.Iframe(width='100%', height='560', 
+                           src='https://embed.waze.com/iframe?zoom=14&lat=25.659477&lon=-100.384827&ct=livemap')
+            ])
+        )    
+
+    ])
+
+
 
 
 def render_ayuda(tab):
@@ -91,6 +116,8 @@ def render_ayuda(tab):
         return ayuda_generales()
     elif tab == 'ayuda_monitoreo':
         return ayuda_monitoreo()
+    elif tab == 'ayuda_eventos':
+        return ayuda_eventos()
    
 
 

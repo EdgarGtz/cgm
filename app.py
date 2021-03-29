@@ -42,7 +42,7 @@ app.layout = html.Div([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
                 		href='https://www.waze.com/en-GB/trafficview', target='blank'),
                 	dbc.DropdownMenuItem('Reporte de Eventos',
-                		href='https://www.waze.com/reporting', target='blank', disabled=True),
+                		href='https://www.waze.com/reporting', target='blank'),
                 	dbc.DropdownMenuItem('Cierre de Vialidades',
                 		href='https://www.waze.com/editor', target='blank', disabled=True)
 	            ],
