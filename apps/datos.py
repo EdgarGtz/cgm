@@ -8,8 +8,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
 
-
-
 # Connect to to data
 
     # Connect to Google Drive
