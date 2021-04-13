@@ -17,13 +17,12 @@ def ayuda():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Generales", tab_id="ayuda_generales"),
                             dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo"),
                             dbc.Tab(label='Reporte de Eventos', tab_id="ayuda_eventos"),
                             dbc.Tab(label='Cierre de Vialidades', tab_id="ayuda_vialidades",
                                 disabled=True)],
                             id='tabs',
-                            active_tab="ayuda_generales",
+                            active_tab="ayuda_monitoreo",
                             card=True
                         )
                     ),
@@ -39,21 +38,6 @@ def ayuda():
                 html.H6('San Pedro Garza García, Nuevo León, México')
             ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
         )
-
-    ])
-
-def ayuda_generales():
-
-    return html.Div([
-
-        dbc.Row(
-            dbc.Col([
-                html.H5('Para cualquier duda o aclaración:'),
-                html.Br(),
-                html.P('1. Envía un mensaje al grupo de whatsapp oficial del Centro de Gestión de Movilidad.'),
-                html.P('2. Envía un correo a edgar.gutierrez@sanpedro.gob.mx.')
-            ])
-        )    
 
     ])
 
@@ -76,7 +60,13 @@ def ayuda_monitoreo():
                 html.H5('¿Cómo utilizar la herramienta de Monitoreo de Tráfico?'),
                 html.Br(),
                 html.Iframe(width='100%', height='560', 
-                           src='https://www.youtube.com/embed/mJ00CJLHd8E')
+                           src='https://www.youtube.com/embed/mJ00CJLHd8E'),
+                html.Br(),
+                html.Br(),
+                html.H5('¿Te quedaron dudas?'),
+                html.Br(),
+                html.P('1. Envía un mensaje al grupo de whatsapp oficial del Centro de Gestión de Movilidad.'),
+                html.P('2. Envía un correo a edgar.gutierrez@sanpedro.gob.mx.')
             ])
         )    
 
@@ -112,9 +102,7 @@ def ayuda_eventos():
 
 
 def render_ayuda(tab):
-    if tab == 'ayuda_generales':
-        return ayuda_generales()
-    elif tab == 'ayuda_monitoreo':
+    if tab == 'ayuda_monitoreo':
         return ayuda_monitoreo()
     elif tab == 'ayuda_eventos':
         return ayuda_eventos()
