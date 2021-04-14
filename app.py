@@ -42,7 +42,7 @@ app.layout = html.Div([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
                 		href='https://www.waze.com/es/live-map', target='blank'),
                 	dbc.DropdownMenuItem('Reporte de Eventos',
-                		href='https://www.waze.com/reporting', target='blank'),
+                		href='https://www.waze.com/reporting', target='blank', disabled=True),
                 	dbc.DropdownMenuItem('Cierre de Vialidades',
                 		href='https://www.waze.com/editor', target='blank', disabled=True)
 	            ],
@@ -51,9 +51,8 @@ app.layout = html.Div([
 	            color='light'
         	),
 
-        	dbc.Button('Datos', href='/apps/datos', color='light'),
-
-        	dbc.Button('Ayuda', href='/apps/ayuda', color='light')
+        	dbc.Button('Ayuda', href='/apps/ayuda', color='light'),
+        	dbc.Button('Datos', href='/apps/datos', color='light')
 
 		],
 		brand='CGM',
