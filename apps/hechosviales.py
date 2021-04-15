@@ -28,7 +28,7 @@ hv_ano = hv_ano.get_all_values()
 
 hv_ano = pd.DataFrame(hv_ano[2:], columns = hv_ano[0])
 
-hv_ano = px.bar(hv_ano, x = 'año', y = 'hechosviales',
+hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
             labels = {
             'año': '',
             'hechosviales': 'Hechos Viales'
