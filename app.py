@@ -39,12 +39,8 @@ app.layout = html.Div([
 	dbc.NavbarSimple(
 		[
 
-			dbc.DropdownMenu(
-				dbc.DropdownMenuItem('Hechos Viales', href='/apps/hechosviales'),
-				label='Hechos Viales',
-				color='light'
-
-			),
+			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
+			
         	dbc.DropdownMenu([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
                 		href='https://www.waze.com/es/live-map', target='blank'),
