@@ -83,13 +83,14 @@ def datos():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='Monitoreo de Tráfico', tab_id='datos_monitoreo'),
-                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos"),
-                            dbc.Tab(label='Cierre de Vialidades', tab_id="datos_vialidades",
+                            # dbc.Tab(label='Reporte de Eventos', tab_id="datos_eventos",
+                            #     disabled=True),
+                            # dbc.Tab(label='Cierre de Vialidades', tab_id="datos_vialidades",
+                            #     disabled=True),
+                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_baches",
                                 disabled=True),
-                            dbc.Tab(label='Hechos Viales', tab_id="datos_hechos",
-                                disabled=True),
-                            dbc.Tab(label='Alfonso Reyes', tab_id="datos_alfonso",
-                                disabled=True),
+                             dbc.Tab(label='Cierre de Vialidades', tab_id="datos_alfonso",
+                                 disabled=True),
                             ],
                             id='tabs',
                             active_tab="datos_monitoreo",
@@ -261,7 +262,7 @@ def datos_monitoreo():
 
 # Reporte de Eventos
 
-def datos_eventos():
+def datos_baches():
 
     return html.Div([
 
@@ -271,7 +272,7 @@ def datos_eventos():
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody(
-                        html.H4('Reportes Totales - Waze', 
+                        html.H4('Baches', 
                             style={'text-align':'left'})
                     )
                 )
@@ -410,18 +411,13 @@ def datos_eventos():
 
 
 
-
-
-
-
-
 # Render página
 
 def render_datos(tab):
     if tab == 'datos_monitoreo':
         return datos_monitoreo()
-    elif tab == 'datos_eventos':
-        return datos_eventos()
+    elif tab == 'datos_baches':
+        return datos_baches()
 
 
 

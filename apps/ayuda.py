@@ -17,11 +17,12 @@ def ayuda():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo"),
-                            dbc.Tab(label='Reporte de Eventos', tab_id="ayuda_eventos",
-                                disabled=True),
-                            dbc.Tab(label='Cierre de Vialidades', tab_id="ayuda_vialidades",
-                                disabled=True)],
+                            dbc.Tab(label="Monitoreo de Tráfico", tab_id="ayuda_monitoreo")
+                            # dbc.Tab(label='Reporte de Eventos', tab_id="ayuda_eventos",
+                            #     disabled=True),
+                            # dbc.Tab(label='Cierre de Vialidades', tab_id="ayuda_vialidades",
+                            #     disabled=True)
+                            ],
                             id='tabs',
                             active_tab="ayuda_monitoreo",
                             card=True
@@ -48,10 +49,10 @@ def ayuda_monitoreo():
 
         dbc.Row(
             dbc.Col([
-                html.H5('Objetivo'),
-                html.Br(),
-                html.P('Mejorar los tiempos de respuesta a eventos que tienen afectación en la vialidad del municipio a través de los reportes enviados por Waze.'),
-                html.Br(),
+                # html.H5('Objetivo'),
+                # html.Br(),
+                # html.P('Mejorar los tiempos de respuesta a eventos que tienen afectación en la vialidad del municipio a través de los reportes enviados por Waze.'),
+                # html.Br(),
                 html.H5('Pasos'),
                 html.Br(),
                 html.P('1. Manten en todo momento el mapa de Waze abierto para visualizar los eventos en tiempo real.'),

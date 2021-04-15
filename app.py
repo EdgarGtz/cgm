@@ -15,9 +15,10 @@ server = app.server
 
 # Connect to app pages
 
-from apps import home, datos, ayuda
-from apps.ayuda import ayuda, render_ayuda
+from apps import home, hechosviales
+from apps.hechosviales import hechosviales, render_hechosviales
 from apps.datos import datos, render_datos
+from apps.ayuda import ayuda, render_ayuda
 
 # Connect to config
 
@@ -38,6 +39,12 @@ app.layout = html.Div([
 	dbc.NavbarSimple(
 		[
 
+			dbc.DropdownMenu(
+				dbc.DropdownMenuItem('Hechos Viales', href='/apps/hechosviales'),
+				label='Hechos Viales',
+				color='light'
+
+			),
         	dbc.DropdownMenu([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
                 		href='https://www.waze.com/es/live-map', target='blank'),
@@ -51,8 +58,8 @@ app.layout = html.Div([
 	            color='light'
         	),
 
-        	dbc.Button('Ayuda', href='/apps/ayuda', color='light'),
-        	dbc.Button('Datos', href='/apps/datos', color='light')
+        	dbc.Button('Datos', href='/apps/datos', color='light'),
+        	dbc.Button('Ayuda', href='/apps/ayuda', color='light')
 
 		],
 		brand='CGM',
@@ -70,28 +77,36 @@ app.layout = html.Div([
 			[Input(component_id='url', component_property='pathname')])
 
 def display_page(pathname):
-	if pathname == '/apps/datos':
+	if pathname == '/apps/hechosviales':
+		return hechosviales()
+	elif pathname == '/apps/datos':
 		return datos()
-	if pathname == '/apps/ayuda':
+	elif pathname == '/apps/ayuda':
 		return ayuda()
 	else:
 		return home.layout
 
 
-# Ayuda
+# Hechos Viales
 
-@app.callback(Output('ayuda_content', 'children'), [Input('tabs', 'active_tab')])
+@app.callback(Output('hechosviales_content', 'children'), [Input('tabs', 'active_tab')])
 
-def get_ayuda(tab):
-    return render_ayuda(tab)
+def get_hechosviales(tab):
+    return render_hechosviales(tab)
 
-# Datos
+#Datos
 
 @app.callback(Output('datos_content', 'children'), [Input('tabs', 'active_tab')])
 
 def get_datos(tab):
     return render_datos(tab)
 
+#Ayuda
+
+@app.callback(Output('ayuda_content', 'children'), [Input('tabs', 'active_tab')])
+
+def get_ayuda(tab):
+    return render_ayuda(tab)
 
 
 if __name__ == '__main__':
