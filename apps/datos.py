@@ -87,8 +87,7 @@ def datos():
                             #     disabled=True),
                             # dbc.Tab(label='Cierre de Vialidades', tab_id="datos_vialidades",
                             #     disabled=True),
-                            dbc.Tab(label='Reporte de Eventos', tab_id="datos_baches",
-                                disabled=True),
+                            dbc.Tab(label='Waze for Cities', tab_id="datos_baches"),
                              dbc.Tab(label='Cierre de Vialidades', tab_id="datos_alfonso",
                                  disabled=True),
                             ],
@@ -272,7 +271,7 @@ def datos_baches():
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody(
-                        html.H4('Baches', 
+                        html.H4('Waze for Cities', 
                             style={'text-align':'left'})
                     )
                 )
@@ -291,118 +290,21 @@ def datos_baches():
 
         html.Br(),
 
-
-        # Reportes por fuente - tarjetas
-
-        dbc.Row([
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Todos"),
-                    dbc.CardBody([
-                        html.H1("300", className="card-text",
-                            style={'display':'inline-block'}),
-                        html.P("(100%)", style={'display':'inline-block'},
-                            className='pl-2')
-                    ])  
-                ])
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("#911 (C5)"),
-                    dbc.CardBody([
-                        html.H1("90", className="card-text",
-                            style={'display':'inline-block'}),
-                        html.P("(30%)", style={'display':'inline-block'},
-                            className='pl-2')
-                    ]) 
-                ], color='danger', outline='true')
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Agentes de Tránsito"),
-                    dbc.CardBody([
-                        html.H1("165", className="card-text",
-                            style={'display':'inline-block'}),
-                        html.P("(55%)", style={'display':'inline-block'},
-                            className='pl-2')
-                    ]) 
-                ], color='primary', outline='True')
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("CIAC"),
-                    dbc.CardBody([
-                        html.H1("33", className="card-text",
-                            style={'display':'inline-block'}),
-                        html.P("(11%)", style={'display':'inline-block'},
-                            className='pl-2')
-                    ]) 
-                ], color='warning', outline='True')
-            ),
-
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Waze"),
-                    dbc.CardBody([
-                        html.H1("12", className="card-text",
-                            style={'display':'inline-block'}),
-                        html.P("(4%)", style={'display':'inline-block'},
-                            className='pl-2')
-                    ]) 
-                ], color='success', outline='True')
-            )
-
-        ]),
-
-
-        html.Br(),
-
         # Reportes por fuente - stacked bar
 
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Reportes por Día"),
+                    dbc.CardHeader("Waze for Cities"),
                     dbc.CardBody(
-                        dcc.Graph(
-                            id = 'reportes_fuente',
-                            figure = reportes_dia,
-                            config={
-                            'displayModeBar': False
-                            }
-                        ) 
-                    )  
-                ])
-            )
-        ),
-
-        html.Br(),
-
-        # Tiempos de respuesta por fuente - histogram
-
-        dbc.Row(
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Tiempo de Respuesta por Fuente (Momento 1)"),
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'reportes_tiempo',
-                            figure = reportes_tiempo,
-                            config={
-                            'displayModeBar': False
-                            }
-                        ) 
+                        html.Iframe(width='100%', height='560', 
+                           src='https://datastudio.google.com/embed/reporting/9260648c-751c-4ec7-b02e-9e6c418f12f9/page/ftYLB')
                     )  
                 ])
             )
         ),
 
         html.Br()
-
 
     ])
 
