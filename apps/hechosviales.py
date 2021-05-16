@@ -14,25 +14,49 @@ scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
 gc = gspread.authorize(credentials)
 
-# Connect to the spreadsheet
+# Connect to the spreadsheets
 
-spreadsheet_key = '1zFm8XDU2DpinjzZHCFK-S9T9sHVEwF6Km2iOpYqbGgg'
+# # Hechos Viales por año
+
+# spreadsheet_key = '1zFm8XDU2DpinjzZHCFK-S9T9sHVEwF6Km2iOpYqbGgg'
+# book = gc.open_by_key(spreadsheet_key)
+
+# José Vasconcelos
+
+spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
+# # Hechos Viales por Año
 
-# Hechos Viales por Año
+# hv_ano = book.worksheet('hv_ano')
 
-hv_ano = book.worksheet('hv_ano')
+# hv_ano = hv_ano.get_all_values()
 
-hv_ano = hv_ano.get_all_values()
+# hv_ano = pd.DataFrame(hv_ano[2:], columns = hv_ano[0])
 
-hv_ano = pd.DataFrame(hv_ano[2:], columns = hv_ano[0])
+# hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
+#             labels = {
+#             'año': '',
+#             'hechosviales': 'Hechos Viales'
+#             })
 
-hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
-            labels = {
-            'año': '',
-            'hechosviales': 'Hechos Viales'
-            })
+# José Vasconcelos
+vasconcelos = book.worksheet('vasconcelos')
+vasconcelos = vasconcelos.get_all_values()
+vasconcelos = pd.DataFrame(vasconcelos[2:], columns = vasconcelos[0])
+
+# Convert to numeric
+vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
+vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
+vasconcelos['hechosviales'] = pd.to_numeric(vasconcelos['hechosviales'])
+
+# Mapbox Access Token
+mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
+px.set_mapbox_access_token(mapbox_access_token)
+
+vasconcelos = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", 
+    size = 'hechosviales', size_max=15, zoom=10)
+
 
 
 # Layout
@@ -82,7 +106,7 @@ def datos_hechosviales():
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody(
-                        html.H4('Hechos Viales', 
+                        html.H4('José Vasconcelos', 
                             style={'text-align':'left'})
                     )
                 )
@@ -101,24 +125,45 @@ def datos_hechosviales():
 
         html.Br(),
 
-        # Hechos Viales por Año
+        # José Vasconcelos
 
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Hechos Viales por Año"),
+                    dbc.CardHeader('Mapa'),
                     dbc.CardBody(
                         dcc.Graph(
-                            id = 'hv_ano',
-                            figure = hv_ano,
+                            id = 'vasconcelos',
+                            figure = vasconcelos,
                             config={
                             'displayModeBar': False
                             }
-                        ) 
-                    )  
+                        )
+                    )
                 ])
+
             )
         ),
+
+
+        # Hechos Viales por Año
+
+        # dbc.Row(
+        #     dbc.Col(
+        #         dbc.Card([
+        #             dbc.CardHeader("Hechos Viales por Año"),
+        #             dbc.CardBody(
+        #                 dcc.Graph(
+        #                     id = 'hv_ano',
+        #                     figure = hv_ano,
+        #                     config={
+        #                     'displayModeBar': False
+        #                     }
+        #                 ) 
+        #             )  
+        #         ])
+        #     )
+        # ),
 
         html.Br()
 
