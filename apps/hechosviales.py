@@ -9,53 +9,47 @@ import pandas as pd
 
 
 # Connect to Google Drive
-
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
 gc = gspread.authorize(credentials)
 
-# Connect to the spreadsheets
 
-# # Hechos Viales por año
-
-# spreadsheet_key = '1zFm8XDU2DpinjzZHCFK-S9T9sHVEwF6Km2iOpYqbGgg'
-# book = gc.open_by_key(spreadsheet_key)
-
-# José Vasconcelos
-
+# Hechos Viales - Generales
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
-# # Hechos Viales por Año
+hv_ano = book.worksheet('hv_ano')
+hv_ano = hv_ano.get_all_values()
+hv_ano = pd.DataFrame(hv_ano[1:7], columns = hv_ano[0])
 
-# hv_ano = book.worksheet('hv_ano')
+#-- Graph
+hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
+             labels = {
+             'año': '',
+             'hechosviales': 'Hechos Viales'
+             })
 
-# hv_ano = hv_ano.get_all_values()
-
-# hv_ano = pd.DataFrame(hv_ano[2:], columns = hv_ano[0])
-
-# hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
-#             labels = {
-#             'año': '',
-#             'hechosviales': 'Hechos Viales'
-#             })
 
 # José Vasconcelos
+spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
+book = gc.open_by_key(spreadsheet_key)
+
 vasconcelos = book.worksheet('vasconcelos')
 vasconcelos = vasconcelos.get_all_values()
 vasconcelos = pd.DataFrame(vasconcelos[2:], columns = vasconcelos[0])
 
-# Convert to numeric
+#-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
 vasconcelos['hechosviales'] = pd.to_numeric(vasconcelos['hechosviales'])
 
-# Mapbox Access Token
+#-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-vasconcelos = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", 
-    size = 'hechosviales', size_max=15, zoom=10)
+#-- Map
+vasconcelos = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
+    size_max=15, zoom=13, hover_name='interseccion')
 
 
 
@@ -71,11 +65,13 @@ def hechosviales():
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader(
-                        dbc.Tabs(
-                            dbc.Tab(label='Hechos Viales', tab_id='datos_hechosviales'),
-                            id='tabs',
-                            active_tab="datos_hechosviales",
-                            card=True
+                        dbc.Tabs([
+                            dbc.Tab(label='Generales', tab_id='hv_general'),
+                            dbc.Tab(label='José Vasconcelos', tab_id='hv_vasconcelos')
+                        ],
+                        id='tabs',
+                        active_tab="hv_general",
+                        card=True
                         )
                     ),
                     dbc.CardBody(html.Div(id="hechosviales_content"))
@@ -94,79 +90,70 @@ def hechosviales():
     ])
 
 
-# Hechos Viales
+# Hechos Viales - Generales
 
-def datos_hechosviales():
+def hv_general():
 
     return html.Div([
 
-        # Header
-
-        dbc.Row([
-            dbc.Col(
-                dbc.Card(
-                    dbc.CardBody(
-                        html.H4('José Vasconcelos', 
-                            style={'text-align':'left'})
-                    )
-                )
-            ),
-
-            dbc.Col(
-                dbc.Card(
-                    dbc.CardBody(
-                        html.P('01 de enero del 2015 al 31 de diciembre del 2020', 
-                            style={'text-align':'center'})
-                    )
-                ), lg=4
-            )
-
-        ]),
-
-        html.Br(),
-
-        # José Vasconcelos
+        # Hechos Viales por Año
 
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader('Mapa'),
+                    dbc.CardHeader("Hechos Viales por Año"),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'hv_ano',
+                            figure = hv_ano,
+                            config={
+                            'displayModeBar': False
+                            }
+                        ) 
+                    )  
+                ])
+            )
+        ),
+
+    ])
+
+
+# Jose Vasconcelos
+
+def hv_vasconcelos():
+
+    return html.Div([
+
+        # José Vasconcelos
+
+        dbc.Row([
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader(""),
+                    dbc.CardBody(
+                        html.P('01 de enero del 2015 al 31 de diciembre del 2020', 
+                            style={'text-align':'center'})
+                    )
+                ]), lg=3
+            ),
+
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader(""),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'vasconcelos',
                             figure = vasconcelos,
                             config={
                             'displayModeBar': False
-                            }
-                        )
+                            },
+                            style={'height':'100vh'}
+                        ),
+                    style={'padding':'0px'}
                     )
                 ])
-
             )
-        ),
-
-
-        # Hechos Viales por Año
-
-        # dbc.Row(
-        #     dbc.Col(
-        #         dbc.Card([
-        #             dbc.CardHeader("Hechos Viales por Año"),
-        #             dbc.CardBody(
-        #                 dcc.Graph(
-        #                     id = 'hv_ano',
-        #                     figure = hv_ano,
-        #                     config={
-        #                     'displayModeBar': False
-        #                     }
-        #                 ) 
-        #             )  
-        #         ])
-        #     )
-        # ),
-
-        html.Br()
-
+        ]),
 
     ])
 
@@ -174,8 +161,10 @@ def datos_hechosviales():
 # Render página
 
 def render_hechosviales(tab):
-    if tab == 'datos_hechosviales':
-        return datos_hechosviales()
+    if tab == 'hv_general':
+        return hv_general()
+    elif tab == 'hv_vasconcelos':
+        return hv_vasconcelos()
 
 
 
