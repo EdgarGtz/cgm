@@ -14,18 +14,15 @@ app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
 server = app.server
 
 # Connect to app pages
-
-from apps import home, hechosviales
-from apps.hechosviales import hechosviales, render_hechosviales
+from apps import home
+from apps.hechosviales import hechosviales, render_hechosviales, render_interseccion_nombre, render_interseccion_hv
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
 # Connect to config
-
 from config import user, password
 
 # Login
-
 auth = dash_auth.BasicAuth(
     app,
     {user: password}
@@ -68,9 +65,9 @@ app.layout = html.Div([
 ])
 
 
-@app.callback(Output(component_id='page-content', component_property=
-					'children'),
-			[Input(component_id='url', component_property='pathname')])
+# Display main pages
+
+@app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
 
 def display_page(pathname):
 	if pathname == '/apps/hechosviales':
@@ -90,14 +87,29 @@ def display_page(pathname):
 def get_hechosviales(tab):
     return render_hechosviales(tab)
 
-#Datos
+#-- Interseccion - Nombre
+
+@app.callback(Output('interseccion_nombre', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_interseccion_nombre(clickData):
+	return render_interseccion_nombre(clickData)
+
+#-- Interseccion - Hechos Viales
+
+@app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+	return render_interseccion_hv(clickData)
+
+
+# Datos
 
 @app.callback(Output('datos_content', 'children'), [Input('tabs', 'active_tab')])
 
 def get_datos(tab):
     return render_datos(tab)
 
-#Ayuda
+# Ayuda
 
 @app.callback(Output('ayuda_content', 'children'), [Input('tabs', 'active_tab')])
 

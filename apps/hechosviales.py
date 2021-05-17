@@ -131,8 +131,10 @@ def hv_vasconcelos():
                 dbc.Card([
                     dbc.CardHeader(""),
                     dbc.CardBody(
-                        html.P('01 de enero del 2015 al 31 de diciembre del 2020', 
-                            style={'text-align':'center'})
+                        html.P(id='interseccion_nombre')
+                    ),
+                    dbc.CardBody(
+                        html.P(id='interseccion_hv')
                     )
                 ]), lg=3
             ),
@@ -159,19 +161,17 @@ def hv_vasconcelos():
 
 
 # Render página
-
 def render_hechosviales(tab):
     if tab == 'hv_general':
         return hv_general()
     elif tab == 'hv_vasconcelos':
         return hv_vasconcelos()
 
+# Render interseccion - nombre
+def render_interseccion_nombre(clickData):
+    return clickData['points'][0]['hovertext']
 
-
-
-
-
-
-
-
+# Render interseccion - hv
+def render_interseccion_hv(clickData):
+    return clickData['points'][0]['marker.size']
 
