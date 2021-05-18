@@ -36,7 +36,7 @@ book = gc.open_by_key(spreadsheet_key)
 
 vasconcelos = book.worksheet('vasconcelos')
 vasconcelos = vasconcelos.get_all_values()
-vasconcelos = pd.DataFrame(vasconcelos[2:], columns = vasconcelos[0])
+vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 
 #-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
@@ -49,7 +49,9 @@ px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Map
 vasconcelos = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
-    size_max=15, zoom=13, hover_name='interseccion')
+    size_max=15, zoom=13, hover_name='interseccion',
+    custom_data=['2015', '2016', '2017', '2018', '2019', '2020'],
+    hover_data={'lat':False, 'lon':False, 'hechosviales':False})
 
 
 
@@ -129,19 +131,22 @@ def hv_vasconcelos():
         dbc.Row([
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader(""),
-                    dbc.CardBody(
-                        html.P(id='interseccion_nombre')
-                    ),
-                    dbc.CardBody(
-                        html.P(id='interseccion_hv')
-                    )
+                    dbc.CardHeader(id='interseccion_nombre'),
+                    dbc.CardBody([
+                        html.P(id='interseccion_hv'),
+                        html.P(id='interseccion_2015'),
+                        html.P(id='interseccion_2016'),
+                        html.P(id='interseccion_2017'),
+                        html.P(id='interseccion_2018'),
+                        html.P(id='interseccion_2019'),
+                        html.P(id='interseccion_2020')
+                    ])
                 ]), lg=3
             ),
 
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader(""),
+                    dbc.CardHeader("Da click en cualquier intersección para conocer más"),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'vasconcelos',
@@ -173,5 +178,39 @@ def render_interseccion_nombre(clickData):
 
 # Render interseccion - hv
 def render_interseccion_hv(clickData):
-    return clickData['points'][0]['marker.size']
+    return 'Hechos Viales Totales: {}'.format(clickData['points'][0]['marker.size'])
+
+# Render interseccion - hv 2015
+def render_interseccion_2015(clickData):
+    return '2015: {}'.format(clickData['points'][0]['customdata'][0])
+
+# Render interseccion - hv 2016
+def render_interseccion_2016(clickData):
+    return '2016: {}'.format(clickData['points'][0]['customdata'][1])
+
+# Render interseccion - hv 2017
+def render_interseccion_2017(clickData):
+    return '2017: {}'.format(clickData['points'][0]['customdata'][2])
+
+# Render interseccion - hv 2018
+def render_interseccion_2018(clickData):
+    return '2018: {}'.format(clickData['points'][0]['customdata'][3])
+
+# Render interseccion - hv 2019
+def render_interseccion_2019(clickData):
+    return '2019: {}'.format(clickData['points'][0]['customdata'][4])
+
+# Render interseccion - hv 2020
+def render_interseccion_2020(clickData):
+    return '2020: {}'.format(clickData['points'][0]['customdata'][5])
+
+
+
+
+
+
+
+
+
+
 

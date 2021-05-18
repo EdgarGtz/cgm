@@ -15,7 +15,10 @@ server = app.server
 
 # Connect to app pages
 from apps import home
-from apps.hechosviales import hechosviales, render_hechosviales, render_interseccion_nombre, render_interseccion_hv
+from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
+	render_interseccion_hv, render_interseccion_2015, render_interseccion_2016,
+	render_interseccion_2017, render_interseccion_2018, render_interseccion_2019,
+	render_interseccion_2020)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -99,7 +102,49 @@ def get_interseccion_nombre(clickData):
 @app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos', 'clickData')])
 
 def get_(clickData):
-	return render_interseccion_hv(clickData)
+ 	return render_interseccion_hv(clickData)
+
+#-- Interseccion - 2015
+
+@app.callback(Output('interseccion_2015', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2015(clickData)
+
+#-- Interseccion - 2016
+
+@app.callback(Output('interseccion_2016', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2016(clickData)
+
+#-- Interseccion - 2017
+
+@app.callback(Output('interseccion_2017', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2017(clickData)
+
+#-- Interseccion - 2018
+
+@app.callback(Output('interseccion_2018', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2018(clickData)
+
+#-- Interseccion - 2019
+
+@app.callback(Output('interseccion_2019', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2019(clickData)
+
+#-- Interseccion - 2020
+
+@app.callback(Output('interseccion_2020', 'children'), [Input('vasconcelos', 'clickData')])
+
+def get_(clickData):
+ 	return render_interseccion_2020(clickData)
 
 
 # Datos
