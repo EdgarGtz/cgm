@@ -16,9 +16,8 @@ server = app.server
 # Connect to app pages
 from apps import home
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
-	render_interseccion_hv, render_interseccion_2015, render_interseccion_2016,
-	render_interseccion_2017, render_interseccion_2018, render_interseccion_2019,
-	render_interseccion_2020, render_vasconcelos_bar)
+	render_interseccion_hv, render_vasconcelos_bar, render_interseccion_les,
+	render_interseccion_fal)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -104,47 +103,20 @@ def get_interseccion_nombre(clickData):
 def get_(clickData):
  	return render_interseccion_hv(clickData)
 
-#-- Interseccion - 2015
+#-- Interseccion - Lesionados
 
-@app.callback(Output('interseccion_2015', 'children'), [Input('vasconcelos_map', 'clickData')])
-
-def get_(clickData):
- 	return render_interseccion_2015(clickData)
-
-#-- Interseccion - 2016
-
-@app.callback(Output('interseccion_2016', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_les', 'children'), [Input('vasconcelos_map', 'clickData')])
 
 def get_(clickData):
- 	return render_interseccion_2016(clickData)
+ 	return render_interseccion_les(clickData)
 
-#-- Interseccion - 2017
+#-- Interseccion - Fallecidos
 
-@app.callback(Output('interseccion_2017', 'children'), [Input('vasconcelos_map', 'clickData')])
-
-def get_(clickData):
- 	return render_interseccion_2017(clickData)
-
-#-- Interseccion - 2018
-
-@app.callback(Output('interseccion_2018', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_fal', 'children'), [Input('vasconcelos_map', 'clickData')])
 
 def get_(clickData):
- 	return render_interseccion_2018(clickData)
+ 	return render_interseccion_fal(clickData)
 
-#-- Interseccion - 2019
-
-@app.callback(Output('interseccion_2019', 'children'), [Input('vasconcelos_map', 'clickData')])
-
-def get_(clickData):
- 	return render_interseccion_2019(clickData)
-
-#-- Interseccion - 2020
-
-@app.callback(Output('interseccion_2020', 'children'), [Input('vasconcelos_map', 'clickData')])
-
-def get_(clickData):
- 	return render_interseccion_2020(clickData)
 
 #-- Vasconcelos (Bar)
 

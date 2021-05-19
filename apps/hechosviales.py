@@ -50,7 +50,7 @@ px.set_mapbox_access_token(mapbox_access_token)
 #-- Map
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
     size_max=15, zoom=13, hover_name='interseccion',
-    custom_data=['2015', '2016', '2017', '2018', '2019', '2020'],
+    custom_data=['2015', '2016', '2017', '2018', '2019', '2020', 'lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'hechosviales':False})
 
 
@@ -126,43 +126,12 @@ def hv_vasconcelos():
 
     return html.Div([
 
-        # José Vasconcelos
+        # Mapa
 
-        dbc.Row([
-            dbc.Col([
-
-                dbc.Card([
-                    dbc.CardHeader(''),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'vasconcelos_bar',
-                            figure = {},
-                            config={
-                            'displayModeBar': False
-                            },
-                            style={'height':'100vh'}
-                        )
-                    ])
-                ]),
-
-                html.Br(),
-
-                dbc.Card([
-                    dbc.CardHeader(id='interseccion_nombre'),
-                    dbc.CardBody([
-                        html.P(id='interseccion_hv'),
-                        html.P(id='interseccion_2015'),
-                        html.P(id='interseccion_2016'),
-                        html.P(id='interseccion_2017'),
-                        html.P(id='interseccion_2018'),
-                        html.P(id='interseccion_2019'),
-                        html.P(id='interseccion_2020')
-                    ])
-                ])
-
-            ], lg = 3),
+        dbc.Row(
 
             dbc.Col(
+
                 dbc.Card([
                     dbc.CardHeader("Da click en cualquier intersección para conocer más"),
                     dbc.CardBody(
@@ -176,11 +145,93 @@ def hv_vasconcelos():
                         ),
                     style={'padding':'0px'}
                     )
-                ])
+                ]), lg=12
+
+            ),
+
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card(
+                    dbc.CardHeader(id='interseccion_nombre')
+                )
+
             )
+
+        ),
+
+
+        html.Br(),
+        # Hechos Viales Totales, Lesionados y Fallecidos
+
+        dbc.Row([
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Hechos Viales'),
+                    dbc.CardBody([
+                        html.P(id = 'interseccion_hv')
+                    ])
+                ]), lg=4
+
+            ),
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Lesionados'),
+                    dbc.CardBody([
+                        html.P(id = 'interseccion_les')
+                    ])
+                ]), lg=4
+
+            ),
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Fallecidos'),
+                    dbc.CardBody([
+                        html.P(id = 'interseccion_fal')
+                    ])
+                ]), lg=4
+
+            ),
+
         ]),
 
+        html.Br(),
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Hechos viales por año'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'vasconcelos_bar',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            },
+                            style={'height':'100vh'}
+                        )
+                    ])
+                ])
+
+            )
+
+        )
+
     ])
+    
 
 
 # Render página
@@ -196,31 +247,15 @@ def render_interseccion_nombre(clickData):
 
 # Render interseccion - hv
 def render_interseccion_hv(clickData):
-    return 'Hechos Viales Totales: {}'.format(clickData['points'][0]['marker.size'])
+    return clickData['points'][0]['marker.size']
 
-# Render interseccion - hv 2015
-def render_interseccion_2015(clickData):
-    return '2015: {}'.format(clickData['points'][0]['customdata'][0])
+# Render interseccion - lesionados
+def render_interseccion_les(clickData):
+    return clickData['points'][0]['customdata'][6]
 
-# Render interseccion - hv 2016
-def render_interseccion_2016(clickData):
-    return '2016: {}'.format(clickData['points'][0]['customdata'][1])
-
-# Render interseccion - hv 2017
-def render_interseccion_2017(clickData):
-    return '2017: {}'.format(clickData['points'][0]['customdata'][2])
-
-# Render interseccion - hv 2018
-def render_interseccion_2018(clickData):
-    return '2018: {}'.format(clickData['points'][0]['customdata'][3])
-
-# Render interseccion - hv 2019
-def render_interseccion_2019(clickData):
-    return '2019: {}'.format(clickData['points'][0]['customdata'][4])
-
-# Render interseccion - hv 2020
-def render_interseccion_2020(clickData):
-    return '2020: {}'.format(clickData['points'][0]['customdata'][5])
+# Render interseccion - lesionados
+def render_interseccion_fal(clickData):
+    return clickData['points'][0]['customdata'][7]
 
 def render_vasconcelos_bar(clickData):
     ano_2015 = clickData['points'][0]['customdata'][0]
