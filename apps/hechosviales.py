@@ -48,7 +48,7 @@ mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoan
 px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Map
-vasconcelos = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
+vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
     size_max=15, zoom=13, hover_name='interseccion',
     custom_data=['2015', '2016', '2017', '2018', '2019', '2020'],
     hover_data={'lat':False, 'lon':False, 'hechosviales':False})
@@ -129,7 +129,24 @@ def hv_vasconcelos():
         # José Vasconcelos
 
         dbc.Row([
-            dbc.Col(
+            dbc.Col([
+
+                dbc.Card([
+                    dbc.CardHeader(''),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'vasconcelos_bar',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            },
+                            style={'height':'100vh'}
+                        )
+                    ])
+                ]),
+
+                html.Br(),
+
                 dbc.Card([
                     dbc.CardHeader(id='interseccion_nombre'),
                     dbc.CardBody([
@@ -141,16 +158,17 @@ def hv_vasconcelos():
                         html.P(id='interseccion_2019'),
                         html.P(id='interseccion_2020')
                     ])
-                ]), lg=3
-            ),
+                ])
+
+            ], lg = 3),
 
             dbc.Col(
                 dbc.Card([
                     dbc.CardHeader("Da click en cualquier intersección para conocer más"),
                     dbc.CardBody(
                         dcc.Graph(
-                            id = 'vasconcelos',
-                            figure = vasconcelos,
+                            id = 'vasconcelos_map',
+                            figure = vasconcelos_map,
                             config={
                             'displayModeBar': False
                             },
@@ -204,7 +222,17 @@ def render_interseccion_2019(clickData):
 def render_interseccion_2020(clickData):
     return '2020: {}'.format(clickData['points'][0]['customdata'][5])
 
+def render_vasconcelos_bar(clickData):
+    ano_2015 = clickData['points'][0]['customdata'][0]
+    ano_2016 = clickData['points'][0]['customdata'][1]
+    ano_2017 = clickData['points'][0]['customdata'][2]
+    ano_2018 = clickData['points'][0]['customdata'][3]
+    ano_2019 = clickData['points'][0]['customdata'][4]
+    ano_2020 = clickData['points'][0]['customdata'][5]
 
+    vasconcelos_bar = px.histogram(y=[ano_2015,ano_2016,ano_2017,ano_2018,ano_2019,ano_2020],
+        x=['2015', '2016', '2017', '2018', '2019', '2020'])    
+    return vasconcelos_bar
 
 
 
