@@ -55,7 +55,10 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'h
     custom_data=['2015', '2016', '2017', '2018', '2019', '2020', 'lesionados', 'fallecidos',
     'tipo_alcance', 'tipo_atropello', 'tipo_caida_persona', 'tipo_choque_crucero',
     'tipo_choque_frente', 'tipo_choque_reversa', 'tipo_choque_diverso', 'tipo_choque_lateral',
-    'tipo_estrellamiento', 'tipo_incendio', 'tipo_volcadura'],
+    'tipo_estrellamiento', 'tipo_incendio', 'tipo_volcadura', 'distraccion',
+    'dormitando', 'estado_alcoholico', 'exceso_dimensiones', 'exceso_velocidad',
+    'invadir_carril', 'mal_estacionado', 'no_guardo_dist', 'no_resp_alto', 'no_resp_sem',
+    'otros', 'viro_indevidamente'],
     hover_data={'lat':False, 'lon':False, 'hechosviales':False})
 
 
@@ -242,7 +245,32 @@ def hv_vasconcelos():
 
             )
 
-        )
+        ),
+
+        html.Br(),
+
+        # Hechos viales por causa
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Hechos viales por causa'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'vasconcelos_hv_causa',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            }
+                        )
+                    ])
+                ])
+
+            )
+
+        ),
 
     ])
     
@@ -315,6 +343,53 @@ def render_vasconcelos_hv_tipo(clickData):
     vasconcelos_hv_tipo.update_layout(yaxis_title="Hechos Viales")   
 
     return vasconcelos_hv_tipo
+
+
+# Render hechos viales por causa
+
+def render_vasconcelos_hv_causa(clickData):
+    distraccion = clickData['points'][0]['customdata'][19]
+    dormitando = clickData['points'][0]['customdata'][20]
+    estado_aloholico = clickData['points'][0]['customdata'][21]
+    exceso_dimensiones = clickData['points'][0]['customdata'][22]
+    exceso_velocidad = clickData['points'][0]['customdata'][23]
+    invadir_carril = clickData['points'][0]['customdata'][24]
+    mal_estacionado = clickData['points'][0]['customdata'][25]
+    no_guardo_dist = clickData['points'][0]['customdata'][26]
+    no_resp_alto = clickData['points'][0]['customdata'][27]
+    no_resp_sem = clickData['points'][0]['customdata'][28]
+    otros = clickData['points'][0]['customdata'][29]
+    viro_indevidamente = clickData['points'][0]['customdata'][30]
+
+    vasconcelos_hv_causa = px.histogram(y=[distraccion, dormitando, estado_aloholico,
+        exceso_dimensiones, exceso_velocidad, invadir_carril, mal_estacionado,
+        no_guardo_dist, no_resp_alto, no_resp_sem, otros, viro_indevidamente],
+        x=['Distracción', 'Dormitando', 'Estado Alcohólico', 'Exceso de Dimensiones',
+        'Exceso de Velocidad', 'Invadir Carril', 'Mal Estacionado', 'No Guardo Distancia',
+        'No Respeto el Alto', 'No Respeto el Semáforo', 'Otros', 'Viro Idevidamente'],
+        labels = {'x': ''}) 
+
+    vasconcelos_hv_causa.update_layout(yaxis_title="Hechos Viales")   
+
+    return vasconcelos_hv_causa
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -17,7 +17,7 @@ server = app.server
 from apps import home
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_vasconcelos_hv_ano, render_interseccion_les,
-	render_interseccion_fal, render_vasconcelos_hv_tipo)
+	render_interseccion_fal, render_vasconcelos_hv_tipo, render_vasconcelos_hv_causa)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -117,7 +117,6 @@ def get(clickData):
 def get(clickData):
  	return render_interseccion_fal(clickData)
 
-
 #-- Vasconcelos (Hechos viales por año)
 
 @app.callback(Output('vasconcelos_hv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
@@ -131,6 +130,13 @@ def get(clickData):
 
 def get(clickData):
  	return render_vasconcelos_hv_tipo(clickData)
+
+#-- Vasconcelos (Hechos viales por causa)
+
+@app.callback(Output('vasconcelos_hv_causa', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_vasconcelos_hv_causa(clickData)
 
 
 
