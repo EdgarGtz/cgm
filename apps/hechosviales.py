@@ -29,6 +29,8 @@ hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
              'hechosviales': 'Hechos Viales'
              })
 
+hv_ano.update_layout(yaxis_title="Hechos Viales")
+
 
 # José Vasconcelos
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
@@ -50,9 +52,11 @@ px.set_mapbox_access_token(mapbox_access_token)
 #-- Map
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
     size_max=15, zoom=13, hover_name='interseccion',
-    custom_data=['2015', '2016', '2017', '2018', '2019', '2020', 'lesionados', 'fallecidos'],
+    custom_data=['2015', '2016', '2017', '2018', '2019', '2020', 'lesionados', 'fallecidos',
+    'tipo_alcance', 'tipo_atropello', 'tipo_caida_persona', 'tipo_choque_crucero',
+    'tipo_choque_frente', 'tipo_choque_reversa', 'tipo_choque_diverso', 'tipo_choque_lateral',
+    'tipo_estrellamiento', 'tipo_incendio', 'tipo_volcadura'],
     hover_data={'lat':False, 'lon':False, 'hechosviales':False})
-
 
 
 # Layout
@@ -162,10 +166,11 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H2(id = 'interseccion_fal')
                     )
-                ], color="danger", outline=True, style={'textAlign':'center'})                
+                ], color="danger", outline=True, style={'textAlign':'center'})             
 
             ]),
 
+            # Mapa
 
             dbc.Col(
 
@@ -201,12 +206,36 @@ def hv_vasconcelos():
                     dbc.CardHeader('Hechos viales por año'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'vasconcelos_bar',
+                            id = 'vasconcelos_hv_ano',
                             figure = {},
                             config={
                             'displayModeBar': False
-                            },
-                            style={'height':'100vh'}
+                            }
+                        )
+                    ])
+                ])
+
+            )
+
+        ),
+
+        html.Br(),
+
+        # Hechos viales por tipo
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Hechos viales por tipo'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'vasconcelos_hv_tipo',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            }
                         )
                     ])
                 ])
@@ -242,7 +271,9 @@ def render_interseccion_les(clickData):
 def render_interseccion_fal(clickData):
     return clickData['points'][0]['customdata'][7]
 
-def render_vasconcelos_bar(clickData):
+# Render hechos viales por año
+
+def render_vasconcelos_hv_ano(clickData):
     ano_2015 = clickData['points'][0]['customdata'][0]
     ano_2016 = clickData['points'][0]['customdata'][1]
     ano_2017 = clickData['points'][0]['customdata'][2]
@@ -250,11 +281,40 @@ def render_vasconcelos_bar(clickData):
     ano_2019 = clickData['points'][0]['customdata'][4]
     ano_2020 = clickData['points'][0]['customdata'][5]
 
-    vasconcelos_bar = px.histogram(y=[ano_2015,ano_2016,ano_2017,ano_2018,ano_2019,ano_2020],
-        x=['2015', '2016', '2017', '2018', '2019', '2020'])    
-    return vasconcelos_bar
+    vasconcelos_hv_ano = px.histogram(y=[ano_2015,ano_2016,ano_2017,ano_2018,ano_2019,ano_2020],
+        x=['2015', '2016', '2017', '2018', '2019', '2020'],
+        labels = {'x': ''}) 
 
+    vasconcelos_hv_ano.update_layout(yaxis_title="Hechos Viales")   
 
+    return vasconcelos_hv_ano
+
+# Render hechos viales por tipo
+
+def render_vasconcelos_hv_tipo(clickData):
+    tipo_alcance = clickData['points'][0]['customdata'][8]
+    tipo_atropello = clickData['points'][0]['customdata'][9]
+    tipo_caida_persona = clickData['points'][0]['customdata'][10]
+    tipo_choque_crucero = clickData['points'][0]['customdata'][11]
+    tipo_choque_frente = clickData['points'][0]['customdata'][12]
+    tipo_choque_reversa = clickData['points'][0]['customdata'][13]
+    tipo_choque_diverso = clickData['points'][0]['customdata'][14]
+    tipo_choque_lateral = clickData['points'][0]['customdata'][15]
+    tipo_estrellamiento = clickData['points'][0]['customdata'][16]
+    tipo_incendio = clickData['points'][0]['customdata'][17]
+    tipo_volcadura = clickData['points'][0]['customdata'][18]
+
+    vasconcelos_hv_tipo = px.histogram(y=[tipo_alcance, tipo_atropello, tipo_caida_persona,
+        tipo_choque_crucero, tipo_choque_frente, tipo_choque_reversa, tipo_choque_diverso,
+        tipo_choque_lateral, tipo_estrellamiento, tipo_incendio, tipo_volcadura],
+        x=['Alcance', 'Atropello', 'Caída de Persona', 'Choque de Crucero',
+        'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral',
+        'Estrellamiento', 'Incendio', 'Volcadura'],
+        labels = {'x': ''}) 
+
+    vasconcelos_hv_tipo.update_layout(yaxis_title="Hechos Viales")   
+
+    return vasconcelos_hv_tipo
 
 
 

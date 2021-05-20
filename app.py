@@ -2,7 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc 
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_auth
 
 
@@ -16,8 +16,8 @@ server = app.server
 # Connect to app pages
 from apps import home
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
-	render_interseccion_hv, render_vasconcelos_bar, render_interseccion_les,
-	render_interseccion_fal)
+	render_interseccion_hv, render_vasconcelos_hv_ano, render_interseccion_les,
+	render_interseccion_fal, render_vasconcelos_hv_tipo)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -100,30 +100,37 @@ def get_interseccion_nombre(clickData):
 
 @app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos_map', 'clickData')])
 
-def get_(clickData):
+def get(clickData):
  	return render_interseccion_hv(clickData)
 
 #-- Interseccion - Lesionados
 
 @app.callback(Output('interseccion_les', 'children'), [Input('vasconcelos_map', 'clickData')])
 
-def get_(clickData):
+def get(clickData):
  	return render_interseccion_les(clickData)
 
 #-- Interseccion - Fallecidos
 
 @app.callback(Output('interseccion_fal', 'children'), [Input('vasconcelos_map', 'clickData')])
 
-def get_(clickData):
+def get(clickData):
  	return render_interseccion_fal(clickData)
 
 
-#-- Vasconcelos (Bar)
+#-- Vasconcelos (Hechos viales por año)
 
-@app.callback(Output('vasconcelos_bar', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('vasconcelos_hv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
-def get_(clickData):
- 	return render_vasconcelos_bar(clickData)
+def get(clickData):
+ 	return render_vasconcelos_hv_ano(clickData)
+
+#-- Vasconcelos (Hechos viales por tipo)
+
+@app.callback(Output('vasconcelos_hv_tipo', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_vasconcelos_hv_tipo(clickData)
 
 
 
