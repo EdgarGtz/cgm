@@ -126,14 +126,52 @@ def hv_vasconcelos():
 
     return html.Div([
 
-        # Mapa
+        # Mapa y principales indicadores
 
-        dbc.Row(
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.Card(
+                    dbc.CardHeader(id='interseccion_nombre'),
+                    style={'textAlign':'center'}
+                ),
+
+                html.Br(),
+
+                dbc.Card([
+                    dbc.CardHeader('Hechos Viales'),
+                    dbc.CardBody(
+                        html.H2(id = 'interseccion_hv')
+                    )
+                ], color="info", outline=True, style={'textAlign':'center'}), 
+
+                html.Br(),
+
+                dbc.Card([
+                    dbc.CardHeader('Lesionados'),
+                    dbc.CardBody(
+                        html.H2(id = 'interseccion_les')
+                    )
+                ], color="warning", outline=True, style={'textAlign':'center'}),
+
+                html.Br(),
+
+                dbc.Card([
+                    dbc.CardHeader('Fallecidos'),
+                    dbc.CardBody(
+                        html.H2(id = 'interseccion_fal')
+                    )
+                ], color="danger", outline=True, style={'textAlign':'center'})                
+
+            ]),
+
 
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader("Da click en cualquier intersección para conocer más"),
+                    dbc.CardHeader("Da click en cualquier intersección para conocer más",
+                        style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'vasconcelos_map',
@@ -145,68 +183,15 @@ def hv_vasconcelos():
                         ),
                     style={'padding':'0px'}
                     )
-                ]), lg=12
-
-            ),
-
-        ),
-
-        html.Br(),
-
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card(
-                    dbc.CardHeader(id='interseccion_nombre')
-                )
+                ]), lg=10
 
             )
-
-        ),
-
-
-        html.Br(),
-        # Hechos Viales Totales, Lesionados y Fallecidos
-
-        dbc.Row([
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Hechos Viales'),
-                    dbc.CardBody([
-                        html.P(id = 'interseccion_hv')
-                    ])
-                ]), lg=4
-
-            ),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Lesionados'),
-                    dbc.CardBody([
-                        html.P(id = 'interseccion_les')
-                    ])
-                ]), lg=4
-
-            ),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Fallecidos'),
-                    dbc.CardBody([
-                        html.P(id = 'interseccion_fal')
-                    ])
-                ]), lg=4
-
-            ),
 
         ]),
 
         html.Br(),
+
+        # Hechos viales por año
 
         dbc.Row(
 
