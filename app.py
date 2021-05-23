@@ -16,8 +16,8 @@ server = app.server
 # Connect to app pages
 from apps import home
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
-	render_interseccion_hv, render_vasconcelos_hv_ano, render_interseccion_les,
-	render_interseccion_fal, render_vasconcelos_hv_tipo, render_vasconcelos_hv_causa)
+	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
+	render_interseccion_sv_ano, render_interseccion_sv_tipo, render_interseccion_sv_causa)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -38,7 +38,7 @@ app.layout = html.Div([
 	dbc.NavbarSimple(
 		[
 
-			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
+			dbc.Button('Siniestros Viales', href='/apps/hechosviales', color='light'),
 			
         	dbc.DropdownMenu([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',
@@ -117,28 +117,26 @@ def get(clickData):
 def get(clickData):
  	return render_interseccion_fal(clickData)
 
-#-- Vasconcelos (Hechos viales por año)
+#-- Intersección - Siniestros Viales por Año
 
-@app.callback(Output('vasconcelos_hv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_vasconcelos_hv_ano(clickData)
-
-#-- Vasconcelos (Hechos viales por tipo)
-
-@app.callback(Output('vasconcelos_hv_tipo', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_sv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
 def get(clickData):
- 	return render_vasconcelos_hv_tipo(clickData)
+ 	return render_interseccion_sv_ano(clickData)
 
-#-- Vasconcelos (Hechos viales por causa)
+#-- Intersección - Tipos de Siniestros Viales
 
-@app.callback(Output('vasconcelos_hv_causa', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_sv_tipo', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
 def get(clickData):
- 	return render_vasconcelos_hv_causa(clickData)
+ 	return render_interseccion_sv_tipo(clickData)
 
+#-- Intersección - Causas de Siniestros Viales
 
+@app.callback(Output('interseccion_sv_causa', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_sv_causa(clickData)
 
 # Datos
 
