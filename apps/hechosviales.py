@@ -129,7 +129,7 @@ px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Graph
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
-    size_max=15, zoom=13, hover_name='interseccion',
+    size_max=15, zoom=13, hover_name='interseccion', color='hechosviales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'hechosviales':False})
 
@@ -191,7 +191,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'100vh'}
+                            style={'height':'80vh'}
                         ),
                     style={'padding':'0px'}
                     )
