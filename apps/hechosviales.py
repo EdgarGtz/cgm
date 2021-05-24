@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.graph_objs as go
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
@@ -53,22 +54,28 @@ gc = gspread.authorize(credentials)
 
 # General
 
-# Connect to data
+# Siniestros Viales por Año
+
+#-- Connect to data
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
-hv_ano = book.worksheet('hv_ano')
-hv_ano = hv_ano.get_all_values()
-hv_ano = pd.DataFrame(hv_ano[1:7], columns = hv_ano[0])
+siniestros_viales = book.worksheet('siniestrosviales')
+siniestros_viales = siniestros_viales.get_all_values()
+siniestros_viales = pd.DataFrame(siniestros_viales[1:], columns = siniestros_viales[0])
+
+# Count sv por año
+sv_ano = pd.DataFrame(siniestros_viales['año'].value_counts())
+sv_ano = sv_ano.reset_index()
+
+# Rename columns and change sv to numeric
+sv_ano.columns = ['Año', 'Siniestros Viales']
+sv_ano['Siniestros Viales'] = pd.to_numeric(sv_ano['Siniestros Viales'])
 
 # Graph
-hv_ano = px.histogram(hv_ano, x = 'año', y = 'hechosviales',
-             labels = {
-             'año': '',
-             'hechosviales': 'Hechos Viales'
-             })
-
-hv_ano.update_layout(yaxis_title="Hechos Viales")
+sv_ano = px.bar(sv_ano, x='Año', y='Siniestros Viales',
+    labels = {'Año': ''}, text='Siniestros Viales',
+    hover_data={'Año':False, 'Siniestros Viales':False})
 
 
 # Layout
@@ -85,7 +92,7 @@ def hv_general():
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'hv_ano',
-                            figure = hv_ano,
+                            figure = sv_ano,
                             config={
                             'displayModeBar': False
                             }
@@ -101,7 +108,9 @@ def hv_general():
 
 # Intersecciones
 
-# Connect to data
+# Map
+
+#-- Connect to data
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
@@ -109,16 +118,16 @@ vasconcelos = book.worksheet('vasconcelos')
 vasconcelos = vasconcelos.get_all_values()
 vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 
-# Convert to numeric
+#-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
 vasconcelos['hechosviales'] = pd.to_numeric(vasconcelos['hechosviales'])
 
-# Mapbox Access Token
+#-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-# Map
+#-- Graph
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
     size_max=15, zoom=13, hover_name='interseccion',
     custom_data=['lesionados', 'fallecidos'],
@@ -145,7 +154,7 @@ def hv_vasconcelos():
                 dbc.Card([
                     dbc.CardHeader('Siniestros Viales'),
                     dbc.CardBody(
-                        html.H2(id = 'interseccion_hv')
+                        html.H3(id = 'interseccion_hv')
                     )
                 ], color="info", outline=True, style={'textAlign':'center'}), 
 
@@ -154,7 +163,7 @@ def hv_vasconcelos():
                 dbc.Card([
                     dbc.CardHeader('Lesionados'),
                     dbc.CardBody(
-                        html.H2(id = 'interseccion_les')
+                        html.H3(id = 'interseccion_les')
                     )
                 ], color="warning", outline=True, style={'textAlign':'center'}),
 
@@ -163,7 +172,7 @@ def hv_vasconcelos():
                 dbc.Card([
                     dbc.CardHeader('Fallecidos'),
                     dbc.CardBody(
-                        html.H2(id = 'interseccion_fal')
+                        html.H3(id = 'interseccion_fal')
                     )
                 ], color="danger", outline=True, style={'textAlign':'center'})             
 
@@ -265,7 +274,10 @@ def hv_vasconcelos():
 
 # Nombre
 def render_interseccion_nombre(clickData):
-    return clickData['points'][0]['hovertext']
+    if clickData is None:
+        return 'Intersección'
+    else:
+        return clickData['points'][0]['hovertext']
 
 # Siniestros Viales
 def render_interseccion_hv(clickData):
@@ -300,7 +312,8 @@ def render_interseccion_sv_ano(clickData):
 
     # Graph
     interseccion_sv_ano = px.bar(interseccion_sv_ano, x='Años', y='Siniestros Viales',
-            labels = {'Años': ''}, text='Siniestros Viales')
+            labels = {'Años': ''}, text='Siniestros Viales',
+            hover_data={'Años':False, 'Siniestros Viales':False})
 
     interseccion_sv_ano.update_layout(yaxis={'categoryorder':'total ascending'})
 
@@ -330,7 +343,8 @@ def render_interseccion_sv_tipo(clickData):
 
     # Graph
     interseccion_sv_tipo = px.bar(interseccion_sv_tipo, x='Siniestros Viales', y='Tipo',
-            labels = {'Tipo': ''}, text='Siniestros Viales')
+            labels = {'Tipo': ''}, text='Siniestros Viales',
+            hover_data={'Tipo':False, 'Siniestros Viales':False})
 
     interseccion_sv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
 

@@ -81,8 +81,9 @@ def display_page(pathname):
 	else:
 		return home.layout
 
+#----------
 
-# Hechos Viales
+# Siniestros Viales Content
 
 @app.callback(Output('hechosviales_content', 'children'), [Input('tabs', 'active_tab')])
 
@@ -96,7 +97,7 @@ def get_hechosviales(tab):
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
 
-#-- Interseccion - Hechos Viales
+#-- Interseccion - Siniestros Viales
 
 @app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos_map', 'clickData')])
 
