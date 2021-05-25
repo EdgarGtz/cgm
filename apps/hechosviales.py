@@ -121,17 +121,18 @@ vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 #-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
-vasconcelos['hechosviales'] = pd.to_numeric(vasconcelos['hechosviales'])
+vasconcelos['Siniestros Viales'] = pd.to_numeric(vasconcelos['Siniestros Viales'])
 
 #-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Graph
-vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon", size = 'hechosviales',
-    size_max=15, zoom=13, hover_name='interseccion', color='hechosviales',
+vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
+    size = 'Siniestros Viales',
+    size_max=15, zoom=13, hover_name='interseccion', color='Siniestros Viales',
     custom_data=['lesionados', 'fallecidos'],
-    hover_data={'lat':False, 'lon':False, 'hechosviales':False})
+    hover_data={'lat':False, 'lon':False, 'Siniestros Viales':False})
 
 
 # Layout
@@ -262,7 +263,7 @@ def hv_vasconcelos():
                     ])
                 ])
 
-            )            
+            )          
 
         ])
 
