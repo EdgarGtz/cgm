@@ -38,7 +38,7 @@ app.layout = html.Div([
 	dbc.NavbarSimple(
 		[
 
-			dbc.Button('Siniestros Viales', href='/apps/hechosviales', color='light'),
+			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
 			
         	dbc.DropdownMenu([
                 	dbc.DropdownMenuItem('Monitoreo de Tráfico',

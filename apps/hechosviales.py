@@ -69,13 +69,13 @@ sv_ano = pd.DataFrame(siniestros_viales['año'].value_counts())
 sv_ano = sv_ano.reset_index()
 
 # Rename columns and change sv to numeric
-sv_ano.columns = ['Año', 'Siniestros Viales']
-sv_ano['Siniestros Viales'] = pd.to_numeric(sv_ano['Siniestros Viales'])
+sv_ano.columns = ['Año', 'Hechos Viales']
+sv_ano['Hechos Viales'] = pd.to_numeric(sv_ano['Hechos Viales'])
 
 # Graph
-sv_ano = px.bar(sv_ano, x='Año', y='Siniestros Viales',
-    labels = {'Año': ''}, text='Siniestros Viales',
-    hover_data={'Año':False, 'Siniestros Viales':False})
+sv_ano = px.bar(sv_ano, x='Año', y='Hechos Viales',
+    labels = {'Año': ''}, text='Hechos Viales',
+    hover_data={'Año':False, 'Hechos Viales':False})
 
 
 # Layout
@@ -88,7 +88,7 @@ def hv_general():
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Siniestros Viales por Año"),
+                    dbc.CardHeader("Hechos Viales por Año"),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'hv_ano',
@@ -121,7 +121,7 @@ vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 #-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
-vasconcelos['Siniestros Viales'] = pd.to_numeric(vasconcelos['Siniestros Viales'])
+vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])
 
 #-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
@@ -129,10 +129,10 @@ px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Graph
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
-    size = 'Siniestros Viales',
-    size_max=15, zoom=13, hover_name='interseccion', color='Siniestros Viales',
+    size = 'Hechos Viales',
+    size_max=15, zoom=13, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
-    hover_data={'lat':False, 'lon':False, 'Siniestros Viales':False})
+    hover_data={'lat':False, 'lon':False, 'Hechos Viales':False})
 
 
 # Layout
@@ -153,7 +153,7 @@ def hv_vasconcelos():
                 html.Br(),
 
                 dbc.Card([
-                    dbc.CardHeader('Siniestros Viales'),
+                    dbc.CardHeader('Hechos Viales'),
                     dbc.CardBody(
                         html.H3(id = 'interseccion_hv')
                     )
@@ -210,7 +210,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Siniestros Viales por Año'),
+                    dbc.CardHeader('Hechos Viales por Año'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'interseccion_sv_ano',
@@ -234,7 +234,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Tipos de Siniestros Viales'),
+                    dbc.CardHeader('Tipos de Hechos Viales'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'interseccion_sv_tipo',
@@ -251,7 +251,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Causas de Siniestros Viales'),
+                    dbc.CardHeader('Causas de Hechos Viales'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'interseccion_sv_causa',
@@ -307,14 +307,14 @@ def render_interseccion_sv_ano(clickData):
     interseccion_sv_ano = interseccion_sv_ano.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_ano.columns = ['Años', 'Siniestros Viales']
-    interseccion_sv_ano['Siniestros Viales'] = pd.to_numeric(
-        interseccion_sv_ano['Siniestros Viales'])
+    interseccion_sv_ano.columns = ['Años', 'Hechos Viales']
+    interseccion_sv_ano['Hechos Viales'] = pd.to_numeric(
+        interseccion_sv_ano['Hechos Viales'])
 
     # Graph
-    interseccion_sv_ano = px.bar(interseccion_sv_ano, x='Años', y='Siniestros Viales',
-            labels = {'Años': ''}, text='Siniestros Viales',
-            hover_data={'Años':False, 'Siniestros Viales':False})
+    interseccion_sv_ano = px.bar(interseccion_sv_ano, x='Años', y='Hechos Viales',
+            labels = {'Años': ''}, text='Hechos Viales',
+            hover_data={'Años':False, 'Hechos Viales':False})
 
     interseccion_sv_ano.update_layout(yaxis={'categoryorder':'total ascending'})
 
@@ -338,14 +338,14 @@ def render_interseccion_sv_tipo(clickData):
     interseccion_sv_tipo = interseccion_sv_tipo.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_tipo.columns = ['Tipo', 'Siniestros Viales']
-    interseccion_sv_tipo['Siniestros Viales'] = pd.to_numeric(
-        interseccion_sv_tipo['Siniestros Viales'])
+    interseccion_sv_tipo.columns = ['Tipo', 'Hechos Viales']
+    interseccion_sv_tipo['Hechos Viales'] = pd.to_numeric(
+        interseccion_sv_tipo['Hechos Viales'])
 
     # Graph
-    interseccion_sv_tipo = px.bar(interseccion_sv_tipo, x='Siniestros Viales', y='Tipo',
-            labels = {'Tipo': ''}, text='Siniestros Viales',
-            hover_data={'Tipo':False, 'Siniestros Viales':False})
+    interseccion_sv_tipo = px.bar(interseccion_sv_tipo, x='Hechos Viales', y='Tipo',
+            labels = {'Tipo': ''}, text='Hechos Viales',
+            hover_data={'Tipo':False, 'Hechos Viales':False})
 
     interseccion_sv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
 
@@ -370,13 +370,14 @@ def render_interseccion_sv_causa(clickData):
     interseccion_sv_causa = interseccion_sv_causa.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_causa.columns = ['Causa', 'Siniestros Viales']
-    interseccion_sv_causa['Siniestros Viales'] = pd.to_numeric(
-        interseccion_sv_causa['Siniestros Viales'])
+    interseccion_sv_causa.columns = ['Causa', 'Hechos Viales']
+    interseccion_sv_causa['Hechos Viales'] = pd.to_numeric(
+        interseccion_sv_causa['Hechos Viales'])
 
     # Graph
-    interseccion_sv_causa = px.bar(interseccion_sv_causa, x='Siniestros Viales', y='Causa',
-            labels = {'Causa': ''}, text='Siniestros Viales')
+    interseccion_sv_causa = px.bar(interseccion_sv_causa, x='Hechos Viales', y='Causa',
+            labels = {'Causa': ''}, text='Hechos Viales',
+            hover_data={'Causa':False, 'Hechos Viales':False})
 
     interseccion_sv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
 
