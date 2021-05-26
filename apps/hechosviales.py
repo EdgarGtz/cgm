@@ -54,26 +54,26 @@ gc = gspread.authorize(credentials)
 
 # General
 
-# Siniestros Viales por Año
+# Hechos Viales por Año
 
 #-- Connect to data
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
-siniestros_viales = book.worksheet('siniestrosviales')
-siniestros_viales = siniestros_viales.get_all_values()
-siniestros_viales = pd.DataFrame(siniestros_viales[1:], columns = siniestros_viales[0])
+hechos_viales = book.worksheet('hechosviales')
+hechos_viales = hechos_viales.get_all_values()
+hechos_viales = pd.DataFrame(hechos_viales[1:], columns = hechos_viales[0])
 
-# Count sv por año
-sv_ano = pd.DataFrame(siniestros_viales['año'].value_counts())
-sv_ano = sv_ano.reset_index()
+# Count hv por año
+hv_ano = pd.DataFrame(hechos_viales['año'].value_counts())
+hv_ano = hv_ano.reset_index()
 
-# Rename columns and change sv to numeric
-sv_ano.columns = ['Año', 'Hechos Viales']
-sv_ano['Hechos Viales'] = pd.to_numeric(sv_ano['Hechos Viales'])
+# Rename columns and change hv to numeric
+hv_ano.columns = ['Año', 'Hechos Viales']
+hv_ano['Hechos Viales'] = pd.to_numeric(hv_ano['Hechos Viales'])
 
 # Graph
-sv_ano = px.bar(sv_ano, x='Año', y='Hechos Viales',
+hv_ano = px.bar(hv_ano, x='Año', y='Hechos Viales',
     labels = {'Año': ''}, text='Hechos Viales',
     hover_data={'Año':False, 'Hechos Viales':False})
 
@@ -92,7 +92,7 @@ def hv_general():
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'hv_ano',
-                            figure = sv_ano,
+                            figure = hv_ano,
                             config={
                             'displayModeBar': False
                             }
@@ -132,7 +132,8 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size = 'Hechos Viales',
     size_max=15, zoom=13, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
-    hover_data={'lat':False, 'lon':False, 'Hechos Viales':False})
+    hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
+    color_continuous_scale=px.colors.sequential.Sunset)
 
 
 # Layout
@@ -157,7 +158,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_hv')
                     )
-                ], color="info", outline=True, style={'textAlign':'center'}), 
+                ], style={'textAlign':'center'}),
 
                 html.Br(),
 
@@ -166,7 +167,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_les')
                     )
-                ], color="warning", outline=True, style={'textAlign':'center'}),
+                ], style={'textAlign':'center'}),
 
                 html.Br(),
 
@@ -175,7 +176,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_fal')
                     )
-                ], color="danger", outline=True, style={'textAlign':'center'})             
+                ], style={'textAlign':'center'})             
 
             ]),
 
@@ -204,7 +205,7 @@ def hv_vasconcelos():
 
         html.Br(),
 
-        # Siniestros viales por año
+        # Hechos viales por año
         dbc.Row(
 
             dbc.Col(
@@ -213,7 +214,7 @@ def hv_vasconcelos():
                     dbc.CardHeader('Hechos Viales por Año'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'interseccion_sv_ano',
+                            id = 'interseccion_hv_ano',
                             figure = {},
                             config={
                             'displayModeBar': False
@@ -228,7 +229,7 @@ def hv_vasconcelos():
 
         html.Br(),
 
-        # Causa y Tipo de Siniestros Viales
+        # Causa y Tipo de Hechos Viales
         dbc.Row([
 
             dbc.Col(
@@ -237,7 +238,7 @@ def hv_vasconcelos():
                     dbc.CardHeader('Tipos de Hechos Viales'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'interseccion_sv_tipo',
+                            id = 'interseccion_hv_tipo',
                             figure = {},
                             config={
                             'displayModeBar': False
@@ -254,7 +255,7 @@ def hv_vasconcelos():
                     dbc.CardHeader('Causas de Hechos Viales'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'interseccion_sv_causa',
+                            id = 'interseccion_hv_causa',
                             figure = {},
                             config={
                             'displayModeBar': False
@@ -265,7 +266,48 @@ def hv_vasconcelos():
 
             )          
 
-        ])
+        ]),
+
+        html.Br(),
+
+        # Edad de Responsables y Afectados
+        dbc.Row([
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Edad de Responsables'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'interseccion_resp_edad',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            }
+                        )
+                    ])
+                ])
+
+            ),
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Edad de Afectados'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'interseccion_afec_edad',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            }
+                        )
+                    ])
+                ])
+
+            )          
+
+        ])      
 
     ])
 
@@ -280,7 +322,7 @@ def render_interseccion_nombre(clickData):
     else:
         return clickData['points'][0]['hovertext']
 
-# Siniestros Viales
+# Hechos Viales
 def render_interseccion_hv(clickData):
     return clickData['points'][0]['marker.size']
 
@@ -292,96 +334,216 @@ def render_interseccion_les(clickData):
 def render_interseccion_fal(clickData):
     return clickData['points'][0]['customdata'][1]
 
-# Siniestros Viales por Año
-def render_interseccion_sv_ano(clickData):
+# Hechos Viales por Año
+def render_interseccion_hv_ano(clickData):
 
     # Filter interseccion
-    interseccion_sv_ano = vasconcelos[vasconcelos['interseccion'] == 
+    interseccion_hv_ano = vasconcelos[vasconcelos['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
     # Filter columns
-    interseccion_sv_ano = interseccion_sv_ano[interseccion_sv_ano.columns[6:12]]
+    interseccion_hv_ano = interseccion_hv_ano[interseccion_hv_ano.columns[6:12]]
 
     # Transpose
-    interseccion_sv_ano = interseccion_sv_ano.T
-    interseccion_sv_ano = interseccion_sv_ano.reset_index()
+    interseccion_hv_ano = interseccion_hv_ano.T
+    interseccion_hv_ano = interseccion_hv_ano.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_ano.columns = ['Años', 'Hechos Viales']
-    interseccion_sv_ano['Hechos Viales'] = pd.to_numeric(
-        interseccion_sv_ano['Hechos Viales'])
+    interseccion_hv_ano.columns = ['Años', 'Hechos Viales']
+    interseccion_hv_ano['Hechos Viales'] = pd.to_numeric(
+        interseccion_hv_ano['Hechos Viales'])
 
     # Graph
-    interseccion_sv_ano = px.bar(interseccion_sv_ano, x='Años', y='Hechos Viales',
+    interseccion_hv_ano = px.bar(interseccion_hv_ano, x='Años', y='Hechos Viales',
             labels = {'Años': ''}, text='Hechos Viales',
-            hover_data={'Años':False, 'Hechos Viales':False})
+            hover_data={'Años':False, 'Hechos Viales':False}, color = 'Hechos Viales',
+            color_continuous_scale=px.colors.sequential.Sunset)
 
-    interseccion_sv_ano.update_layout(yaxis={'categoryorder':'total ascending'})
+    interseccion_hv_ano.update_layout(yaxis={'categoryorder':'total ascending'})
 
-    return interseccion_sv_ano
+    interseccion_hv_ano.update(layout_coloraxis_showscale=False)
 
-# Tipo de Siniestros Viales
-def render_interseccion_sv_tipo(clickData):
+    return interseccion_hv_ano
+
+# Tipo de Hechos Viales
+def render_interseccion_hv_tipo(clickData):
 
     # Filter interseccion
-    interseccion_sv_tipo = vasconcelos[vasconcelos['interseccion'] == 
+    interseccion_hv_tipo = vasconcelos[vasconcelos['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
     # Filter and Rename columns
-    interseccion_sv_tipo = interseccion_sv_tipo[interseccion_sv_tipo.columns[12:23]]
-    interseccion_sv_tipo.columns = ['Alcance', 'Atropello', 'Caida de Persona',
+    interseccion_hv_tipo = interseccion_hv_tipo[interseccion_hv_tipo.columns[12:23]]
+    interseccion_hv_tipo.columns = ['Alcance', 'Atropello', 'Caida de Persona',
         'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso',
         'Choque Lateral', 'Estrellamiento', 'Incendio', 'Volcadura']
 
     # Transpose
-    interseccion_sv_tipo = interseccion_sv_tipo.T
-    interseccion_sv_tipo = interseccion_sv_tipo.reset_index()
+    interseccion_hv_tipo = interseccion_hv_tipo.T
+    interseccion_hv_tipo = interseccion_hv_tipo.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_tipo.columns = ['Tipo', 'Hechos Viales']
-    interseccion_sv_tipo['Hechos Viales'] = pd.to_numeric(
-        interseccion_sv_tipo['Hechos Viales'])
+    interseccion_hv_tipo.columns = ['Tipo', 'Hechos Viales']
+    interseccion_hv_tipo['Hechos Viales'] = pd.to_numeric(
+        interseccion_hv_tipo['Hechos Viales'])
 
     # Graph
-    interseccion_sv_tipo = px.bar(interseccion_sv_tipo, x='Hechos Viales', y='Tipo',
+    interseccion_hv_tipo = px.bar(interseccion_hv_tipo, x='Hechos Viales', y='Tipo',
             labels = {'Tipo': ''}, text='Hechos Viales',
-            hover_data={'Tipo':False, 'Hechos Viales':False})
+            hover_data={'Tipo':False, 'Hechos Viales':False}, color = 'Hechos Viales',
+            color_continuous_scale=px.colors.sequential.Sunset)
 
-    interseccion_sv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
+    interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
 
-    return interseccion_sv_tipo
+    interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
 
-# Causa de Siniestros Viales
-def render_interseccion_sv_causa(clickData):
+    return interseccion_hv_tipo
+
+# Causa de Hechos Viales
+def render_interseccion_hv_causa(clickData):
 
     # Filter interseccion
-    interseccion_sv_causa = vasconcelos[vasconcelos['interseccion'] == 
+    interseccion_hv_causa = vasconcelos[vasconcelos['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
     # Filter and Rename columns
-    interseccion_sv_causa = interseccion_sv_causa[interseccion_sv_causa.columns[24:36]]
-    interseccion_sv_causa.columns = ['Distracción', 'Dormitando', 'Estado alcohólico',
+    interseccion_hv_causa = interseccion_hv_causa[interseccion_hv_causa.columns[24:36]]
+    interseccion_hv_causa.columns = ['Distracción', 'Dormitando', 'Estado alcohólico',
         'Exceso de Dimensiones', 'Exceso de Velocidad', 'Invadir Carril', 'Mal Estacionado',
         'No Guardó Distancia', 'No Respetó Alto', 'No Respetó Semáforo', 'Viró Indevidamente',
         'Otros']
 
     # Transpose
-    interseccion_sv_causa = interseccion_sv_causa.T
-    interseccion_sv_causa = interseccion_sv_causa.reset_index()
+    interseccion_hv_causa = interseccion_hv_causa.T
+    interseccion_hv_causa = interseccion_hv_causa.reset_index()
 
     # Rename columns and change to numeric
-    interseccion_sv_causa.columns = ['Causa', 'Hechos Viales']
-    interseccion_sv_causa['Hechos Viales'] = pd.to_numeric(
-        interseccion_sv_causa['Hechos Viales'])
+    interseccion_hv_causa.columns = ['Causa', 'Hechos Viales']
+    interseccion_hv_causa['Hechos Viales'] = pd.to_numeric(
+        interseccion_hv_causa['Hechos Viales'])
 
     # Graph
-    interseccion_sv_causa = px.bar(interseccion_sv_causa, x='Hechos Viales', y='Causa',
+    interseccion_hv_causa = px.bar(interseccion_hv_causa, x='Hechos Viales', y='Causa',
             labels = {'Causa': ''}, text='Hechos Viales',
-            hover_data={'Causa':False, 'Hechos Viales':False})
+            hover_data={'Causa':False, 'Hechos Viales':False}, color = 'Hechos Viales',
+            color_continuous_scale=px.colors.sequential.Sunset)
 
-    interseccion_sv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
+    interseccion_hv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
 
-    return interseccion_sv_causa
+    interseccion_hv_causa.update(layout_coloraxis_showscale=False)
+
+    return interseccion_hv_causa
+
+# Valor máximo de edades
+def get_max_value(clickData):
+
+    # Filter interseccion
+    interseccion = interseccion[interseccion['interseccion'] == 
+    clickData['points'][0]['hovertext']]  
+
+    # Get max value
+    max_value = intersecciones_joined['Hechos Viales 2'].max()
+    max_value = max_value + 10
+    max_value
+
+    return max_value
+
+
+# Edad de Responsables
+def render_interseccion_resp_edad(clickData):
+
+    # Connect to database
+    interseccion_resp = book.worksheet('vasconcelos_resp')
+    interseccion_resp = interseccion_resp.get_all_values()
+    interseccion_resp = pd.DataFrame(interseccion_resp[1:], columns = interseccion_resp[0])
+
+    # Filter interseccion and drop NA's
+    interseccion_resp_edad = interseccion_resp[interseccion_resp['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+
+    interseccion_resp_edad = interseccion_resp_edad[interseccion_resp_edad.edad_grupo != 'NA']
+
+    # Create dataframe
+    interseccion_resp_edad = pd.DataFrame(interseccion_resp_edad.edad_grupo.value_counts())
+    interseccion_resp_edad = interseccion_resp_edad.reset_index()
+    interseccion_resp_edad.columns = ['Edades', 'Hechos Viales']
+    interseccion_resp_edad['Hechos Viales'] = pd.to_numeric(
+        interseccion_resp_edad['Hechos Viales'])
+    interseccion_resp_edad = interseccion_resp_edad.sort_values(by=['Edades'])
+
+    # Create edades dataframe
+    edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
+        '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
+        '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
+        'Hechos Viales 2': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+    interseccion_edades = pd.DataFrame(data=edades)
+
+    # Join dataframes
+    interseccion_resp_edad = interseccion_edades.merge(interseccion_resp_edad, how = 'left')
+    interseccion_resp_edad['Hechos Viales'] = interseccion_resp_edad[
+        'Hechos Viales'].fillna(0)
+
+    # Graph
+    interseccion_resp_edad = px.bar(interseccion_resp_edad, x='Edades', y='Hechos Viales',
+        labels = {'Edades': ''},
+        hover_data={'Edades':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+        color_continuous_scale=px.colors.sequential.Sunset)
+
+    interseccion_resp_edad.update(layout_coloraxis_showscale=False)
+
+    interseccion_resp_edad.update_traces(hovertemplate=' %{y} ')
+
+    # interseccion_resp_edad.update_yaxes(range=[0, 80])
+
+
+    return interseccion_resp_edad
+
+# Edad de Afectados
+def render_interseccion_afec_edad(clickData):
+
+    # Connect to database
+    interseccion_afec = book.worksheet('vasconcelos_afec')
+    interseccion_afec = interseccion_afec.get_all_values()
+    interseccion_afec = pd.DataFrame(interseccion_afec[1:], columns = interseccion_afec[0])
+
+    # Filter interseccion and drop NA's
+    interseccion_afec_edad = interseccion_afec[interseccion_afec['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    interseccion_afec_edad = interseccion_afec_edad[interseccion_afec_edad.edad_grupo != 'NA']
+
+    # Create dataframe
+    interseccion_afec_edad = pd.DataFrame(interseccion_afec_edad.edad_grupo.value_counts())
+    interseccion_afec_edad = interseccion_afec_edad.reset_index()
+    interseccion_afec_edad.columns = ['Edades', 'Hechos Viales']
+    interseccion_afec_edad['Hechos Viales'] = pd.to_numeric(
+        interseccion_afec_edad['Hechos Viales'])
+
+    # Create edades dataframe
+    edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
+        '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
+        '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
+        'Hechos Viales 2': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+    interseccion_edades = pd.DataFrame(data=edades)
+
+    # Join dataframes
+    interseccion_afec_edad = interseccion_edades.merge(interseccion_afec_edad, how = 'left')
+    interseccion_afec_edad['Hechos Viales'] = interseccion_afec_edad[
+        'Hechos Viales'].fillna(0)
+
+    # Graph
+    interseccion_afec_edad = px.bar(interseccion_afec_edad, x='Edades', y='Hechos Viales',
+        labels = {'Edades': ''},
+        hover_data={'Edades':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+        color_continuous_scale=px.colors.sequential.Sunset)
+
+    interseccion_afec_edad.update(layout_coloraxis_showscale=False)
+
+    interseccion_afec_edad.update_traces(hovertemplate=' %{y} ')
+
+    # interseccion_afec_edad.update_yaxes(range=[0, 80])
+
+
+    return interseccion_afec_edad
 
 #----------
 

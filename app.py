@@ -17,7 +17,8 @@ server = app.server
 from apps import home
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_sv_ano, render_interseccion_sv_tipo, render_interseccion_sv_causa)
+	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa,
+	render_interseccion_resp_edad, render_interseccion_afec_edad)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -83,7 +84,7 @@ def display_page(pathname):
 
 #----------
 
-# Siniestros Viales Content
+# Hechos Viales Content
 
 @app.callback(Output('hechosviales_content', 'children'), [Input('tabs', 'active_tab')])
 
@@ -97,7 +98,7 @@ def get_hechosviales(tab):
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
 
-#-- Interseccion - Siniestros Viales
+#-- Interseccion - Hechos Viales
 
 @app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos_map', 'clickData')])
 
@@ -118,26 +119,40 @@ def get(clickData):
 def get(clickData):
  	return render_interseccion_fal(clickData)
 
-#-- Intersección - Siniestros Viales por Año
+#-- Intersección - Hechos Viales por Año
 
-@app.callback(Output('interseccion_sv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_sv_ano(clickData)
-
-#-- Intersección - Tipos de Siniestros Viales
-
-@app.callback(Output('interseccion_sv_tipo', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_hv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
 def get(clickData):
- 	return render_interseccion_sv_tipo(clickData)
+ 	return render_interseccion_hv_ano(clickData)
 
-#-- Intersección - Causas de Siniestros Viales
+#-- Intersección - Tipos de Hechos Viales
 
-@app.callback(Output('interseccion_sv_causa', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_hv_tipo', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
 def get(clickData):
- 	return render_interseccion_sv_causa(clickData)
+ 	return render_interseccion_hv_tipo(clickData)
+
+#-- Intersección - Causas de Hechos Viales
+
+@app.callback(Output('interseccion_hv_causa', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_hv_causa(clickData)
+
+#-- Intersección - Edad de Responsables
+
+@app.callback(Output('interseccion_resp_edad', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_resp_edad(clickData)
+
+#-- Intersección - Edad de Afectados
+
+@app.callback(Output('interseccion_afec_edad', 'figure'), [Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_afec_edad(clickData)
 
 # Datos
 
