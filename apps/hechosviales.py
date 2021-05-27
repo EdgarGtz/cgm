@@ -434,21 +434,6 @@ def render_interseccion_hv_causa(clickData):
 
     return interseccion_hv_causa
 
-# Valor máximo de edades
-def get_max_value(clickData):
-
-    # Filter interseccion
-    interseccion = interseccion[interseccion['interseccion'] == 
-    clickData['points'][0]['hovertext']]  
-
-    # Get max value
-    max_value = intersecciones_joined['Hechos Viales 2'].max()
-    max_value = max_value + 10
-    max_value
-
-    return max_value
-
-
 # Edad de Responsables
 def render_interseccion_resp_edad(clickData):
 
@@ -466,16 +451,22 @@ def render_interseccion_resp_edad(clickData):
     # Create dataframe
     interseccion_resp_edad = pd.DataFrame(interseccion_resp_edad.edad_grupo.value_counts())
     interseccion_resp_edad = interseccion_resp_edad.reset_index()
-    interseccion_resp_edad.columns = ['Edades', 'Hechos Viales']
-    interseccion_resp_edad['Hechos Viales'] = pd.to_numeric(
-        interseccion_resp_edad['Hechos Viales'])
-    interseccion_resp_edad = interseccion_resp_edad.sort_values(by=['Edades'])
+    interseccion_resp_edad.columns = ['Edades', 'Hechos Viales 2']
+    interseccion_resp_edad['Hechos Viales 2'] = pd.to_numeric(
+        interseccion_resp_edad['Hechos Viales 2'])
+
+    # Create new variable with percentage values
+    suma = interseccion_resp_edad['Hechos Viales 2'].sum()
+    interseccion_resp_edad['Hechos Viales'] = (interseccion_resp_edad[
+        'Hechos Viales 2'] / suma) * 100
+    interseccion_resp_edad['Hechos Viales'] = interseccion_resp_edad[
+        'Hechos Viales'].round(decimals=0)
 
     # Create edades dataframe
     edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
         '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
         '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
-        'Hechos Viales 2': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
     interseccion_edades = pd.DataFrame(data=edades)
 
     # Join dataframes
@@ -484,17 +475,15 @@ def render_interseccion_resp_edad(clickData):
         'Hechos Viales'].fillna(0)
 
     # Graph
-    interseccion_resp_edad = px.bar(interseccion_resp_edad, x='Edades', y='Hechos Viales',
-        labels = {'Edades': ''},
-        hover_data={'Edades':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+    interseccion_resp_edad = px.bar(interseccion_resp_edad, x='Edades',
+        y='Hechos Viales',
+        labels = {'Edades': ''}, text = 'Hechos Viales',
+        hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
         color_continuous_scale=px.colors.sequential.Sunset)
 
     interseccion_resp_edad.update(layout_coloraxis_showscale=False)
-
-    interseccion_resp_edad.update_traces(hovertemplate=' %{y} ')
-
-    # interseccion_resp_edad.update_yaxes(range=[0, 80])
-
+    interseccion_resp_edad.layout.yaxis.ticksuffix = '% '
+    interseccion_resp_edad.update_yaxes(range=[0, 25])
 
     return interseccion_resp_edad
 
@@ -514,15 +503,22 @@ def render_interseccion_afec_edad(clickData):
     # Create dataframe
     interseccion_afec_edad = pd.DataFrame(interseccion_afec_edad.edad_grupo.value_counts())
     interseccion_afec_edad = interseccion_afec_edad.reset_index()
-    interseccion_afec_edad.columns = ['Edades', 'Hechos Viales']
-    interseccion_afec_edad['Hechos Viales'] = pd.to_numeric(
-        interseccion_afec_edad['Hechos Viales'])
+    interseccion_afec_edad.columns = ['Edades', 'Hechos Viales 2']
+    interseccion_afec_edad['Hechos Viales 2'] = pd.to_numeric(
+        interseccion_afec_edad['Hechos Viales 2'])
+
+    # Create new variable with percentage values
+    suma = interseccion_afec_edad['Hechos Viales 2'].sum()
+    interseccion_afec_edad['Hechos Viales'] = (interseccion_afec_edad[
+        'Hechos Viales 2'] / suma) * 100
+    interseccion_afec_edad['Hechos Viales'] = interseccion_afec_edad[
+        'Hechos Viales'].round(decimals=0)
 
     # Create edades dataframe
     edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
         '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
         '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
-        'Hechos Viales 2': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
     interseccion_edades = pd.DataFrame(data=edades)
 
     # Join dataframes
@@ -532,16 +528,14 @@ def render_interseccion_afec_edad(clickData):
 
     # Graph
     interseccion_afec_edad = px.bar(interseccion_afec_edad, x='Edades', y='Hechos Viales',
-        labels = {'Edades': ''},
-        hover_data={'Edades':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+        labels = {'Edades': ''}, text='Hechos Viales',
+        hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
         color_continuous_scale=px.colors.sequential.Sunset)
 
     interseccion_afec_edad.update(layout_coloraxis_showscale=False)
-
-    interseccion_afec_edad.update_traces(hovertemplate=' %{y} ')
-
-    # interseccion_afec_edad.update_yaxes(range=[0, 80])
-
+    interseccion_afec_edad.layout.yaxis.ticksuffix = '% '
+    interseccion_afec_edad.update_yaxes(range=[0, 25])
+    #interseccion_afec_edad.update_traces(hovertemplate=' %{y} ')
 
     return interseccion_afec_edad
 
