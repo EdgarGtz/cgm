@@ -130,10 +130,13 @@ px.set_mapbox_access_token(mapbox_access_token)
 #-- Graph
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size = 'Hechos Viales',
-    size_max=15, zoom=13, hover_name='interseccion', color='Hechos Viales',
+    size_max=15, zoom=12.5, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
     color_continuous_scale=px.colors.sequential.Sunset)
+
+vasconcelos_map.update_layout(clickmode='event+select')
+
 
 
 # Layout
@@ -406,7 +409,7 @@ def render_interseccion_hv_tipo(clickData):
     interseccion_hv_tipo.layout.xaxis.ticksuffix = '% '
     interseccion_hv_tipo.layout.yaxis.ticksuffix = ' '
     interseccion_hv_tipo.update_xaxes(range=[0, 50])
-    interseccion_hv_tipo.update_traces(hovertemplate='  %{x}', opacity = .8)
+    interseccion_hv_tipo.update_traces(hovertemplate='  %{x}', opacity = .9)
 
     return interseccion_hv_tipo
 
@@ -451,7 +454,7 @@ def render_interseccion_hv_causa(clickData):
     interseccion_hv_causa.layout.yaxis.ticksuffix = ' '
     interseccion_hv_causa.update(layout_coloraxis_showscale=False)
     interseccion_hv_causa.update_xaxes(range=[0, 50])
-    interseccion_hv_causa.update_traces(hovertemplate='  %{x}', opacity = .8)
+    interseccion_hv_causa.update_traces(hovertemplate='  %{x}', opacity = .9)
     # interseccion_hv_causa.update_layout(margin=dict(r=20))
 
     return interseccion_hv_causa
@@ -506,7 +509,7 @@ def render_interseccion_resp_edad(clickData):
     interseccion_resp_edad.update(layout_coloraxis_showscale=False)
     interseccion_resp_edad.layout.yaxis.ticksuffix = '% '
     interseccion_resp_edad.update_yaxes(range=[0, 25])
-    interseccion_resp_edad.update_traces(hovertemplate='  %{y}', opacity = .8)
+    interseccion_resp_edad.update_traces(hovertemplate='  %{y}', opacity = .9)
 
     return interseccion_resp_edad
 
@@ -559,7 +562,7 @@ def render_interseccion_afec_edad(clickData):
     interseccion_afec_edad.layout.yaxis.ticksuffix = '% '
     interseccion_afec_edad.update_yaxes(range=[0, 25])
     #interseccion_afec_edad.update_traces(texttemplate='%{text:}')
-    interseccion_afec_edad.update_traces(hovertemplate='  %{y}', opacity = .8)
+    interseccion_afec_edad.update_traces(hovertemplate='  %{y}', opacity = .9)
 
     return interseccion_afec_edad
 
