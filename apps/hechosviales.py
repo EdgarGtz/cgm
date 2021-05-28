@@ -147,6 +147,27 @@ def hv_vasconcelos():
         # Mapa y principales indicadores
         dbc.Row([
 
+            # Mapa
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader("Da click en una intersección y desliza la página para conocer más.",
+                        style={'textAlign': 'center'}),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'vasconcelos_map',
+                            figure = vasconcelos_map,
+                            config={
+                            'displayModeBar': False
+                            },
+                            style={'height':'80vh'}
+                        ),
+                    style={'padding':'0px'}
+                    )
+                ]), lg=10
+
+            ),
+
             dbc.Col([
 
                 dbc.Card(
@@ -181,28 +202,7 @@ def hv_vasconcelos():
                     )
                 ], style={'textAlign':'center'})             
 
-            ]),
-
-            # Mapa
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader("Da click en una intersección y desliza la página para conocer más.",
-                        style={'textAlign': 'center'}),
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'vasconcelos_map',
-                            figure = vasconcelos_map,
-                            config={
-                            'displayModeBar': False
-                            },
-                            style={'height':'80vh'}
-                        ),
-                    style={'padding':'0px'}
-                    )
-                ]), lg=10
-
-            )
+            ])
 
         ]),
 
@@ -252,6 +252,8 @@ def hv_vasconcelos():
 
             ),
 
+            html.Br(),
+
             dbc.Col(
 
                 dbc.Card([
@@ -292,6 +294,8 @@ def hv_vasconcelos():
                 ])
 
             ),
+
+            html.Br(),
 
             dbc.Col(
 
@@ -358,14 +362,14 @@ def render_interseccion_hv_ano(clickData):
 
     # Graph
     interseccion_hv_ano = px.bar(interseccion_hv_ano, x='Años', y='Hechos Viales',
-            labels = {'Años': ''}, text='Hechos Viales',
-            hover_data={'Años':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+            labels = {'Años': '', 'Hechos Viales': ''}, text='Hechos Viales',
+            hover_data={'Años':False, 'Hechos Viales':False}, color = 'Hechos Viales',
             color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
-    interseccion_hv_ano.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_ano.update(layout_coloraxis_showscale=False)
-    interseccion_hv_ano.layout.yaxis.ticksuffix = ' '
-    interseccion_hv_ano.update_traces(hovertemplate='  %{y} ', opacity = .8)
+    interseccion_hv_ano.update_traces(opacity = .8, textfont_size = 16,
+        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
+    interseccion_hv_ano.update_yaxes(showticklabels=False, showgrid=False)
 
     return interseccion_hv_ano
 
@@ -407,10 +411,10 @@ def render_interseccion_hv_tipo(clickData):
     interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
     interseccion_hv_tipo.layout.xaxis.ticksuffix = '% '
-    interseccion_hv_tipo.layout.yaxis.ticksuffix = ' '
     interseccion_hv_tipo.update_xaxes(showticklabels=False, showgrid=False)
     # interseccion_hv_tipo.update_traces(hovertemplate='  %{x}')
-    interseccion_hv_tipo.update_traces(texttemplate='%{text:}%', opacity = .9)
+    interseccion_hv_tipo.update_traces(texttemplate='%{text:}%', opacity = .9,
+        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
 
     return interseccion_hv_tipo
 
@@ -457,7 +461,8 @@ def render_interseccion_hv_causa(clickData):
     interseccion_hv_causa.update_xaxes(showticklabels=False, showgrid=False)
     # interseccion_hv_causa.update_traces(hovertemplate='  %{x}')
     # interseccion_hv_causa.update_layout(margin=dict(r=20))
-    interseccion_hv_causa.update_traces(texttemplate='%{text:}%', opacity = .9)
+    interseccion_hv_causa.update_traces(texttemplate='%{text:}%', opacity = .9,
+        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
 
 # range=[0, 50], 
     return interseccion_hv_causa
@@ -512,7 +517,8 @@ def render_interseccion_resp_edad(clickData):
     interseccion_resp_edad.layout.yaxis.ticksuffix = ' '
     # interseccion_resp_edad.update_yaxes(range=[0, 25])
     interseccion_resp_edad.update_xaxes(showticklabels=False, showgrid=False)
-    interseccion_resp_edad.update_traces(texttemplate='%{text:}%', opacity = .9)
+    interseccion_resp_edad.update_traces(texttemplate='%{text:}%', opacity = .9,
+        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
     # interseccion_resp_edad.update_xaxes(tickangle = 90)
 
     return interseccion_resp_edad
@@ -564,7 +570,8 @@ def render_interseccion_afec_edad(clickData):
     interseccion_afec_edad.update(layout_coloraxis_showscale=False)
     interseccion_afec_edad.layout.yaxis.ticksuffix = ' '
     interseccion_afec_edad.update_xaxes(showticklabels=False, showgrid=False)
-    interseccion_afec_edad.update_traces(texttemplate='%{text:}%', opacity = .9)
+    interseccion_afec_edad.update_traces(texttemplate='%{text:}%', opacity = .9,
+        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
     # interseccion_afec_edad.update_traces(hovertemplate='  %{x}')
 
     return interseccion_afec_edad
