@@ -400,16 +400,17 @@ def render_interseccion_hv_tipo(clickData):
 
     # Graph
     interseccion_hv_tipo = px.bar(interseccion_hv_tipo, x='Hechos Viales', y='Tipo',
-            labels = {'Tipo': ''}, text='Hechos Viales',
-            hover_data={'Tipo':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+            labels = {'Tipo': '', 'Hechos Viales': ''}, text='Hechos Viales',
+            hover_data={'Tipo':False, 'Hechos Viales':False}, color = 'Hechos Viales',
             color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
     interseccion_hv_tipo.layout.xaxis.ticksuffix = '% '
     interseccion_hv_tipo.layout.yaxis.ticksuffix = ' '
-    interseccion_hv_tipo.update_xaxes(range=[0, 50])
-    interseccion_hv_tipo.update_traces(hovertemplate='  %{x}', opacity = .9)
+    interseccion_hv_tipo.update_xaxes(showticklabels=False, showgrid=False)
+    # interseccion_hv_tipo.update_traces(hovertemplate='  %{x}')
+    interseccion_hv_tipo.update_traces(texttemplate='%{text:}%', opacity = .9)
 
     return interseccion_hv_tipo
 
@@ -445,18 +446,20 @@ def render_interseccion_hv_causa(clickData):
 
     # Graph
     interseccion_hv_causa = px.bar(interseccion_hv_causa, x='Hechos Viales', y='Causa',
-            labels = {'Causa': ''}, text='Hechos Viales',
-            hover_data={'Causa':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+            labels = {'Causa': '', 'Hechos Viales': ''}, text='Hechos Viales',
+            hover_data={'Causa':False, 'Hechos Viales':False}, color = 'Hechos Viales',
             color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_hv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_causa.layout.xaxis.ticksuffix = '% '
     interseccion_hv_causa.layout.yaxis.ticksuffix = ' '
     interseccion_hv_causa.update(layout_coloraxis_showscale=False)
-    interseccion_hv_causa.update_xaxes(range=[0, 50])
-    interseccion_hv_causa.update_traces(hovertemplate='  %{x}', opacity = .9)
+    interseccion_hv_causa.update_xaxes(showticklabels=False, showgrid=False)
+    # interseccion_hv_causa.update_traces(hovertemplate='  %{x}')
     # interseccion_hv_causa.update_layout(margin=dict(r=20))
+    interseccion_hv_causa.update_traces(texttemplate='%{text:}%', opacity = .9)
 
+# range=[0, 50], 
     return interseccion_hv_causa
 
 # Edad de Responsables
@@ -488,10 +491,9 @@ def render_interseccion_resp_edad(clickData):
         'Hechos Viales'].round(decimals=0)
 
     # Create edades dataframe
-    edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
-        '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
-        '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
-        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+    edades = {'Edades': ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49',
+        '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 y más'],
+        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0]}
     interseccion_edades = pd.DataFrame(data=edades)
 
     # Join dataframes
@@ -500,16 +502,18 @@ def render_interseccion_resp_edad(clickData):
         'Hechos Viales'].fillna(0)
 
     # Graph
-    interseccion_resp_edad = px.bar(interseccion_resp_edad, x='Edades',
-        y='Hechos Viales',
-        labels = {'Edades': ''}, text = 'Hechos Viales',
-        hover_data={'Edades':False, 'Hechos Viales':True}, color = 'Hechos Viales',
+    interseccion_resp_edad = px.bar(interseccion_resp_edad, y='Edades',
+        x='Hechos Viales',
+        labels = {'Edades': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
+        hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
         color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_resp_edad.update(layout_coloraxis_showscale=False)
-    interseccion_resp_edad.layout.yaxis.ticksuffix = '% '
-    interseccion_resp_edad.update_yaxes(range=[0, 25])
-    interseccion_resp_edad.update_traces(hovertemplate='  %{y}', opacity = .9)
+    interseccion_resp_edad.layout.yaxis.ticksuffix = ' '
+    # interseccion_resp_edad.update_yaxes(range=[0, 25])
+    interseccion_resp_edad.update_xaxes(showticklabels=False, showgrid=False)
+    interseccion_resp_edad.update_traces(texttemplate='%{text:}%', opacity = .9)
+    # interseccion_resp_edad.update_xaxes(tickangle = 90)
 
     return interseccion_resp_edad
 
@@ -541,10 +545,9 @@ def render_interseccion_afec_edad(clickData):
         'Hechos Viales'].round(decimals=0)
 
     # Create edades dataframe
-    edades = {'Edades': ['0 - 4', '5 -  9', '10 - 14', '15 - 19', '20 - 24', '25 - 29',
-        '30 - 34', '35 - 39', '40 - 44', '45 - 49', '50 - 54', '55 - 59', '60 - 64',
-        '65 - 69', '70 - 74', '75 - 79', '80 - 84', '85 - 89', '90 - 94', '95 y más'],
-        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+    edades = {'Edades': ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49',
+        '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 y más'],
+        'Hechos Viales 3': [0,0,0,0,0,0,0,0,0,0]}
     interseccion_edades = pd.DataFrame(data=edades)
 
     # Join dataframes
@@ -553,16 +556,16 @@ def render_interseccion_afec_edad(clickData):
         'Hechos Viales'].fillna(0)
 
     # Graph
-    interseccion_afec_edad = px.bar(interseccion_afec_edad, x='Edades', y='Hechos Viales',
-        labels = {'Edades': ''}, text='Hechos Viales',
+    interseccion_afec_edad = px.bar(interseccion_afec_edad, y='Edades', x='Hechos Viales',
+        labels = {'Edades': '', 'Hechos Viales': ''}, text='Hechos Viales',
         hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
         color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_afec_edad.update(layout_coloraxis_showscale=False)
-    interseccion_afec_edad.layout.yaxis.ticksuffix = '% '
-    interseccion_afec_edad.update_yaxes(range=[0, 25])
-    #interseccion_afec_edad.update_traces(texttemplate='%{text:}')
-    interseccion_afec_edad.update_traces(hovertemplate='  %{y}', opacity = .9)
+    interseccion_afec_edad.layout.yaxis.ticksuffix = ' '
+    interseccion_afec_edad.update_xaxes(showticklabels=False, showgrid=False)
+    interseccion_afec_edad.update_traces(texttemplate='%{text:}%', opacity = .9)
+    # interseccion_afec_edad.update_traces(hovertemplate='  %{x}')
 
     return interseccion_afec_edad
 
