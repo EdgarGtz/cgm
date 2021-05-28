@@ -151,7 +151,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader("Da click en una intersección y desliza la página para conocer más.",
+                    dbc.CardHeader("Da click en una intersección y desliza la página para conocer más",
                         style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
@@ -220,7 +220,7 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_ano',
                             figure = {},
                             config={
-                            'displayModeBar': False
+                            'displayModeBar': True
                             }
                         )
                     ])
@@ -244,7 +244,7 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_tipo',
                             figure = {},
                             config={
-                            'displayModeBar': False
+                            'displayModeBar': True
                             }
                         )
                     ])
@@ -263,7 +263,7 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_causa',
                             figure = {},
                             config={
-                            'displayModeBar': False
+                            'displayModeBar': True
                             }
                         )
                     ])
@@ -287,7 +287,7 @@ def hv_vasconcelos():
                             id = 'interseccion_resp_edad',
                             figure = {},
                             config={
-                            'displayModeBar': False
+                            'displayModeBar': True
                             }
                         )
                     ])
@@ -306,7 +306,7 @@ def hv_vasconcelos():
                             id = 'interseccion_afec_edad',
                             figure = {},
                             config={
-                            'displayModeBar': False
+                            'displayModeBar': True
                             }
                         )
                     ])
