@@ -172,7 +172,8 @@ def hv_vasconcelos():
 
                 dbc.Card(
                     dbc.CardHeader(id='interseccion_nombre'),
-                    style={'textAlign':'center'}
+                    style={'textAlign':'center'},
+                    color="secondary", inverse=True
                 ),
 
                 html.Br(),
@@ -220,7 +221,10 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_ano',
                             figure = {},
                             config={
-                            'displayModeBar': True
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
                             }
                         )
                     ])
@@ -244,7 +248,10 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_tipo',
                             figure = {},
                             config={
-                            'displayModeBar': True
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
                             }
                         )
                     ])
@@ -263,7 +270,10 @@ def hv_vasconcelos():
                             id = 'interseccion_hv_causa',
                             figure = {},
                             config={
-                            'displayModeBar': True
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
                             }
                         )
                     ])
@@ -287,7 +297,10 @@ def hv_vasconcelos():
                             id = 'interseccion_resp_edad',
                             figure = {},
                             config={
-                            'displayModeBar': True
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
                             }
                         )
                     ])
@@ -306,7 +319,10 @@ def hv_vasconcelos():
                             id = 'interseccion_afec_edad',
                             figure = {},
                             config={
-                            'displayModeBar': True
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
                             }
                         )
                     ])
@@ -367,7 +383,7 @@ def render_interseccion_hv_ano(clickData):
             color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_hv_ano.update(layout_coloraxis_showscale=False)
-    interseccion_hv_ano.update_traces(opacity = .8, textfont_size = 16,
+    interseccion_hv_ano.update_traces(textfont_size = 16, opacity = .9,
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
     interseccion_hv_ano.update_yaxes(showticklabels=False, showgrid=False)
 
