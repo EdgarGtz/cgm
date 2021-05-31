@@ -133,7 +133,7 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size_max=15, zoom=12.5, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
-    color_continuous_scale=px.colors.sequential.Sunset)
+    color_continuous_scale=px.colors.sequential.Teal)
 
 vasconcelos_map.update_layout(clickmode='event+select')
 
@@ -173,7 +173,7 @@ def hv_vasconcelos():
                 dbc.Card(
                     dbc.CardHeader(id='interseccion_nombre'),
                     style={'textAlign':'center'},
-                    color="secondary", inverse=True
+                    color="info", inverse=True, outline = False
                 ),
 
                 html.Br(),
@@ -183,7 +183,8 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_hv')
                     )
-                ], style={'textAlign':'center'}),
+                ], style={'textAlign':'center'}, color = 'info', inverse = False,
+                        outline = True),
 
                 html.Br(),
 
@@ -192,7 +193,8 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_les')
                     )
-                ], style={'textAlign':'center'}),
+                ], style={'textAlign':'center'}, color = 'info', inverse = False,
+                        outline = True),
 
                 html.Br(),
 
@@ -201,7 +203,8 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_fal')
                     )
-                ], style={'textAlign':'center'})             
+                ], style={'textAlign':'center'}, color = 'info', inverse = False,
+                        outline = True)             
 
             ])
 
@@ -376,16 +379,18 @@ def render_interseccion_hv_ano(clickData):
     interseccion_hv_ano['Hechos Viales'] = pd.to_numeric(
         interseccion_hv_ano['Hechos Viales'])
 
+    maxy = max(interseccion_hv_ano['Hechos Viales'])
+
     # Graph
     interseccion_hv_ano = px.bar(interseccion_hv_ano, x='Años', y='Hechos Viales',
-            labels = {'Años': '', 'Hechos Viales': ''}, text='Hechos Viales',
-            hover_data={'Años':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
+            labels = {'Años': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
+            hover_data={'Años':False, 'Hechos Viales':False},
+            template = "plotly_white")
 
-    interseccion_hv_ano.update(layout_coloraxis_showscale=False)
-    interseccion_hv_ano.update_traces(textfont_size = 16, opacity = .9,
+    interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
+    interseccion_hv_ano.update_yaxes(showline=False, showgrid=False, showticklabels = False)
+    interseccion_hv_ano.update_traces(opacity = 1, marker_color='#008E97',
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
-    interseccion_hv_ano.update_yaxes(showticklabels=False, showgrid=False)
 
     return interseccion_hv_ano
 
@@ -422,14 +427,14 @@ def render_interseccion_hv_tipo(clickData):
     interseccion_hv_tipo = px.bar(interseccion_hv_tipo, x='Hechos Viales', y='Tipo',
             labels = {'Tipo': '', 'Hechos Viales': ''}, text='Hechos Viales',
             hover_data={'Tipo':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
+            color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
 
     interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
     interseccion_hv_tipo.layout.xaxis.ticksuffix = '% '
     interseccion_hv_tipo.update_xaxes(showticklabels=False, showgrid=False)
     # interseccion_hv_tipo.update_traces(hovertemplate='  %{x}')
-    interseccion_hv_tipo.update_traces(texttemplate='%{text:}%', opacity = .9,
+    interseccion_hv_tipo.update_traces(texttemplate='%{text:}%',
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
 
     return interseccion_hv_tipo
@@ -468,7 +473,7 @@ def render_interseccion_hv_causa(clickData):
     interseccion_hv_causa = px.bar(interseccion_hv_causa, x='Hechos Viales', y='Causa',
             labels = {'Causa': '', 'Hechos Viales': ''}, text='Hechos Viales',
             hover_data={'Causa':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
+            color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
 
     interseccion_hv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_causa.layout.xaxis.ticksuffix = '% '
@@ -477,7 +482,7 @@ def render_interseccion_hv_causa(clickData):
     interseccion_hv_causa.update_xaxes(showticklabels=False, showgrid=False)
     # interseccion_hv_causa.update_traces(hovertemplate='  %{x}')
     # interseccion_hv_causa.update_layout(margin=dict(r=20))
-    interseccion_hv_causa.update_traces(texttemplate='%{text:}%', opacity = .9,
+    interseccion_hv_causa.update_traces(texttemplate='%{text:}%',
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
 
 # range=[0, 50], 
@@ -527,13 +532,13 @@ def render_interseccion_resp_edad(clickData):
         x='Hechos Viales',
         labels = {'Edades': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
         hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-        color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
+        color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
 
     interseccion_resp_edad.update(layout_coloraxis_showscale=False)
     interseccion_resp_edad.layout.yaxis.ticksuffix = ' '
     # interseccion_resp_edad.update_yaxes(range=[0, 25])
     interseccion_resp_edad.update_xaxes(showticklabels=False, showgrid=False)
-    interseccion_resp_edad.update_traces(texttemplate='%{text:}%', opacity = .9,
+    interseccion_resp_edad.update_traces(texttemplate='%{text:}%',
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
     # interseccion_resp_edad.update_xaxes(tickangle = 90)
 
@@ -581,12 +586,12 @@ def render_interseccion_afec_edad(clickData):
     interseccion_afec_edad = px.bar(interseccion_afec_edad, y='Edades', x='Hechos Viales',
         labels = {'Edades': '', 'Hechos Viales': ''}, text='Hechos Viales',
         hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-        color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
+        color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
 
     interseccion_afec_edad.update(layout_coloraxis_showscale=False)
     interseccion_afec_edad.layout.yaxis.ticksuffix = ' '
     interseccion_afec_edad.update_xaxes(showticklabels=False, showgrid=False)
-    interseccion_afec_edad.update_traces(texttemplate='%{text:}%', opacity = .9,
+    interseccion_afec_edad.update_traces(texttemplate='%{text:}%',
         hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
     # interseccion_afec_edad.update_traces(hovertemplate='  %{x}')
 
