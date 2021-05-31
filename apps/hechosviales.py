@@ -389,8 +389,8 @@ def render_interseccion_hv_ano(clickData):
 
     interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
     interseccion_hv_ano.update_yaxes(showline=False, showgrid=False, showticklabels = False)
-    interseccion_hv_ano.update_traces(opacity = 1, marker_color='#008E97',
-        hoverlabel_bgcolor='white', hoverlabel_bordercolor='white')
+    interseccion_hv_ano.update_traces(marker_color='#008E97', hoverlabel_bgcolor='white',
+        hoverlabel_bordercolor='white', textfont_size=14)
 
     return interseccion_hv_ano
 
