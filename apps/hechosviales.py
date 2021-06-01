@@ -22,7 +22,8 @@ def hechosviales():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='General', tab_id='hv_general', disabled=True),
-                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos')
+                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos'),
+                            dbc.Tab(label='Atropellos', tab_id='hv_atropellos')
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -78,7 +79,7 @@ hv_ano = px.bar(hv_ano, x='Año', y='Hechos Viales',
     hover_data={'Año':False, 'Hechos Viales':False})
 
 
-# Layout
+# Layout - General
 def hv_general():
 
     return html.Div([
@@ -133,13 +134,13 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size_max=15, zoom=12.5, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
-    color_continuous_scale=px.colors.sequential.Teal)
+    color_continuous_scale=px.colors.sequential.Sunset)
 
 vasconcelos_map.update_layout(clickmode='event+select')
 
 
 
-# Layout
+# Layout - Vasconcelos
 def hv_vasconcelos():
 
     return html.Div([
@@ -173,7 +174,7 @@ def hv_vasconcelos():
                 dbc.Card(
                     dbc.CardHeader(id='interseccion_nombre'),
                     style={'textAlign':'center'},
-                    color="info", inverse=True, outline = False
+                    color="secondary", inverse=True, outline = False
                 ),
 
                 html.Br(),
@@ -183,8 +184,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_hv')
                     )
-                ], style={'textAlign':'center'}, color = 'info', inverse = False,
-                        outline = True),
+                ], style={'textAlign':'center'}),
 
                 html.Br(),
 
@@ -193,8 +193,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_les')
                     )
-                ], style={'textAlign':'center'}, color = 'info', inverse = False,
-                        outline = True),
+                ], style={'textAlign':'center'}),
 
                 html.Br(),
 
@@ -203,8 +202,7 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         html.H3(id = 'interseccion_fal')
                     )
-                ], style={'textAlign':'center'}, color = 'info', inverse = False,
-                        outline = True)             
+                ], style={'textAlign':'center'})            
 
             ])
 
@@ -333,7 +331,78 @@ def hv_vasconcelos():
 
             )          
 
-        ])      
+        ]),
+
+        html.Br(),
+
+        # Género de Responsables y Afectados
+        dbc.Row([
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Género de Responsables'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'interseccion_resp_genero',
+                            figure = {},
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            ),
+
+            html.Br(),
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Género de Afectados'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'interseccion_afec_genero',
+                            figure = {},
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            )          
+
+        ])   
+
+    ])
+
+#----------
+
+# Layout - Atropellos
+def hv_atropellos():
+
+    return html.Div([
+
+        # Atropellos
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Atropellos"),
+                    dbc.CardBody(
+                        html.Iframe(width='100%', height='560', 
+                           src='https://edgargtzgzz.carto.com/builder/981d5d24-9fd7-4f8f-b1ca-47dc0e8658c7/embed')
+                    )  
+                ])
+            )
+        )
 
     ])
 
@@ -385,12 +454,13 @@ def render_interseccion_hv_ano(clickData):
     interseccion_hv_ano = px.bar(interseccion_hv_ano, x='Años', y='Hechos Viales',
             labels = {'Años': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
             hover_data={'Años':False, 'Hechos Viales':False},
-            template = "plotly_white")
+            template = "plotly_white", color = 'Hechos Viales',
+            color_continuous_scale=px.colors.sequential.Sunset)
 
     interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
     interseccion_hv_ano.update_yaxes(showline=False, showgrid=False, showticklabels = False)
-    interseccion_hv_ano.update_traces(marker_color='#008E97', hoverlabel_bgcolor='white',
-        hoverlabel_bordercolor='white', textfont_size=14)
+    interseccion_hv_ano.update_traces(hoverlabel_bgcolor='white', textfont_size=14)
+    interseccion_hv_ano.update(layout_coloraxis_showscale=False)
 
     return interseccion_hv_ano
 
@@ -427,7 +497,7 @@ def render_interseccion_hv_tipo(clickData):
     interseccion_hv_tipo = px.bar(interseccion_hv_tipo, x='Hechos Viales', y='Tipo',
             labels = {'Tipo': '', 'Hechos Viales': ''}, text='Hechos Viales',
             hover_data={'Tipo':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
+            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
@@ -473,7 +543,7 @@ def render_interseccion_hv_causa(clickData):
     interseccion_hv_causa = px.bar(interseccion_hv_causa, x='Hechos Viales', y='Causa',
             labels = {'Causa': '', 'Hechos Viales': ''}, text='Hechos Viales',
             hover_data={'Causa':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
+            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_hv_causa.update_layout(yaxis={'categoryorder':'total ascending'})
     interseccion_hv_causa.layout.xaxis.ticksuffix = '% '
@@ -499,7 +569,6 @@ def render_interseccion_resp_edad(clickData):
     # Filter interseccion and drop NA's
     interseccion_resp_edad = interseccion_resp[interseccion_resp['interseccion'] == 
     clickData['points'][0]['hovertext']]
-
     interseccion_resp_edad = interseccion_resp_edad[interseccion_resp_edad.edad_grupo != 'NA']
 
     # Create dataframe
@@ -532,7 +601,7 @@ def render_interseccion_resp_edad(clickData):
         x='Hechos Viales',
         labels = {'Edades': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
         hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-        color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
+        color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_resp_edad.update(layout_coloraxis_showscale=False)
     interseccion_resp_edad.layout.yaxis.ticksuffix = ' '
@@ -586,7 +655,7 @@ def render_interseccion_afec_edad(clickData):
     interseccion_afec_edad = px.bar(interseccion_afec_edad, y='Edades', x='Hechos Viales',
         labels = {'Edades': '', 'Hechos Viales': ''}, text='Hechos Viales',
         hover_data={'Edades':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-        color_continuous_scale=px.colors.sequential.Teal, template = "plotly_white")
+        color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white")
 
     interseccion_afec_edad.update(layout_coloraxis_showscale=False)
     interseccion_afec_edad.layout.yaxis.ticksuffix = ' '
@@ -597,6 +666,82 @@ def render_interseccion_afec_edad(clickData):
 
     return interseccion_afec_edad
 
+# Género de Responsables
+def render_interseccion_resp_genero(clickData):
+
+    # Connect to the database
+    interseccion_resp = book.worksheet('vasconcelos_resp')
+    interseccion_resp = interseccion_resp.get_all_values()
+    interseccion_resp = pd.DataFrame(interseccion_resp[1:], columns = interseccion_resp[0])
+
+    # Filter interseccion and drop NA's
+    interseccion_resp_genero = interseccion_resp[interseccion_resp['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    interseccion_resp_genero = interseccion_resp_genero[interseccion_resp_genero.sexo != 'NA']
+
+    # Create df
+    interseccion_resp_genero = pd.DataFrame(interseccion_resp_genero.sexo.value_counts())
+    interseccion_resp_genero = interseccion_resp_genero.reset_index()
+    interseccion_resp_genero.columns = ['Género', 'Hechos Viales 2']
+    interseccion_resp_genero['Hechos Viales 2'] = pd.to_numeric(
+        interseccion_resp_genero['Hechos Viales 2'])
+
+    # Get percent value
+    suma = interseccion_resp_genero['Hechos Viales 2'].sum()
+    interseccion_resp_genero['Hechos Viales'] = (interseccion_resp_genero[
+        'Hechos Viales 2'] / suma) * 100
+    interseccion_resp_genero['Hechos Viales'] = interseccion_resp_genero[
+        'Hechos Viales'].round(decimals=0)
+
+    # Graph
+    interseccion_resp_genero = px.pie(interseccion_resp_genero,
+        labels = interseccion_resp_genero['Género'], values = interseccion_resp_genero[
+        'Hechos Viales'], hole = .4, names = interseccion_resp_genero['Género'],
+        color_discrete_sequence=px.colors.sequential.Agsunset, opacity = .8)
+    
+    interseccion_resp_genero.update_traces(textposition='inside', textinfo='percent+label')
+    interseccion_resp_genero.update(layout_showlegend=False)
+
+    return interseccion_resp_genero
+
+# Género de Afectados
+def render_interseccion_afec_genero(clickData):
+
+    # Connect to the database
+    interseccion_afec = book.worksheet('vasconcelos_afec')
+    interseccion_afec = interseccion_afec.get_all_values()
+    interseccion_afec = pd.DataFrame(interseccion_afec[1:], columns = interseccion_afec[0])
+
+    # Filter interseccion and drop NA's
+    interseccion_afec_genero = interseccion_afec[interseccion_afec['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    interseccion_afec_genero = interseccion_afec_genero[interseccion_afec_genero.sexo != 'NA']
+
+    # Create df
+    interseccion_afec_genero = pd.DataFrame(interseccion_afec_genero.sexo.value_counts())
+    interseccion_afec_genero = interseccion_afec_genero.reset_index()
+    interseccion_afec_genero.columns = ['Género', 'Hechos Viales 2']
+    interseccion_afec_genero['Hechos Viales 2'] = pd.to_numeric(
+        interseccion_afec_genero['Hechos Viales 2'])
+
+    # Get percent value
+    suma = interseccion_afec_genero['Hechos Viales 2'].sum()
+    interseccion_afec_genero['Hechos Viales'] = (interseccion_afec_genero[
+        'Hechos Viales 2'] / suma) * 100
+    interseccion_afec_genero['Hechos Viales'] = interseccion_afec_genero[
+        'Hechos Viales'].round(decimals=0)
+
+    # Graph
+    interseccion_afec_genero = px.pie(interseccion_afec_genero,
+        labels = interseccion_afec_genero['Género'], values = interseccion_afec_genero[
+        'Hechos Viales'], hole = .4, names = interseccion_afec_genero['Género'],
+        color_discrete_sequence=px.colors.sequential.Agsunset, opacity = .8)
+    
+    interseccion_afec_genero.update_traces(textposition='inside', textinfo='percent+label')
+    interseccion_afec_genero.update(layout_showlegend=False)
+
+    return interseccion_afec_genero
+
 #----------
 
 # Display tabs
@@ -605,6 +750,8 @@ def render_hechosviales(tab):
         return hv_general()
     elif tab == 'hv_vasconcelos':
         return hv_vasconcelos()
+    elif tab == 'hv_atropellos':
+        return hv_atropellos()
 
 
 
