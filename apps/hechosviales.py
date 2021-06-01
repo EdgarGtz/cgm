@@ -395,7 +395,7 @@ def hv_atropellos():
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Atropellos"),
+                    dbc.CardHeader("Atropellos a Peatones (2015 - 2020)"),
                     dbc.CardBody(
                         html.Iframe(width='100%', height='560', 
                            src='https://edgargtzgzz.carto.com/builder/981d5d24-9fd7-4f8f-b1ca-47dc0e8658c7/embed')
