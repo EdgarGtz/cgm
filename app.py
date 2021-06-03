@@ -19,7 +19,8 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa,
 	render_interseccion_resp_edad, render_interseccion_afec_edad, 
-	render_interseccion_resp_genero, render_interseccion_afec_genero)
+	render_interseccion_resp_genero, render_interseccion_afec_genero,
+	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
 
@@ -175,6 +176,22 @@ def get(clickData):
 
 def get(clickData):
  	return render_interseccion_afec_genero(clickData)
+
+#-- Intersección - Vehículo del Responsable
+
+@app.callback(Output('interseccion_resp_vehiculo', 'figure'),
+	[Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_resp_vehiculo(clickData)
+
+#-- Intersección - Vehículo del Afectado
+
+@app.callback(Output('interseccion_afec_vehiculo', 'figure'),
+	[Input('vasconcelos_map', 'clickData')])
+
+def get(clickData):
+ 	return render_interseccion_afec_vehiculo(clickData)
 
 # Datos
 
