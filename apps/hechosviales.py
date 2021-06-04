@@ -829,7 +829,7 @@ def render_interseccion_resp_vehiculo(clickData):
 
     # Graph
     interseccion_resp_vehiculo = px.bar(interseccion_resp_vehiculo, y='Vehiculo',
-        x='Hechos Viales', labels = {'Vehiculo': '', 'Hechos Viales 2': 'Hechos Viales ',
+        x='Hechos Viales', labels = {'Vehiculo': '', 'Hechos Viales 2': 'Responsables ',
         'Hechos Viales': ''}, text = 'Hechos Viales',
         hover_data={'Vehiculo':False, 'Hechos Viales 2':True, 'Hechos Viales': False},
         color = 'Hechos Viales', color_continuous_scale=px.colors.sequential.Sunset,
@@ -870,11 +870,11 @@ def render_interseccion_afec_vehiculo(clickData):
     interseccion_afec_vehiculo['Hechos Viales'] = (interseccion_afec_vehiculo[
         'Hechos Viales 2'] / suma) * 100
     interseccion_afec_vehiculo['Hechos Viales'] = interseccion_afec_vehiculo[
-        'Hechos Viales'].round(decimals=2)
+        'Hechos Viales'].round(decimals=1)
 
     # Graph
     interseccion_afec_vehiculo = px.bar(interseccion_afec_vehiculo, y='Vehiculo',
-        x='Hechos Viales', labels = {'Vehiculo': '', 'Hechos Viales 2': 'Hechos Viales ',
+        x='Hechos Viales', labels = {'Vehiculo': '', 'Hechos Viales 2': 'Afectados ',
         'Hechos Viales': ''}, text = 'Hechos Viales',
         hover_data={'Vehiculo':False, 'Hechos Viales 2':True, 'Hechos Viales': False},
         color = 'Hechos Viales', color_continuous_scale=px.colors.sequential.Sunset,
@@ -887,23 +887,6 @@ def render_interseccion_afec_vehiculo(clickData):
     interseccion_afec_vehiculo.update_layout(yaxis={'categoryorder':'total ascending'})
 
     return interseccion_afec_vehiculo
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #----------
 

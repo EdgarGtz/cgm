@@ -23,6 +23,7 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo)
 from apps.datos import datos, render_datos
 from apps.ayuda import ayuda, render_ayuda
+from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes 
 
 # Connect to config
 from config import user, password
@@ -40,6 +41,8 @@ app.layout = html.Div([
 
 	dbc.NavbarSimple(
 		[
+
+			dbc.Button('Alfonso Reyes', href = '/apps/alfonsoreyes', color = 'light'),
 
 			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
 			
@@ -81,6 +84,8 @@ def display_page(pathname):
 		return datos()
 	elif pathname == '/apps/ayuda':
 		return ayuda()
+	elif pathname == '/apps/alfonsoreyes':
+		return alfonsoreyes()
 	else:
 		return home.layout
 
@@ -206,6 +211,13 @@ def get_datos(tab):
 
 def get_ayuda(tab):
     return render_ayuda(tab)
+
+# Alfonso Reyes
+
+@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
+
+def get_ayuda(tab):
+    return render_alfonsoreyes(tab)
 
 
 if __name__ == '__main__':
