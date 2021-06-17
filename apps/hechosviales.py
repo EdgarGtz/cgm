@@ -23,7 +23,12 @@ def hechosviales():
                         dbc.Tabs([
                             dbc.Tab(label='General', tab_id='hv_general', disabled=True),
                             dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos'),
-                            dbc.Tab(label='Atropellos', tab_id='hv_atropellos')
+                            dbc.Tab(label='Peatón', tab_id='hv_peaton',
+                                disabled = True),
+                            dbc.Tab(label = 'Ciclista', tab_id = 'hv_ciclista',
+                                disabled = True),
+                            dbc.Tab(label = 'Motociclista', tab_id = 'hv_motociclista',
+                                disabled = True)
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -897,7 +902,11 @@ def render_hechosviales(tab):
     elif tab == 'hv_vasconcelos':
         return hv_vasconcelos()
     elif tab == 'hv_atropellos':
-        return hv_atropellos()
+        return hv_peaton()
+    elif tab == 'hv_ciclista':
+        return hv_ciclista()
+    elif tab == 'hv_motociclista':
+        return hv_motociclista()
 
 
 

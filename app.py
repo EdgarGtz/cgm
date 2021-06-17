@@ -15,15 +15,13 @@ server = app.server
 
 # Connect to app pages
 from apps import home
+from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes 
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa,
 	render_interseccion_resp_edad, render_interseccion_afec_edad, 
 	render_interseccion_resp_genero, render_interseccion_afec_genero,
 	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo)
-from apps.datos import datos, render_datos
-from apps.ayuda import ayuda, render_ayuda
-from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes 
 
 # Connect to config
 from config import user, password
@@ -41,27 +39,9 @@ app.layout = html.Div([
 
 	dbc.NavbarSimple(
 		[
-
 			dbc.Button('Alfonso Reyes', href = '/apps/alfonsoreyes', color = 'light'),
 
-			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
-			
-        	dbc.DropdownMenu([
-                	dbc.DropdownMenuItem('Monitoreo de Tráfico',
-                		href='https://www.waze.com/es/live-map', target='blank'),
-                	dbc.DropdownMenuItem('Reporte de Eventos',
-                		href='https://www.waze.com/reporting', target='blank', disabled=True),
-                	dbc.DropdownMenuItem('Cierre de Vialidades',
-                		href='https://www.waze.com/editor', target='blank', disabled=True)
-	            ],
-	            label='Acciones',
-	            group=True,
-	            color='light'
-        	),
-
-        	dbc.Button('Datos', href='/apps/datos', color='light'),
-        	dbc.Button('Ayuda', href='/apps/ayuda', color='light')
-
+			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light')
 		],
 		brand='CGM',
 		brand_href='/apps/home'
@@ -78,20 +58,25 @@ app.layout = html.Div([
 @app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
 
 def display_page(pathname):
-	if pathname == '/apps/hechosviales':
-		return hechosviales()
-	elif pathname == '/apps/datos':
-		return datos()
-	elif pathname == '/apps/ayuda':
-		return ayuda()
-	elif pathname == '/apps/alfonsoreyes':
+	if pathname == '/apps/alfonsoreyes':
 		return alfonsoreyes()
+	elif pathname == '/apps/hechosviales':
+		return hechosviales()
 	else:
 		return home.layout
 
 #----------
 
-# Hechos Viales Content
+
+# Alfonso Reyes
+
+@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
+
+def get_ayuda(tab):
+    return render_alfonsoreyes(tab)
+
+
+# Hechos Viales
 
 @app.callback(Output('hechosviales_content', 'children'), [Input('tabs', 'active_tab')])
 
@@ -198,26 +183,7 @@ def get(clickData):
 def get(clickData):
  	return render_interseccion_afec_vehiculo(clickData)
 
-# Datos
 
-@app.callback(Output('datos_content', 'children'), [Input('tabs', 'active_tab')])
-
-def get_datos(tab):
-    return render_datos(tab)
-
-# Ayuda
-
-@app.callback(Output('ayuda_content', 'children'), [Input('tabs', 'active_tab')])
-
-def get_ayuda(tab):
-    return render_ayuda(tab)
-
-# Alfonso Reyes
-
-@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
-
-def get_ayuda(tab):
-    return render_alfonsoreyes(tab)
 
 
 if __name__ == '__main__':
