@@ -20,8 +20,8 @@ def alfonsoreyes():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_1'),
-                            dbc.Tab(label='Velocidades', tab_id='alfonsoreyes_2',
+                            dbc.Tab(label='Datos Generales', tab_id='alfonsoreyes_1'),
+                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_2',
                             	disabled = True),
                             dbc.Tab(label='Hechos Viales', tab_id='alfonsoreyes_3',
                             	disabled = True)

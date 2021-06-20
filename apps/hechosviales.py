@@ -40,6 +40,19 @@ def hechosviales():
             ), justify = 'center'
         ),
 
+        # html.Br(),
+        
+        # dbc.Row(
+        #     dbc.Col(
+
+        #         dbc.Card([
+        #             dbc.CardHeader("Datos de hechos viales"),
+        #             dbc.CardBody("Datos")
+        #         ])
+
+        #     )
+        # ),
+
         #Footer 
         dbc.Row(
             dbc.Col(

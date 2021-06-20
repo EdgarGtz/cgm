@@ -13,8 +13,8 @@ layout = html.Div([
 
     dbc.Row(
         dbc.Col([
-            html.Img(src='../assets/sanpedro.jpg', style={'width':'100%', 'height':'auto'}),
-            html.H2('Centro de Gestión de Movilidad',
+            html.Img(src='../assets/mobility11.jpeg', style={'width':'100%', 'height':'auto'}),
+            html.H1('Centro de Gestión de Movilidad',
                 style={'position': 'absolute', 'top': '50%', 'left': '50%',
                 'transform': 'translate(-50%, -50%)','color': 'white','text-align':'center'})
         ])
