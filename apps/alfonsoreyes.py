@@ -7,6 +7,9 @@ import plotly.graph_objs as go
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+import geopandas as gpd
+import geopandas as pdg
+
 
 
 # Layout General
@@ -46,6 +49,13 @@ def alfonsoreyes():
     ])
 
 
+#-- Connect to data
+
+inegi = pdg.read_file("assets/geojson/inegi_2020_sp_manzanas_ar_datos.geojson")
+
+#-- Graph
+
+
 # Layout - General
 def alfonsoreyes_1():
 
@@ -60,7 +70,7 @@ def alfonsoreyes_1():
                     dbc.CardBody(
 						html.Iframe(width='100%', height='560', 
                            src='https://edgargtzgzz.carto.com/builder/d1005d51-e3de-4e56-a6be-274465006ebd/embed')
-                    )  
+                    ),
                 ])
             )
         ),
