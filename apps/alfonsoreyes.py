@@ -45,6 +45,17 @@ def alfonsoreyes():
 
     ])
 
+#-- Connect to data
+#inegi = gpd.read_file("assets/geojson/inegi_2020_sp_manzanas_ar_datos.geojson")
+#inegi_df = inegi[["CVEGEO","POBTOT"]]
+
+#-- Graph
+#alfonsoreyes_map = px.choropleth(inegi_df, geojson=inegi.geometry,locations="CVEGEO",color="POBTOT",projection="mercator")
+
+denue = pd.read_csv("assets/denue.csv")
+mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=3, height=300)
+mapa_denue.update_layout(mapbox_style="open-street-map")
+mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 # Layout - General
 def alfonsoreyes_1():
@@ -58,18 +69,19 @@ def alfonsoreyes_1():
                 dbc.Card([
                     dbc.CardHeader("Alfonso Reyes"),
                     dbc.CardBody(
-						html.Iframe(width='100%', height='560', 
-                           src='https://edgargtzgzz.carto.com/builder/d1005d51-e3de-4e56-a6be-274465006ebd/embed')
-                    )  
+						#html.Iframe(width='100%', height='560', 
+                           #src='https://edgargtzgzz.carto.com/builder/d1005d51-e3de-4e56-a6be-274465006ebd/embed')
+                           dcc.Graph(
+                           id = 'mapa_denue',
+                           figure = mapa_denue,
+                           style={'height':'80vh'}
+                        )
+                    ),
                 ])
             )
         ),
 
     ])
-
-
-
-
 
 # Display tabs
 def render_alfonsoreyes(tab):

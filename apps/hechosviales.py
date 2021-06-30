@@ -158,7 +158,7 @@ vasconcelos_map.update_layout(clickmode='event+select')
 
 
 
-# Layout - Vasconcelos
+# Layout - Intersecciones
 def hv_vasconcelos():
 
     return html.Div([
