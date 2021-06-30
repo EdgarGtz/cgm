@@ -21,8 +21,7 @@ def alfonsoreyes():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='Datos Generales', tab_id='alfonsoreyes_1'),
-                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_2',
-                            	disabled = True),
+                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_2'),
                             dbc.Tab(label='Hechos Viales', tab_id='alfonsoreyes_3',
                             	disabled = True)
                         ],
@@ -57,7 +56,51 @@ mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discr
 mapa_denue.update_layout(mapbox_style="open-street-map")
 mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-# Layout - General
+
+#----------
+
+# Connect to Google Drive
+scope = ['https://spreadsheets.google.com/feeds']
+credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
+gc = gspread.authorize(credentials)
+
+#----------
+
+# Cámaras Viales
+
+# Bicicletas por Día
+
+# Connect to the spreadsheet
+spreadsheet_key = '18mtg-QZ0sCF-_7u643LTGGBoEekV7fGW3S_jaePmQQY'
+book = gc.open_by_key(spreadsheet_key)
+
+# Create dataframe
+camaras_viales = book.worksheet('camaras_viales')
+camaras_viales = camaras_viales.get_all_values()
+camaras_viales = pd.DataFrame(camaras_viales[1:], columns = camaras_viales[0])
+ 
+camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
+
+bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia','dia_semana'], values = 'bicycle', aggfunc = 'sum')
+
+bicicletas_dia = bicicletas_dia.reset_index()
+
+# Graph
+bicicletas_dia = px.bar(bicicletas_dia, x='dia_semana', y='bicycle',
+    labels = {'dia_semana': '', 'bicycle': ''}, text='bicycle',
+    hover_data={'dia_semana':False, 'bicycle':False}, opacity = .9, template = 'plotly_white')
+
+bicicletas_dia.update_xaxes(showline=True, showgrid=False)
+bicicletas_dia.update_yaxes(showline=False, showgrid=False, showticklabels = False)
+bicicletas_dia.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
+    hoverlabel_bordercolor='white')
+bicicletas_dia.update(layout_coloraxis_showscale=False)
+bicicletas_dia.update_layout(hovermode = False, dragmode=False)
+
+#----------
+
+
+# Layout - Mapa
 def alfonsoreyes_1():
 
     return html.Div([
@@ -79,9 +122,46 @@ def alfonsoreyes_1():
                     ),
                 ])
             )
-        ),
+        )
 
     ])
+
+#----------
+
+# Layout - Camaras Viales
+def alfonsoreyes_2():
+
+    return html.Div([
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Bicicletas por Semana'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'bicicletas_dia',
+                            figure = bicicletas_dia,
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            )
+        )
+
+    ])
+
+
+
+
+
 
 # Display tabs
 def render_alfonsoreyes(tab):
