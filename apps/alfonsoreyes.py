@@ -138,7 +138,7 @@ def alfonsoreyes_2():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Bicicletas por Día'),
+                    dbc.CardHeader('Bicicletas por Semana'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'bicicletas_dia',
