@@ -7,6 +7,7 @@ import plotly.graph_objs as go
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+#import geopandas as gpd
 
 
 # Layout General
@@ -46,17 +47,19 @@ def alfonsoreyes():
 #----------
 
 #-- Connect to data
-#inegi = gpd.read_file("assets/geojson/inegi_2020_sp_manzanas_ar_datos.geojson")
+#inegi = gpd.read_file("assets/inegi_2020_alfonsoreyes.geojson")
 #inegi_df = inegi[["CVEGEO","POBTOT"]]
 
 #-- Graph
-#alfonsoreyes_map = px.choropleth(inegi_df, geojson=inegi.geometry,locations="CVEGEO",color="POBTOT",projection="mercator")
+#alfonsoreyes_map = px.choropleth(inegi_df, geojson=inegi.geometry,locations="CVEGEO",color="POBTOT",projection="mercator", zoom=13.5, height=300)
+#alfonsoreyes_map.update_layout(mapbox_style="carto-positron")
+#alfonsoreyes_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 # Mapa
 
 denue = pd.read_csv("assets/mapa/denue.csv")
-mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=3, height=300)
-mapa_denue.update_layout(mapbox_style="open-street-map")
+mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=13.5, height=300)
+mapa_denue.update_layout(mapbox_style="carto-positron")
 mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 
