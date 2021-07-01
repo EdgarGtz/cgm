@@ -68,8 +68,6 @@ gc = gspread.authorize(credentials)
 
 # Cámaras Viales
 
-# Bicicletas por Día
-
 # Connect to the spreadsheet
 spreadsheet_key = '18mtg-QZ0sCF-_7u643LTGGBoEekV7fGW3S_jaePmQQY'
 book = gc.open_by_key(spreadsheet_key)
@@ -78,10 +76,24 @@ book = gc.open_by_key(spreadsheet_key)
 camaras_viales = book.worksheet('camaras_viales')
 camaras_viales = camaras_viales.get_all_values()
 camaras_viales = pd.DataFrame(camaras_viales[1:], columns = camaras_viales[0])
- 
-camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
 
-bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia','dia_semana'], values = 'bicycle', aggfunc = 'sum')
+# Change some variables to numeric
+camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
+camaras_viales['hora'] = pd.to_numeric(camaras_viales['hora'])
+
+
+# Bicicletas - Semana Anterior
+bicicletas_semana = camaras_viales['bicycle'].sum()
+bicicletas_semana = bicicletas_semana.astype(str)
+
+
+# Bicicletas - Semana Anterior
+bicicletas_acumuladas = camaras_viales['bicycle'].sum()
+
+
+# Bicicletas por Día
+bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia','dia_semana'],
+    values = 'bicycle', aggfunc = 'sum')
 
 bicicletas_dia = bicicletas_dia.reset_index()
 
@@ -96,6 +108,30 @@ bicicletas_dia.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
     hoverlabel_bordercolor='white')
 bicicletas_dia.update(layout_coloraxis_showscale=False)
 bicicletas_dia.update_layout(hovermode = False, dragmode=False)
+
+
+# Bicicletas por Hora
+bicicletas_hora = pd.pivot_table(camaras_viales, index = ['hora'], values = 'bicycle',
+    aggfunc = 'sum')
+bicicletas_hora = bicicletas_hora.reset_index()
+bicicletas_hora = bicicletas_hora.sort_values(by=['hora'])
+
+suma = bicicletas_hora['bicycle'].sum()
+bicicletas_hora['porcentaje'] = (bicicletas_hora['bicycle'] / suma) * 100
+bicicletas_hora['porcentaje'] = bicicletas_hora['porcentaje'].round(decimals = 1)
+
+# Graph
+bicicletas_hora = px.bar(bicicletas_hora, x='hora', y='porcentaje',
+    labels = {'hora': '', 'porcentaje': ''}, text='porcentaje',
+    hover_data={'hora':False, 'porcentaje':False}, color = 'porcentaje', 
+    color_continuous_scale = px.colors.sequential.Sunset, template = 'plotly_white',
+    opacity = .9)
+
+bicicletas_hora.update(layout_coloraxis_showscale=False)
+bicicletas_hora.update_yaxes(showticklabels=False, showgrid=False)
+bicicletas_hora.update_traces(texttemplate='%{text:}% ')
+bicicletas_hora.layout.yaxis.ticksuffix = ' '
+bicicletas_hora.update_layout(hovermode = False, dragmode=False)
 
 #----------
 
@@ -133,16 +169,62 @@ def alfonsoreyes_2():
 
     return html.Div([
 
+        dbc.Row([
+
+            dbc.Col([
+                dbc.CardHeader('Bicicletas - Semana Anterior'),
+                dbc.CardBody(
+                    html.H3('3,218')
+                )
+            ], style = {'textAlign':'center'}),
+
+
+            dbc.Col([
+                dbc.CardHeader('Bicicletas Acumuladas'),
+                dbc.CardBody(
+                    html.H3('3,218')
+                )
+            ], style = {'textAlign':'center'})
+
+        ]),
+
+        html.Br(),
+
         dbc.Row(
 
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Bicicletas por Semana'),
+                    dbc.CardHeader('Bicicletas por Día'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'bicicletas_dia',
                             figure = bicicletas_dia,
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            )
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Bicicletas por Hora'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'bicicletas_hora',
+                            figure = bicicletas_hora,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
