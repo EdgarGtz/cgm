@@ -52,7 +52,9 @@ def alfonsoreyes():
 #-- Graph
 #alfonsoreyes_map = px.choropleth(inegi_df, geojson=inegi.geometry,locations="CVEGEO",color="POBTOT",projection="mercator")
 
-denue = pd.read_csv("assets/denue.csv")
+# Mapa
+
+denue = pd.read_csv("assets/mapa/denue.csv")
 mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=3, height=300)
 mapa_denue.update_layout(mapbox_style="open-street-map")
 mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
