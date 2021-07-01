@@ -20,10 +20,9 @@ def alfonsoreyes():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Datos Generales', tab_id='alfonsoreyes_1'),
-                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_2'),
-                            dbc.Tab(label='Hechos Viales', tab_id='alfonsoreyes_3',
-                            	disabled = True)
+                            dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1'),
+                            dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2'),
+                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_3')
                         ],
                         id='tabs',
                         active_tab="alfonsoreyes_1",
@@ -43,6 +42,8 @@ def alfonsoreyes():
         )
 
     ])
+
+#----------
 
 #-- Connect to data
 #inegi = gpd.read_file("assets/geojson/inegi_2020_sp_manzanas_ar_datos.geojson")
@@ -66,6 +67,8 @@ gc = gspread.authorize(credentials)
 
 #----------
 
+# Ciclistas
+
 # Cámaras Viales
 
 # Connect to the spreadsheet
@@ -82,16 +85,16 @@ camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
 camaras_viales['hora'] = pd.to_numeric(camaras_viales['hora'])
 
 
-# Bicicletas - Semana Anterior
+# Ciclistas - Semana Anterior
 bicicletas_semana = camaras_viales['bicycle'].sum()
 bicicletas_semana = bicicletas_semana.astype(str)
 
 
-# Bicicletas - Semana Anterior
+# Ciclistas - Semana Anterior
 bicicletas_acumuladas = camaras_viales['bicycle'].sum()
 
 
-# Bicicletas por Día
+# Ciclistas por Día
 bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia','dia_semana'],
     values = 'bicycle', aggfunc = 'sum')
 
@@ -110,7 +113,7 @@ bicicletas_dia.update(layout_coloraxis_showscale=False)
 bicicletas_dia.update_layout(hovermode = False, dragmode=False)
 
 
-# Bicicletas por Hora
+# Ciclistas por Hora del Día
 bicicletas_hora = pd.pivot_table(camaras_viales, index = ['hora'], values = 'bicycle',
     aggfunc = 'sum')
 bicicletas_hora = bicicletas_hora.reset_index()
@@ -136,8 +139,30 @@ bicicletas_hora.update_layout(hovermode = False, dragmode=False)
 #----------
 
 
-# Layout - Mapa
+# Layout - BiciRuta
 def alfonsoreyes_1():
+
+    return html.Div([
+
+        # Avance del Proyecto
+
+        dbc.Row(
+            dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader("Avance del Proyecto"),
+                    dbc.CardBody(
+                        dbc.Progress("25%", value=25)
+                    )
+                ])
+            )
+        )
+
+    ])
+
+#----------
+
+# Layout - Mapa
+def alfonsoreyes_2():
 
     return html.Div([
 
@@ -146,10 +171,8 @@ def alfonsoreyes_1():
         dbc.Row(
             dbc.Col(
                 dbc.Card([
-                    dbc.CardHeader("Alfonso Reyes"),
+                    dbc.CardHeader("BiciRuta"),
                     dbc.CardBody(
-						#html.Iframe(width='100%', height='560', 
-                           #src='https://edgargtzgzz.carto.com/builder/d1005d51-e3de-4e56-a6be-274465006ebd/embed')
                            dcc.Graph(
                            id = 'mapa_denue',
                            figure = mapa_denue,
@@ -164,8 +187,8 @@ def alfonsoreyes_1():
 
 #----------
 
-# Layout - Camaras Viales
-def alfonsoreyes_2():
+# Layout - Ciclistas
+def alfonsoreyes_3():
 
     return html.Div([
 
@@ -220,7 +243,7 @@ def alfonsoreyes_2():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Bicicletas por Hora'),
+                    dbc.CardHeader('Bicicletas por Hora del Día'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'bicicletas_hora',
@@ -240,9 +263,7 @@ def alfonsoreyes_2():
 
     ])
 
-
-
-
+#----------
 
 
 # Display tabs
