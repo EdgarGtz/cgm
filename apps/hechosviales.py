@@ -75,7 +75,7 @@ gc = gspread.authorize(credentials)
 
 # Hechos Viales por Año
 
-#-- Connect to data
+#-- Connect to the spreadsheet
 spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
 book = gc.open_by_key(spreadsheet_key)
 
@@ -158,7 +158,7 @@ vasconcelos_map.update_layout(clickmode='event+select')
 
 
 
-# Layout - Vasconcelos
+# Layout - Intersecciones
 def hv_vasconcelos():
 
     return html.Div([
