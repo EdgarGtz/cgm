@@ -7,10 +7,7 @@ import plotly.graph_objs as go
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
-#import geopandas as gpd
-
-#cambioooooo
-#cambio 2222222222222
+import geopandas as gpd
 
 
 # Layout General
@@ -50,20 +47,31 @@ def alfonsoreyes():
 #----------
 
 #-- Connect to data
-#inegi = gpd.read_file("assets/inegi_2020_alfonsoreyes.geojson")
-#inegi_df = inegi[["CVEGEO","POBTOT"]]
+juntasv = gpd.read_file("assets/juntas_vecinos_ar_f1.geojson")
+camaras = gpd.read_file("assets/camaras_viales_fase1_ar.geojson")
+biciracks = gpd.read_file("assets/biciracks_ar.geojson")
+#denue = pd.read_csv("assets/mapa/denue.csv")
 
-#-- Graph
-#alfonsoreyes_map = px.choropleth(inegi_df, geojson=inegi.geometry,locations="CVEGEO",color="POBTOT",projection="mercator", zoom=13.5, height=300)
-#alfonsoreyes_map.update_layout(mapbox_style="carto-positron")
-#alfonsoreyes_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+# Mapa Juntas
+juntasv_map = px.choropleth_mapbox(juntasv, geojson=juntasv.geometry,locations=juntasv.index,color="seccion",
+                                        center={"lat": 25.645682, "lon": -100.380236}, 
+                                        mapbox_style="carto-positron", zoom=13)
+juntasv_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-# Mapa
+# Mapa Cámaras
+camaras_map = px.scatter_mapbox(camaras, lat=camaras.geometry.y, lon=camaras.geometry.x, color_discrete_sequence=["fuchsia"], zoom=13.5, height=800)
+camaras_map.update_layout(mapbox_style="carto-positron")
+camaras_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-denue = pd.read_csv("assets/mapa/denue.csv")
-mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=13.5, height=300)
-mapa_denue.update_layout(mapbox_style="carto-positron")
-mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+# Mapa Biciracks
+biciracks_map = px.scatter_mapbox(biciracks, lat=biciracks.geometry.y, lon=biciracks.geometry.x, color_discrete_sequence=["fuchsia"], zoom=13.5, height=800)
+biciracks_map.update_layout(mapbox_style="carto-positron")
+biciracks_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
+
+#mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=13.5, height=300)
+#mapa_denue.update_layout(mapbox_style="carto-positron")
+#mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 
 #----------
@@ -182,8 +190,22 @@ def alfonsoreyes_2():
                     dbc.CardHeader("BiciRuta"),
                     dbc.CardBody(
                            dcc.Graph(
-                           id = 'mapa_denue',
-                           figure = mapa_denue,
+                           id = 'juntasv_map',
+                           figure = juntasv_map,
+                           style={'height':'80vh'}
+                        )
+                    ),
+                    dbc.CardBody(
+                           dcc.Graph(
+                           id = 'camaras_map',
+                           figure = camaras_map,
+                           style={'height':'80vh'}
+                        )
+                    ),
+                    dbc.CardBody(
+                           dcc.Graph(
+                           id = 'biciracks_map',
+                           figure = biciracks_map,
                            style={'height':'80vh'}
                         )
                     ),
