@@ -22,8 +22,10 @@ def alfonsoreyes():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1'),
-                            dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2'),
-                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_3')
+                            dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2',
+                                disabled = True),
+                            dbc.Tab(label='Hechos Viales', tab_id='alfonsoreyes_3',
+                                disabled = True)
                         ],
                         id='tabs',
                         active_tab="alfonsoreyes_1",
