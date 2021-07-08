@@ -108,20 +108,24 @@ camaras_viales['dia'] = pd.to_datetime(camaras_viales['dia'], dayfirst = True)
 
 
 # Ciclistas por Día
-bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia'],
+bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia', 'dia_semana'],
     values = 'bicycle', aggfunc = 'sum')
 
 bicicletas_dia = bicicletas_dia.reset_index()
 
+# Maximo de bicicletas
+maximo_bicicletas = bicicletas_dia.bicycle.max() + 200
+
 # Graph
-bicicletas_dia = px.line(bicicletas_dia, x = 'dia', y = 'bicycle',
+bicicletas_dia_graph = px.line(bicicletas_dia, x = 'dia', y = 'bicycle',
     labels = {'dia': '', 'bicycle': ''},
     template = 'plotly_white')
 
-bicicletas_dia.update_traces(mode = 'lines+markers', marker_size = 10,
+bicicletas_dia_graph.update_traces(mode = 'lines+markers', marker_size = 10,
     hovertemplate = None)
-bicicletas_dia.update_xaxes(showline = True, showgrid = False)
-bicicletas_dia.update_layout(dragmode = False, hovermode = 'x',
+bicicletas_dia_graph.update_xaxes(showgrid = False, showline = True)
+bicicletas_dia_graph.update_yaxes(range = [0,maximo_bicicletas])
+bicicletas_dia_graph.update_layout(dragmode = False, hovermode = 'x',
     hoverlabel = dict(font_size = 16))
 
 
@@ -139,7 +143,7 @@ bicicletas_hora['porcentaje'] = bicicletas_hora['porcentaje'].round(decimals = 1
 bicicletas_hora = px.bar(bicicletas_hora, x='hora', y='porcentaje',
     labels = {'hora': '', 'porcentaje': ''}, text='porcentaje',
     hover_data={'hora':False, 'porcentaje':False}, color = 'porcentaje', 
-    color_continuous_scale = px.colors.sequential.Teal, template = 'plotly_white',
+    color_continuous_scale = px.colors.sequential.Blues, template = 'plotly_white',
     opacity = .9)
 
 bicicletas_hora.update(layout_coloraxis_showscale=False)
@@ -227,7 +231,7 @@ def alfonsoreyes_3():
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'bicicletas_dia',
-                            figure = bicicletas_dia,
+                            figure = bicicletas_dia_graph,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
