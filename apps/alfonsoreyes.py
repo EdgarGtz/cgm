@@ -21,14 +21,15 @@ def alfonsoreyes():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1'),
+                            dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1',
+                                disabled = True),
                             dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2',
                                 disabled = True),
-                            dbc.Tab(label='Hechos Viales', tab_id='alfonsoreyes_3',
-                                disabled = True)
+                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_3',
+                                disabled = False)
                         ],
                         id='tabs',
-                        active_tab="alfonsoreyes_1",
+                        active_tab="alfonsoreyes_3",
                         card=True
                         )
                     ),
@@ -96,42 +97,35 @@ book = gc.open_by_key(spreadsheet_key)
 # Create dataframe
 camaras_viales = book.worksheet('camaras_viales')
 camaras_viales = camaras_viales.get_all_values()
-camaras_viales = pd.DataFrame(camaras_viales[1:], columns = camaras_viales[0])
+camaras_viales = pd.DataFrame(camaras_viales[4:], columns = camaras_viales[3])
 
 # Change some variables to numeric
 camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
 camaras_viales['hora'] = pd.to_numeric(camaras_viales['hora'])
 
-
-# Ciclistas - Semana Anterior
-bicicletas_semana = camaras_viales['bicycle'].sum()
-bicicletas_semana = bicicletas_semana.astype(str)
-
-
-# Ciclistas - Semana Anterior
-bicicletas_acumuladas = camaras_viales['bicycle'].sum()
+# Change variables to datetime
+camaras_viales['dia'] = pd.to_datetime(camaras_viales['dia'], dayfirst = True)
 
 
 # Ciclistas por Día
-bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia','dia_semana'],
+bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia'],
     values = 'bicycle', aggfunc = 'sum')
 
 bicicletas_dia = bicicletas_dia.reset_index()
 
 # Graph
-bicicletas_dia = px.bar(bicicletas_dia, x='dia_semana', y='bicycle',
-    labels = {'dia_semana': '', 'bicycle': ''}, text='bicycle',
-    hover_data={'dia_semana':False, 'bicycle':False}, opacity = .9, template = 'plotly_white')
+bicicletas_dia = px.line(bicicletas_dia, x = 'dia', y = 'bicycle',
+    labels = {'dia': '', 'bicycle': ''},
+    template = 'plotly_white')
 
-bicicletas_dia.update_xaxes(showline=True, showgrid=False)
-bicicletas_dia.update_yaxes(showline=False, showgrid=False, showticklabels = False)
-bicicletas_dia.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
-    hoverlabel_bordercolor='white')
-bicicletas_dia.update(layout_coloraxis_showscale=False)
-bicicletas_dia.update_layout(hovermode = False, dragmode=False)
+bicicletas_dia.update_traces(mode = 'lines+markers', marker_size = 10,
+    hovertemplate = None)
+bicicletas_dia.update_xaxes(showline = True, showgrid = False)
+bicicletas_dia.update_layout(dragmode = False, hovermode = 'x',
+    hoverlabel = dict(font_size = 16))
 
 
-# Ciclistas por Hora del Día
+# Ciclistas por Hora
 bicicletas_hora = pd.pivot_table(camaras_viales, index = ['hora'], values = 'bicycle',
     aggfunc = 'sum')
 bicicletas_hora = bicicletas_hora.reset_index()
@@ -145,7 +139,7 @@ bicicletas_hora['porcentaje'] = bicicletas_hora['porcentaje'].round(decimals = 1
 bicicletas_hora = px.bar(bicicletas_hora, x='hora', y='porcentaje',
     labels = {'hora': '', 'porcentaje': ''}, text='porcentaje',
     hover_data={'hora':False, 'porcentaje':False}, color = 'porcentaje', 
-    color_continuous_scale = px.colors.sequential.Sunset, template = 'plotly_white',
+    color_continuous_scale = px.colors.sequential.Teal, template = 'plotly_white',
     opacity = .9)
 
 bicicletas_hora.update(layout_coloraxis_showscale=False)
@@ -224,27 +218,6 @@ def alfonsoreyes_3():
 
     return html.Div([
 
-        dbc.Row([
-
-            dbc.Col([
-                dbc.CardHeader('Bicicletas - Semana Anterior'),
-                dbc.CardBody(
-                    html.H3('3,218')
-                )
-            ], style = {'textAlign':'center'}),
-
-
-            dbc.Col([
-                dbc.CardHeader('Bicicletas Acumuladas'),
-                dbc.CardBody(
-                    html.H3('3,218')
-                )
-            ], style = {'textAlign':'center'})
-
-        ]),
-
-        html.Br(),
-
         dbc.Row(
 
             dbc.Col(
@@ -275,7 +248,7 @@ def alfonsoreyes_3():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Bicicletas por Hora del Día'),
+                    dbc.CardHeader('Bicicletas por Hora'),
                     dbc.CardBody([
                         dcc.Graph(
                             id = 'bicicletas_hora',
