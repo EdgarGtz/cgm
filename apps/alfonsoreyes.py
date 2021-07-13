@@ -22,14 +22,12 @@ def alfonsoreyes():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1',
-                                disabled = True),
+                                disabled = False),
                             dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2',
                                 disabled = True),
-                            dbc.Tab(label='Ciclistas', tab_id='alfonsoreyes_3',
-                                disabled = False)
                         ],
                         id='tabs',
-                        active_tab="alfonsoreyes_3",
+                        active_tab="alfonsoreyes_1",
                         card=True
                         )
                     ),
@@ -86,90 +84,183 @@ gc = gspread.authorize(credentials)
 
 #----------
 
-# Ciclistas
-
-# Cámaras Viales
+# BICICLETAS
 
 # Connect to the spreadsheet
 spreadsheet_key = '18mtg-QZ0sCF-_7u643LTGGBoEekV7fGW3S_jaePmQQY'
 book = gc.open_by_key(spreadsheet_key)
 
+
+# BICICLETAS POR HORA
+
 # Create dataframe
-camaras_viales = book.worksheet('camaras_viales')
-camaras_viales = camaras_viales.get_all_values()
-camaras_viales = pd.DataFrame(camaras_viales[4:], columns = camaras_viales[3])
+bicicletas_hora = book.worksheet('camaras_viales')
+bicicletas_hora = bicicletas_hora.get_all_values()
+bicicletas_hora = pd.DataFrame(bicicletas_hora[61:], columns = bicicletas_hora[3])
 
-# Change some variables to numeric
-camaras_viales['bicycle'] = pd.to_numeric(camaras_viales['bicycle'])
-camaras_viales['hora'] = pd.to_numeric(camaras_viales['hora'])
+# Create datetime variable
+bicicletas_hora['datetime'] = bicicletas_hora['dia'] + ' ' + bicicletas_hora['hora']
 
-# Change variables to datetime
-camaras_viales['dia'] = pd.to_datetime(camaras_viales['dia'], dayfirst = True)
-
-
-# Ciclistas por Día
-bicicletas_dia = pd.pivot_table(camaras_viales, index = ['dia', 'dia_semana'],
-    values = 'bicycle', aggfunc = 'sum')
-
-bicicletas_dia = bicicletas_dia.reset_index()
+# Change variable types
+bicicletas_hora['datetime'] = pd.to_datetime(bicicletas_hora['datetime'],
+    dayfirst = True, format = '%d/%m/%Y %H')
+bicicletas_hora['bicycle'] = pd.to_numeric(bicicletas_hora['bicycle'])
 
 # Maximo de bicicletas
-maximo_bicicletas = bicicletas_dia.bicycle.max() + 200
+max_bicicletas_hora = bicicletas_hora.bicycle.max() + 100
 
 # Graph
-bicicletas_dia_graph = px.line(bicicletas_dia, x = 'dia', y = 'bicycle',
-    labels = {'dia': '', 'bicycle': ''},
-    template = 'plotly_white')
+bicicletas_hora = px.scatter(bicicletas_hora, x = 'datetime', y = 'bicycle',
+    labels = {'datetime': '', 'bicycle': ''}, template = 'plotly_white',
+    hover_data = ['dia_semana'])
 
-bicicletas_dia_graph.update_traces(mode = 'lines+markers', marker_size = 10,
-    hovertemplate = None)
-bicicletas_dia_graph.update_xaxes(showgrid = False, showline = True)
-bicicletas_dia_graph.update_yaxes(range = [0,maximo_bicicletas])
-bicicletas_dia_graph.update_layout(dragmode = False, hovermode = 'x',
+bicicletas_hora.update_traces(mode = 'lines')
+bicicletas_hora.update_xaxes(showgrid = False, showline = True)
+bicicletas_hora.update_yaxes(range = [0, max_bicicletas_hora])
+bicicletas_hora.update_layout(dragmode = False, hovermode = 'x',
     hoverlabel = dict(font_size = 16))
 
 
-# Ciclistas por Hora
-bicicletas_hora = pd.pivot_table(camaras_viales, index = ['hora'], values = 'bicycle',
-    aggfunc = 'sum')
-bicicletas_hora = bicicletas_hora.reset_index()
-bicicletas_hora = bicicletas_hora.sort_values(by=['hora'])
+# BICICLETAS POR DÍA
 
-suma = bicicletas_hora['bicycle'].sum()
-bicicletas_hora['porcentaje'] = (bicicletas_hora['bicycle'] / suma) * 100
-bicicletas_hora['porcentaje'] = bicicletas_hora['porcentaje'].round(decimals = 1)
+# Create dataframe
+bicicletas_dia = book.worksheet('camaras_viales')
+bicicletas_dia = bicicletas_dia.get_all_values()
+bicicletas_dia = pd.DataFrame(bicicletas_dia[61:], columns = bicicletas_dia[3])
+
+# Change variable types
+bicicletas_dia['dia'] = pd.to_datetime(bicicletas_dia['dia'],
+    dayfirst = True)
+bicicletas_dia['bicycle'] = pd.to_numeric(bicicletas_dia['bicycle'])
+
+# Bicycles per day
+bicicletas_dia = pd.pivot_table(bicicletas_dia, index = ['dia', 'dia_semana'],
+    values = 'bicycle', aggfunc = 'sum')
+bicicletas_dia = bicicletas_dia.reset_index()
+
+# Maximo de bicicletas
+max_bicicletas_dia = bicicletas_dia.bicycle.max() + 200
 
 # Graph
-bicicletas_hora = px.bar(bicicletas_hora, x='hora', y='porcentaje',
-    labels = {'hora': '', 'porcentaje': ''}, text='porcentaje',
-    hover_data={'hora':False, 'porcentaje':False}, color = 'porcentaje', 
-    color_continuous_scale = px.colors.sequential.Blues, template = 'plotly_white',
-    opacity = .9)
+bicicletas_dia = px.scatter(bicicletas_dia, x = 'dia', y = 'bicycle',
+    labels = {'dia': '', 'bicycle': ''}, template = 'plotly_white',
+    hover_data = ['dia_semana'])
 
-bicicletas_hora.update(layout_coloraxis_showscale=False)
-bicicletas_hora.update_yaxes(showticklabels=False, showgrid=False)
-bicicletas_hora.update_traces(texttemplate='%{text:}% ')
-bicicletas_hora.layout.yaxis.ticksuffix = ' '
-bicicletas_hora.update_layout(hovermode = False, dragmode=False)
+bicicletas_dia.update_traces(mode = 'markers+lines', marker_size = 10)
+bicicletas_dia.update_xaxes(showgrid = False, showline = True)
+bicicletas_dia.update_yaxes(range = [0, max_bicicletas_dia])
+bicicletas_dia.update_layout(dragmode = False, hovermode = 'x',
+    hoverlabel = dict(font_size = 16))
+
+
+# BICICLETAS POR SEMANA
+
+# Create dataframe
+bicicletas_semana = book.worksheet('camaras_viales')
+bicicletas_semana = bicicletas_semana.get_all_values()
+bicicletas_semana = pd.DataFrame(bicicletas_semana[61:], columns = bicicletas_semana[3])
+
+#Change variable types
+bicicletas_semana['dia'] = pd.to_datetime(bicicletas_semana['dia'], dayfirst = True)
+bicicletas_semana['bicycle'] = pd.to_numeric(bicicletas_semana['bicycle'])
+
+# Bicycles per week
+bicicletas_semana = pd.pivot_table(bicicletas_semana, index = ['dia'],
+    values = 'bicycle', aggfunc = 'sum')
+bicicletas_semana = bicicletas_semana.resample('W').sum()
+bicicletas_semana = bicicletas_semana.reset_index()
+
+# Maximo de bicicletas
+max_bicicletas_semana = bicicletas_semana.bicycle.max() + 1000
+
+# Graph
+bicicletas_semana = px.scatter(bicicletas_semana, x = 'dia', y = 'bicycle',
+    labels = {'dia': '', 'bicycle': ''}, template = 'plotly_white')
+
+bicicletas_semana.update_traces(mode = 'markers+lines', marker_size = 10)
+bicicletas_semana.update_xaxes(showgrid = False, showline = True)
+bicicletas_semana.update_yaxes(range = [0, max_bicicletas_semana])
+bicicletas_semana.update_layout(dragmode = False, hovermode = 'x',
+    hoverlabel = dict(font_size = 16))
+
 
 #----------
-
 
 # Layout - BiciRuta
 def alfonsoreyes_1():
 
     return html.Div([
 
-        # Avance del Proyecto
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Bicicletas por Hora'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'bicicletas_hora',
+                            figure = bicicletas_hora,
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            )
+        ),
+
+        html.Br(),
 
         dbc.Row(
+
             dbc.Col(
+
                 dbc.Card([
-                    dbc.CardHeader("Avance del Proyecto"),
-                    dbc.CardBody(
-                        dbc.Progress("25%", value=25)
-                    )
+                    dbc.CardHeader('Bicicletas por Día'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'bicicletas_dia',
+                            figure = bicicletas_dia,
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
                 ])
+
+            )
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Bicicletas por Semana'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'bicicletas_semana',
+                            figure = bicicletas_semana,
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
             )
         )
 
@@ -215,62 +306,6 @@ def alfonsoreyes_2():
 
     ])
 
-#----------
-
-# Layout - Ciclistas
-def alfonsoreyes_3():
-
-    return html.Div([
-
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Bicicletas por Día'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'bicicletas_dia',
-                            figure = bicicletas_dia_graph,
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )
-        ),
-
-        html.Br(),
-
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Bicicletas por Hora'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'bicicletas_hora',
-                            figure = bicicletas_hora,
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )
-        )
-
-    ])
 
 #----------
 
@@ -281,8 +316,7 @@ def render_alfonsoreyes(tab):
         return alfonsoreyes_1()
     elif tab == 'alfonsoreyes_2':
         return alfonsoreyes_2()
-    elif tab == 'alfonsoreyes_3':
-        return alfonsoreyes_3()
+
 
 
 
