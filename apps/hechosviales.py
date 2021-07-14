@@ -432,7 +432,8 @@ def render_interseccion_hv_ano(clickData):
             template = "plotly_white")
 
     interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
-    interseccion_hv_ano.update_yaxes(showline=False, showgrid=False, showticklabels = False)
+    interseccion_hv_ano.update_yaxes(showline=False, showgrid=False,
+        showticklabels = False)
     interseccion_hv_ano.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
         hoverlabel_bordercolor='white')
     interseccion_hv_ano.update(layout_coloraxis_showscale=False)
