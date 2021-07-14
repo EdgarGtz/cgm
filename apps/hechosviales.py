@@ -10,7 +10,7 @@ import pandas as pd
 
 #----------
 
-# Layout
+# Layout General
 def hechosviales():
 
     return html.Div([
@@ -21,14 +21,7 @@ def hechosviales():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='General', tab_id='hv_general', disabled=True),
-                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos'),
-                            dbc.Tab(label='Peatón', tab_id='hv_peaton',
-                                disabled = True),
-                            dbc.Tab(label = 'Ciclista', tab_id = 'hv_ciclista',
-                                disabled = True),
-                            dbc.Tab(label = 'Motociclista', tab_id = 'hv_motociclista',
-                                disabled = True)
+                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos')
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -40,24 +33,12 @@ def hechosviales():
             ), justify = 'center'
         ),
 
-        # html.Br(),
-        
-        # dbc.Row(
-        #     dbc.Col(
-
-        #         dbc.Card([
-        #             dbc.CardHeader("Datos de hechos viales"),
-        #             dbc.CardBody("Datos")
-        #         ])
-
-        #     )
-        # ),
-
         #Footer 
         dbc.Row(
             dbc.Col(
                 html.H6('San Pedro Garza García, Nuevo León, México')
-            ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
+            ), className='px-3 py-4',
+            style={'background-color': 'black','color': 'white'}
         )
 
     ])
@@ -68,60 +49,6 @@ def hechosviales():
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
 gc = gspread.authorize(credentials)
-
-#----------
-
-# General
-
-# Hechos Viales por Año
-
-#-- Connect to the spreadsheet
-spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
-book = gc.open_by_key(spreadsheet_key)
-
-hechos_viales = book.worksheet('hechosviales')
-hechos_viales = hechos_viales.get_all_values()
-hechos_viales = pd.DataFrame(hechos_viales[1:], columns = hechos_viales[0])
-
-# Count hv por año
-hv_ano = pd.DataFrame(hechos_viales['año'].value_counts())
-hv_ano = hv_ano.reset_index()
-
-# Rename columns and change hv to numeric
-hv_ano.columns = ['Año', 'Hechos Viales']
-hv_ano['Hechos Viales'] = pd.to_numeric(hv_ano['Hechos Viales'])
-
-# Graph
-hv_ano = px.bar(hv_ano, x='Año', y='Hechos Viales',
-    labels = {'Año': ''}, text='Hechos Viales',
-    hover_data={'Año':False, 'Hechos Viales':False})
-
-
-# Layout - General
-def hv_general():
-
-    return html.Div([
-
-        # Hechos Viales por Año
-
-        dbc.Row(
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Hechos Viales por Año"),
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'hv_ano',
-                            figure = hv_ano,
-                            config={
-                            'displayModeBar': False
-                            }
-                        ) 
-                    )  
-                ])
-            )
-        ),
-
-    ])
 
 #----------
 
@@ -156,7 +83,7 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
 
 vasconcelos_map.update_layout(clickmode='event+select')
 
-
+#----------
 
 # Layout - Intersecciones
 def hv_vasconcelos():
@@ -456,29 +383,7 @@ def hv_vasconcelos():
 
 #----------
 
-# Layout - Atropellos
-def hv_atropellos():
-
-    return html.Div([
-
-        # Atropellos
-        dbc.Row(
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("Atropellos a Peatones (2015 - 2020)"),
-                    dbc.CardBody(
-                        html.Iframe(width='100%', height='560', 
-                           src='https://edgargtzgzz.carto.com/builder/981d5d24-9fd7-4f8f-b1ca-47dc0e8658c7/embed')
-                    )  
-                ])
-            )
-        )
-
-    ])
-
-#----------
-
-# Datos de Intersección
+# Datos de Intersecciones
 
 # Nombre
 def render_interseccion_nombre(clickData):
@@ -910,16 +815,10 @@ def render_interseccion_afec_vehiculo(clickData):
 
 # Display tabs
 def render_hechosviales(tab):
-    if tab == 'hv_general':
-        return hv_general()
-    elif tab == 'hv_vasconcelos':
+    if tab == 'hv_vasconcelos':
         return hv_vasconcelos()
-    elif tab == 'hv_atropellos':
-        return hv_peaton()
-    elif tab == 'hv_ciclista':
-        return hv_ciclista()
-    elif tab == 'hv_motociclista':
-        return hv_motociclista()
+
+
 
 
 
