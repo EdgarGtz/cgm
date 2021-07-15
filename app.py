@@ -68,12 +68,19 @@ def display_page(pathname):
 #----------
 
 
-# Alfonso Reyes
+# Alfonso Reyes - General
 
 @app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
 
 def get_ayuda(tab):
     return render_alfonsoreyes(tab)
+
+# Alfonso Reyes - Gráficas
+
+#@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
+
+#def get_ayuda(tab):
+ #   return render_alfonsoreyes(tab)
 
 
 # Hechos Viales

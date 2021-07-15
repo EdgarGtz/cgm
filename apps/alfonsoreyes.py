@@ -80,24 +80,17 @@ biciracks_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 # CONTEO
 
-# Connect to Google Drive
-scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('plasma-galaxy-271714-fa7f2076caca.json', scope)
-gc = gspread.authorize(credentials)
-
-# Connect to the spreadsheet
-spreadsheet_key = '18mtg-QZ0sCF-_7u643LTGGBoEekV7fGW3S_jaePmQQY'
-book = gc.open_by_key(spreadsheet_key)
-
-
 # BICICLETAS
 
 # BICICLETAS POR HORA
 
 # Create dataframe
-bicicletas_hora = book.worksheet('camaras_viales')
-bicicletas_hora = bicicletas_hora.get_all_values()
-bicicletas_hora = pd.DataFrame(bicicletas_hora[61:], columns = bicicletas_hora[3])
+bicicletas_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+bicicletas_hora = bicicletas_hora.iloc[57:]
+
+# Change variable types
+bicicletas_hora['hora'] = bicicletas_hora['hora'].astype(str)
+bicicletas_hora['dia'] = bicicletas_hora['dia'].astype(str)
 
 # Create datetime variable
 bicicletas_hora['datetime'] = bicicletas_hora['dia'] + ' ' + bicicletas_hora['hora']
@@ -124,9 +117,8 @@ bicicletas_hora.update_layout(dragmode = False, hovermode = 'x',
 # BICICLETAS POR DÍA
 
 # Create dataframe
-bicicletas_dia = book.worksheet('camaras_viales')
-bicicletas_dia = bicicletas_dia.get_all_values()
-bicicletas_dia = pd.DataFrame(bicicletas_dia[61:], columns = bicicletas_dia[3])
+bicicletas_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+bicicletas_dia = bicicletas_dia.iloc[57:]
 
 # Change variable types
 bicicletas_dia['dia'] = pd.to_datetime(bicicletas_dia['dia'],
@@ -156,9 +148,8 @@ bicicletas_dia.update_layout(dragmode = False, hovermode = 'x',
 # BICICLETAS POR SEMANA
 
 # Create dataframe
-bicicletas_semana = book.worksheet('camaras_viales')
-bicicletas_semana = bicicletas_semana.get_all_values()
-bicicletas_semana = pd.DataFrame(bicicletas_semana[61:], columns = bicicletas_semana[3])
+bicicletas_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+bicicletas_semana = bicicletas_semana.iloc[57:]
 
 #Change variable types
 bicicletas_semana['dia'] = pd.to_datetime(bicicletas_semana['dia'], dayfirst = True)
@@ -189,11 +180,13 @@ bicicletas_semana.update_layout(dragmode = False, hovermode = 'x',
 
 # PEATONES POR HORA
 
-# Connect to database
-peatones_hora = book.worksheet('camaras_viales')
-peatones_hora = peatones_hora.get_all_values()
-peatones_hora = pd.DataFrame(peatones_hora[61:],
-    columns = peatones_hora[3])
+# Create dataframe
+peatones_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+peatones_hora = peatones_hora.iloc[57:]
+
+# Change variable types
+peatones_hora['hora'] = peatones_hora['hora'].astype(str)
+peatones_hora['dia'] = peatones_hora['dia'].astype(str)
 
 # Create datetime variable
 peatones_hora['datetime'] = peatones_hora['dia'] + ' ' + peatones_hora['hora']
@@ -219,10 +212,9 @@ peatones_hora.update_layout(dragmode = False, hovermode = 'x',
 
 # PEATONES POR DIA
 
-# Connect to database
-peatones_dia = book.worksheet('camaras_viales')
-peatones_dia = peatones_dia.get_all_values()
-peatones_dia = pd.DataFrame(peatones_dia[61:], columns = peatones_dia[3])
+# Create dataframe
+peatones_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+peatones_dia = peatones_dia.iloc[57:]
 
 # Change variable types
 peatones_dia['dia'] = pd.to_datetime(peatones_dia['dia'],
@@ -251,11 +243,9 @@ peatones_dia.update_layout(dragmode = False, hovermode = 'x',
 
 # PEATONES POR SEMANA
 
-# Connect to database
-peatones_semana = book.worksheet('camaras_viales')
-peatones_semana = peatones_semana.get_all_values()
-peatones_semana = pd.DataFrame(peatones_semana[61:],
-    columns = peatones_semana[3])
+# Create dataframe
+peatones_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+peatones_semana = peatones_semana.iloc[57:]
 
 #Change variable types
 peatones_semana['dia'] = pd.to_datetime(peatones_semana['dia'],
@@ -287,11 +277,13 @@ peatones_semana.update_layout(dragmode = False, hovermode = 'x',
 
 # MOTOCICLETAS POR HORA
 
-# Connect to database
-motocicletas_hora = book.worksheet('camaras_viales')
-motocicletas_hora = motocicletas_hora.get_all_values()
-motocicletas_hora = pd.DataFrame(motocicletas_hora[61:],
-    columns = motocicletas_hora[3])
+# Create dataframe
+motocicletas_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+motocicletas_hora = motocicletas_hora.iloc[57:]
+
+# Change variable types
+motocicletas_hora['hora'] = motocicletas_hora['hora'].astype(str)
+motocicletas_hora['dia'] = motocicletas_hora['dia'].astype(str)
 
 # Create datetime variable
 motocicletas_hora['datetime'] = motocicletas_hora['dia'] + ' ' + motocicletas_hora['hora']
@@ -317,10 +309,9 @@ motocicletas_hora.update_layout(dragmode = False, hovermode = 'x',
 
 # MOTOCICLETAS POR DIA
 
-# Connect to database
-motocicletas_dia = book.worksheet('camaras_viales')
-motocicletas_dia = motocicletas_dia.get_all_values()
-motocicletas_dia = pd.DataFrame(motocicletas_dia[61:], columns = motocicletas_dia[3])
+# Create dataframe
+motocicletas_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+motocicletas_dia = motocicletas_dia.iloc[57:]
 
 # Change variable types
 motocicletas_dia['dia'] = pd.to_datetime(motocicletas_dia['dia'],
@@ -349,11 +340,9 @@ motocicletas_dia.update_layout(dragmode = False, hovermode = 'x',
 
 # MOTOCICLETAS POR SEMANA
 
-# Connect to database
-motocicletas_semana = book.worksheet('camaras_viales')
-motocicletas_semana = motocicletas_semana.get_all_values()
-motocicletas_semana = pd.DataFrame(motocicletas_semana[61:],
-    columns = motocicletas_semana[3])
+# Create dataframe
+motocicletas_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+motocicletas_semana = motocicletas_semana.iloc[57:]
 
 #Change variable types
 motocicletas_semana['dia'] = pd.to_datetime(motocicletas_semana['dia'],
@@ -385,11 +374,13 @@ motocicletas_semana.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOBUSES POR HORA
 
-# Connect to database
-autobuses_hora = book.worksheet('camaras_viales')
-autobuses_hora = autobuses_hora.get_all_values()
-autobuses_hora = pd.DataFrame(autobuses_hora[61:],
-    columns = autobuses_hora[3])
+# Create dataframe
+autobuses_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autobuses_hora = autobuses_hora.iloc[57:]
+
+# Change variable types
+autobuses_hora['hora'] = autobuses_hora['hora'].astype(str)
+autobuses_hora['dia'] = autobuses_hora['dia'].astype(str)
 
 # Create datetime variable
 autobuses_hora['datetime'] = autobuses_hora['dia'] + ' ' + autobuses_hora['hora']
@@ -415,10 +406,9 @@ autobuses_hora.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOBUSES POR DIA
 
-# Connect to database
-autobuses_dia = book.worksheet('camaras_viales')
-autobuses_dia = autobuses_dia.get_all_values()
-autobuses_dia = pd.DataFrame(autobuses_dia[61:], columns = autobuses_dia[3])
+# Create dataframe
+autobuses_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autobuses_dia = autobuses_dia.iloc[57:]
 
 # Change variable types
 autobuses_dia['dia'] = pd.to_datetime(autobuses_dia['dia'],
@@ -447,11 +437,9 @@ autobuses_dia.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOBUSES POR SEMANA
 
-# Connect to database
-autobuses_semana = book.worksheet('camaras_viales')
-autobuses_semana = autobuses_semana.get_all_values()
-autobuses_semana = pd.DataFrame(autobuses_semana[61:],
-    columns = autobuses_semana[3])
+# Create dataframe
+autobuses_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autobuses_semana = autobuses_semana.iloc[57:]
 
 #Change variable types
 autobuses_semana['dia'] = pd.to_datetime(autobuses_semana['dia'],
@@ -483,11 +471,13 @@ autobuses_semana.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOS POR HORA
 
-# Connect to database
-autos_hora = book.worksheet('camaras_viales')
-autos_hora = autos_hora.get_all_values()
-autos_hora = pd.DataFrame(autos_hora[61:],
-    columns = autos_hora[3])
+# Create dataframe
+autos_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autos_hora = autos_hora.iloc[57:]
+
+# Change variable types
+autos_hora['hora'] = autos_hora['hora'].astype(str)
+autos_hora['dia'] = autos_hora['dia'].astype(str)
 
 # Create datetime variable
 autos_hora['datetime'] = autos_hora['dia'] + ' ' + autos_hora['hora']
@@ -513,10 +503,9 @@ autos_hora.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOS POR DIA
 
-# Connect to database
-autos_dia = book.worksheet('camaras_viales')
-autos_dia = autos_dia.get_all_values()
-autos_dia = pd.DataFrame(autos_dia[61:], columns = autos_dia[3])
+# Create dataframe
+autos_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autos_dia = autos_dia.iloc[57:]
 
 # Change variable types
 autos_dia['dia'] = pd.to_datetime(autos_dia['dia'],
@@ -545,11 +534,9 @@ autos_dia.update_layout(dragmode = False, hovermode = 'x',
 
 # AUTOS POR SEMANA
 
-# Connect to database
-autos_semana = book.worksheet('camaras_viales')
-autos_semana = autos_semana.get_all_values()
-autos_semana = pd.DataFrame(autos_semana[61:],
-    columns = autos_semana[3])
+# Create dataframe
+autos_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autos_semana = autos_semana.iloc[57:]
 
 #Change variable types
 autos_semana['dia'] = pd.to_datetime(autos_semana['dia'],
@@ -588,11 +575,37 @@ def alfonsoreyes_1():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Autos por Hora'),
+                    dbc.CardHeader('Título de gráfica'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'autos_hora',
-                            figure = autos_hora,
+                            id = '',
+                            figure = {},
+                            config={
+                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                            'hoverClosestCartesian', 'hoverCompareCartesian',
+                            'toggleSpikelines', 'select2d', 'toImage'],
+                            'displaylogo': False
+                            }
+                        )
+                    ])
+                ])
+
+            )
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+
+            dbc.Col(
+
+                dbc.Card([
+                    dbc.CardHeader('Peatones por Día'),
+                    dbc.CardBody([
+                        dcc.Graph(
+                            id = 'peatones_dia',
+                            figure = peatones_dia,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -619,32 +632,6 @@ def alfonsoreyes_1():
                         dcc.Graph(
                             id = 'autos_dia',
                             figure = autos_dia,
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'toImage'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )
-        ),
-
-        html.Br(),
-
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Autos por Semana'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'autos_semana',
-                            figure = autos_semana,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -704,6 +691,24 @@ def alfonsoreyes_2():
 
 #----------
 
+
+# CONTEO
+
+#def render_conteo
+
+
+
+
+
+
+
+
+
+
+
+
+
+#----------
 
 # Display tabs
 def render_alfonsoreyes(tab):
