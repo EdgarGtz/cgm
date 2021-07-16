@@ -81,25 +81,6 @@ biciracks_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 # CONTEO
 
 
-# Create dataframe
-conteo = pd.read_csv('assets/camaras_viales.csv', header = [3])
-conteo = conteo.iloc[57:]
-
-# Change variable types
-conteo['dia'] = pd.to_datetime(conteo['dia'],
-    dayfirst = True)
-conteo['bicycle'] = pd.to_numeric(conteo['bicycle'])
-conteo['peatones'] = pd.to_numeric(conteo['peatones'])
-conteo['motorcycle'] = pd.to_numeric(conteo['motorcycle'])
-conteo['bus'] = pd.to_numeric(conteo['bus'])
-conteo['autos'] = pd.to_numeric(conteo['autos'])
-
-
-
-
-
-
-
 
 
 # BICICLETAS
@@ -620,6 +601,7 @@ def alfonsoreyes_1():
                 dcc.Dropdown(
                     id='my_dropdown_1',
                     options=[
+                             {'label': 'Hora', 'value': 'hora'},
                              {'label': 'Día', 'value': 'dia'},
                              {'label': 'Semana', 'value': 'semana'}                    ],
                     value='dia',
@@ -760,12 +742,47 @@ def alfonsoreyes_2():
 
 def render_conteo(my_dropdown_1, my_dropdown):
 
-    # Create dataframe
-    conteo1 = conteo
+    if my_dropdown_1 == 'hora':
 
-    if my_dropdown_1 == 'dia':
+        # Create dataframe
+        conteo_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+        conteo_hora = conteo_hora.iloc[57:]
 
-        conteo2 = pd.pivot_table(conteo1, index = ['dia', 'dia_semana'],
+        # Change variable types
+        conteo_hora['hora'] = conteo_hora['hora'].astype(str)
+        conteo_hora['dia'] = conteo_hora['dia'].astype(str)
+
+        # Create datetime variable
+        conteo_hora['datetime'] = conteo_hora['dia'] + ' ' + conteo_hora['hora']
+
+        # Change variable types
+        conteo_hora['datetime'] = pd.to_datetime(conteo_hora['datetime'], 
+            dayfirst = True, format = '%d/%m/%Y %H')
+
+        # Graph
+        conteo2 = px.scatter(conteo_hora, x = 'datetime', y = my_dropdown,
+            labels = {'datetime': '', my_dropdown: ''}, template = 'plotly_white',
+            hover_data = ['dia_semana'])
+
+        conteo2.update_traces(mode = 'lines', fill='tozeroy')
+        conteo2.update_xaxes(showgrid = False, showline = True)
+        conteo2.update_layout(dragmode = False, hovermode = 'x',
+            hoverlabel = dict(font_size = 16))
+
+        return conteo2
+
+    elif my_dropdown_1 == 'dia':
+
+        # Create dataframe
+        conteo_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
+        conteo_dia = conteo_dia.iloc[57:]
+
+        # Change dia to datetime
+        conteo_dia['dia'] = pd.to_datetime(conteo_dia['dia'],
+            dayfirst = True)
+
+        # Create dataframe
+        conteo2 = pd.pivot_table(conteo_dia, index = ['dia', 'dia_semana'],
             values = my_dropdown, aggfunc = 'sum')
         conteo2 = conteo2.reset_index()
 
@@ -783,8 +800,16 @@ def render_conteo(my_dropdown_1, my_dropdown):
 
     elif my_dropdown_1 == 'semana':
 
-        # Bicycles per week
-        conteo2 = pd.pivot_table(conteo1, index = ['dia'],
+
+        # Create dataframe
+        conteo_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
+        conteo_semana = conteo_semana.iloc[57:]
+
+        conteo_semana['dia'] = pd.to_datetime(conteo_semana['dia'],
+            dayfirst = True)
+
+        # Create dataframe
+        conteo2 = pd.pivot_table(conteo_semana, index = ['dia'],
             values = my_dropdown, aggfunc = 'sum')
         conteo2 = conteo2.resample('W').sum()
         conteo2 = conteo2.reset_index()
