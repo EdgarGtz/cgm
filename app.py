@@ -15,13 +15,14 @@ server = app.server
 
 # Connect to app pages
 from apps import home
-from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes 
+from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes, render_conteo
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa,
 	render_interseccion_resp_edad, render_interseccion_afec_edad, 
 	render_interseccion_resp_genero, render_interseccion_afec_genero,
-	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo)
+	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo
+	)
 
 # Connect to config
 from config import user, password
@@ -67,10 +68,21 @@ def display_page(pathname):
 
 #----------
 
+# Conteo
+
+@app.callback(
+	Output('conteo2', 'figure'),
+	Input('my_dropdown_1', 'value'),
+	Input('my_dropdown', 'value'))
+
+def get_conteo1(tab, tab1):
+    return render_conteo(tab, tab1)
+
 
 # Alfonso Reyes - General
 
-@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
+@app.callback(Output('alfonsoreyes_content', 'children'), 
+	[Input('tabs', 'active_tab')])
 
 def get_ayuda(tab):
     return render_alfonsoreyes(tab)

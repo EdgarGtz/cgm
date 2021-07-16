@@ -80,6 +80,28 @@ biciracks_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 # CONTEO
 
+
+# Create dataframe
+conteo = pd.read_csv('assets/camaras_viales.csv', header = [3])
+conteo = conteo.iloc[57:]
+
+# Change variable types
+conteo['dia'] = pd.to_datetime(conteo['dia'],
+    dayfirst = True)
+conteo['bicycle'] = pd.to_numeric(conteo['bicycle'])
+conteo['peatones'] = pd.to_numeric(conteo['peatones'])
+conteo['motorcycle'] = pd.to_numeric(conteo['motorcycle'])
+conteo['bus'] = pd.to_numeric(conteo['bus'])
+conteo['autos'] = pd.to_numeric(conteo['autos'])
+
+
+
+
+
+
+
+
+
 # BICICLETAS
 
 # BICICLETAS POR HORA
@@ -571,14 +593,57 @@ def alfonsoreyes_1():
     return html.Div([
 
         dbc.Row(
+            dbc.Col(
+                dcc.Dropdown(
+                    id='my_dropdown',
+                    options=[
+                             {'label': 'Bicicletas', 'value': 'bicycle'},
+                             {'label': 'Peatones', 'value': 'peatones'},
+                             {'label': 'Motocicletas', 'value': 'motorcycle'},
+                             {'label': 'Autobuses', 'value': 'bus'},
+                             {'label': 'Autos', 'value': 'autos'}
+                    ],
+                    value='bicycle',
+                    multi=False,
+                    clearable=False,
+                    style={"width": "50%"}
+                )
+
+            )
+
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Dropdown(
+                    id='my_dropdown_1',
+                    options=[
+                             {'label': 'Día', 'value': 'dia'},
+                             {'label': 'Semana', 'value': 'semana'}                    ],
+                    value='dia',
+                    multi=False,
+                    clearable=False,
+                    style={"width": "50%"}
+                )
+
+            )
+
+        ),
+
+
+        html.Br(),
+
+        dbc.Row(
 
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Título de gráfica'),
+                    dbc.CardHeader(''),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = '',
+                            id = 'conteo2',
                             figure = {},
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
@@ -601,11 +666,11 @@ def alfonsoreyes_1():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Peatones por Día'),
+                    dbc.CardHeader('Bicicletas por Hora'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'peatones_dia',
-                            figure = peatones_dia,
+                            id = '',
+                            figure = bicicletas_hora,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -627,11 +692,11 @@ def alfonsoreyes_1():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Autos por Día'),
+                    dbc.CardHeader('Peatones por Semana'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = 'autos_dia',
-                            figure = autos_dia,
+                            id = 'peatones_semana',
+                            figure = peatones_semana,
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -691,22 +756,50 @@ def alfonsoreyes_2():
 
 #----------
 
-
 # CONTEO
 
-#def render_conteo
+def render_conteo(my_dropdown_1, my_dropdown):
 
+    # Create dataframe
+    conteo1 = conteo
 
+    if my_dropdown_1 == 'dia':
 
+        conteo2 = pd.pivot_table(conteo1, index = ['dia', 'dia_semana'],
+            values = my_dropdown, aggfunc = 'sum')
+        conteo2 = conteo2.reset_index()
 
+        # Graph
+        conteo2 = px.scatter(conteo2, x = 'dia', y = my_dropdown,
+            labels = {'datetime': '', my_dropdown: ''}, template = 'plotly_white',
+            hover_data = ['dia_semana'])
 
+        conteo2.update_traces(mode = 'lines', fill='tozeroy')
+        conteo2.update_xaxes(showgrid = False, showline = True)
+        conteo2.update_layout(dragmode = False, hovermode = 'x',
+            hoverlabel = dict(font_size = 16))
 
+        return conteo2
 
+    elif my_dropdown_1 == 'semana':
 
+        # Bicycles per week
+        conteo2 = pd.pivot_table(conteo1, index = ['dia'],
+            values = my_dropdown, aggfunc = 'sum')
+        conteo2 = conteo2.resample('W').sum()
+        conteo2 = conteo2.reset_index()
 
+        # Graph
+        conteo2 = px.scatter(conteo2, x = 'dia', y = my_dropdown,
+            labels = {'dia': '', my_dropdown: ''}, template = 'plotly_white')
 
+        conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
+            fill='tozeroy')
+        conteo2.update_xaxes(showgrid = False, showline = True)
+        conteo2.update_layout(dragmode = False, hovermode = 'x',
+            hoverlabel = dict(font_size = 16))
 
-
+        return conteo2
 
 #----------
 
