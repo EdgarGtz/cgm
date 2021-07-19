@@ -225,55 +225,6 @@ def hv_vasconcelos():
 
         ]),
 
-        html.Br(),
-
-        # Causa y Tipo de Hechos Viales
-        dbc.Row([
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Tipos de Hechos Viales'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_hv_tipo',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            ),
-
-            html.Br(),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Causas de Hechos Viales'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_hv_causa',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )          
-
-        ]),
-
     ])
 
 #----------
