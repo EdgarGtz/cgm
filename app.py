@@ -18,10 +18,7 @@ from apps import home
 from apps.alfonsoreyes import alfonsoreyes, render_alfonsoreyes, render_conteo
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa,
-	render_interseccion_resp_edad, render_interseccion_afec_edad, 
-	render_interseccion_resp_genero, render_interseccion_afec_genero,
-	render_interseccion_resp_vehiculo, render_interseccion_afec_vehiculo
+	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa
 	)
 
 # Connect to config
@@ -153,56 +150,6 @@ def get(clickData):
 
 def get(clickData):
  	return render_interseccion_hv_causa(clickData)
-
-#-- Intersección - Edad de Responsables
-
-@app.callback(Output('interseccion_resp_edad', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_resp_edad(clickData)
-
-#-- Intersección - Edad de Afectados
-
-@app.callback(Output('interseccion_afec_edad', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_afec_edad(clickData)
-
-#-- Intersección - Género de Responsables
-
-@app.callback(Output('interseccion_resp_genero', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_resp_genero(clickData)
-
-#-- Intersección - Género de Afectados
-
-@app.callback(Output('interseccion_afec_genero', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_afec_genero(clickData)
-
-#-- Intersección - Vehículo del Responsable
-
-@app.callback(Output('interseccion_resp_vehiculo', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_resp_vehiculo(clickData)
-
-#-- Intersección - Vehículo del Afectado
-
-@app.callback(Output('interseccion_afec_vehiculo', 'figure'),
-	[Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_afec_vehiculo(clickData)
-
-
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
