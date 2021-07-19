@@ -21,7 +21,7 @@ def hechosviales():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos')
+                            dbc.Tab(label='Hechos viales', tab_id='hv_vasconcelos')
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -83,12 +83,26 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
 
 vasconcelos_map.update_layout(clickmode='event+select')
 
+
+# HWCHOS VIALES POR HORA
+
+# Create dataframe
+bicicletas_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+bicicletas_hora = bicicletas_hora.iloc[57:]
+
+# Change variable types
+bicicletas_hora['hora'] = bicicletas_hora['hora'].astype(str)
+bicicletas_hora['dia'] = bicicletas_hora['dia'].astype(str)
+
+
+
 #----------
 
 # Layout - Intersecciones
 def hv_vasconcelos():
 
     return html.Div([
+
 
         # Mapa y principales indicadores
         dbc.Row([
@@ -110,74 +124,106 @@ def hv_vasconcelos():
                         ),
                     style={'padding':'0px'}
                     )
-                ]), lg=10
+                ]), lg=7
 
             ),
 
             dbc.Col([
 
+                dbc.Card([
+                    dbc.CardBody(
+                        dcc.Checklist(
+                            options=[
+                                {'label': '  L', 'value': 'lunes'},
+                                {'label': '  M', 'value': 'martes'},
+                                {'label': '  MX', 'value': 'miercoles'},
+                                {'label': '  J', 'value': 'jueves'},
+                                {'label': '  V', 'value': 'viernes'},
+                                {'label': '  S', 'value': 'sabado'},
+                                {'label': '  D', 'value': 'domingo'}
+                            ],
+                            value=['lunes', 'martes', 'miercoles','jueves','viernes','sabado','domingo'],
+                            labelStyle={'display': 'inline-block', "padding":"0px 15px 0px 0"},
+                            className="d-flex justify-content-center mb-3, py-1"
+                        ) 
+                    ),
+                    dcc.RangeSlider(
+                        marks={i: '{}'.format(i) for i in range(0, 24)},
+                        count=1,
+                        min=0,
+                        max=23,
+                        step=1,
+                        value=[0, 23]
+                    )  
+                ]),
+
+                html.Br(),
+
+                # Nombre Intersección
                 dbc.Card(
-                    dbc.CardHeader(id='interseccion_nombre'),
-                    style={'textAlign':'center'}, inverse=False, outline = False
-                ),
+                        dbc.CardHeader(id='interseccion_nombre'),
+                        style={'textAlign':'center'}, inverse=False, outline = False),
 
                 html.Br(),
 
-                dbc.Card([
-                    dbc.CardHeader('Hechos Viales'),
-                    dbc.CardBody(
-                        html.H3(id = 'interseccion_hv')
-                    )
-                ], style={'textAlign':'center'}),
+                # Tarjetas Indicadores
+                dbc.Row([
+                        dbc.Col(
+                            
+                            dbc.Card([
+                                dbc.CardHeader('Hechos Viales'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_hv')
+                                )
+                            ], style={'textAlign':'center'}),
+                        ),
+
+                        dbc.Col(
+                             dbc.Card([
+                                dbc.CardHeader('Lesionados'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_les')
+                                )
+                            ], style={'textAlign':'center'}),
+                        ),
+
+                        dbc.Col(
+                            dbc.Card([
+                                dbc.CardHeader('Fallecidos'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_fal')
+                                )
+                            ], style={'textAlign':'center'})
+                        )
+                ]),
 
                 html.Br(),
 
-                dbc.Card([
-                    dbc.CardHeader('Lesionados'),
-                    dbc.CardBody(
-                        html.H3(id = 'interseccion_les')
+                # Hechos viales por año
+                dbc.Row(
+                    dbc.Col(
+                        dbc.Card([
+                            dbc.CardHeader('Hechos Viales por Año'),
+                            dbc.CardBody([
+                                dcc.Graph(
+                                    id = 'interseccion_hv_ano',
+                                    figure = {},
+                                    config={
+                                    'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                    'hoverClosestCartesian', 'hoverCompareCartesian',
+                                    'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                    }
+                                )
+                            ])
+                        ])
                     )
-                ], style={'textAlign':'center'}),
-
-                html.Br(),
-
-                dbc.Card([
-                    dbc.CardHeader('Fallecidos'),
-                    dbc.CardBody(
-                        html.H3(id = 'interseccion_fal')
-                    )
-                ], style={'textAlign':'center'})            
-
+                )
             ])
 
+            
+
         ]),
-
-        html.Br(),
-
-        # Hechos viales por año
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Hechos Viales por Año'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_hv_ano',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )
-
-        ),
 
         html.Br(),
 
@@ -227,157 +273,6 @@ def hv_vasconcelos():
             )          
 
         ]),
-
-        html.Br(),
-
-        # Edad de Responsables y Afectados
-        dbc.Row([
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Edad de Responsables'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_resp_edad',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            ),
-
-            html.Br(),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Edad de Afectados'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_afec_edad',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )          
-
-        ]),
-
-        html.Br(),
-
-        # Género de Responsables y Afectados
-        dbc.Row([
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Género de Responsables'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_resp_genero',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'hoverClosestPie'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            ),
-
-            html.Br(),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Género de Afectados'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_afec_genero',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'hoverClosestPie'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )          
-
-        ]),
-
-        html.Br(),
-
-        # Vehículo de Responsables y Afectados
-        dbc.Row([
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Vehículo del Responsable'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_resp_vehiculo',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'hoverClosestPie'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            ),
-
-            html.Br(),
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Vehículo del Afectado'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'interseccion_afec_vehiculo',
-                            figure = {},
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'hoverClosestPie'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )          
-
-        ])
 
     ])
 
