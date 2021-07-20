@@ -23,9 +23,7 @@ def alfonsoreyes():
                     dbc.CardHeader(
                         dbc.Tabs([
                             dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1',
-                                disabled = False),
-                            dbc.Tab(label='Mapa', tab_id='alfonsoreyes_2',
-                                disabled = True),
+                                disabled = False)
                         ],
                         id='tabs',
                         active_tab="alfonsoreyes_1",
@@ -48,40 +46,7 @@ def alfonsoreyes():
 
 #----------
 
-#-- Connect to data
-juntasv = gpd.read_file("assets/juntas_vecinos_ar_f1.geojson")
-camaras = gpd.read_file("assets/camaras_viales_fase1_ar.geojson")
-biciracks = gpd.read_file("assets/biciracks_ar.geojson")
-#denue = pd.read_csv("assets/mapa/denue.csv")
-
-# Mapa Juntas
-juntasv_map = px.choropleth_mapbox(juntasv, geojson=juntasv.geometry,locations=juntasv.index,color="seccion",
-                                        center={"lat": 25.645682, "lon": -100.380236}, 
-                                        mapbox_style="carto-positron", zoom=13)
-juntasv_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-# Mapa Cámaras
-camaras_map = px.scatter_mapbox(camaras, lat=camaras.geometry.y, lon=camaras.geometry.x, color_discrete_sequence=["fuchsia"], zoom=13.5, height=800)
-camaras_map.update_layout(mapbox_style="carto-positron")
-camaras_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-# Mapa Biciracks
-biciracks_map = px.scatter_mapbox(biciracks, lat=biciracks.geometry.y, lon=biciracks.geometry.x, color_discrete_sequence=["fuchsia"], zoom=13.5, height=800)
-biciracks_map.update_layout(mapbox_style="carto-positron")
-biciracks_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-
-#mapa_denue = px.scatter_mapbox(denue, lat="latitud", lon="longitud", color_discrete_sequence=["fuchsia"], zoom=13.5, height=300)
-#mapa_denue.update_layout(mapbox_style="carto-positron")
-#mapa_denue.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-
-#----------
-
 # CONTEO
-
-
-
 
 # BICICLETAS
 
@@ -178,393 +143,50 @@ bicicletas_semana.update_yaxes(range = [0, max_bicicletas_semana])
 bicicletas_semana.update_layout(dragmode = False, hovermode = 'x',
     hoverlabel = dict(font_size = 16))
 
+#----------
 
-# PEATONES
+# VELOCIDAD PROMEDIO
 
-# PEATONES POR HORA
-
-# Create dataframe
-peatones_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
-peatones_hora = peatones_hora.iloc[57:]
-
-# Change variable types
-peatones_hora['hora'] = peatones_hora['hora'].astype(str)
-peatones_hora['dia'] = peatones_hora['dia'].astype(str)
-
-# Create datetime variable
-peatones_hora['datetime'] = peatones_hora['dia'] + ' ' + peatones_hora['hora']
-
-# Change variable types
-peatones_hora['datetime'] = pd.to_datetime(peatones_hora['datetime'],
-    dayfirst = True, format = '%d/%m/%Y %H')
-peatones_hora['peatones'] = pd.to_numeric(peatones_hora['peatones'])
-
-# Maximo de peatones
-max_peatones_hora = peatones_hora.peatones.max() + 100
-
-# Graph
-peatones_hora = px.scatter(peatones_hora, x = 'datetime', y = 'peatones',
-    labels = {'datetime': '', 'peatones': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-peatones_hora.update_traces(mode = 'lines', fill='tozeroy')
-peatones_hora.update_xaxes(showgrid = False, showline = True)
-peatones_hora.update_yaxes(range = [0, max_peatones_hora])
-peatones_hora.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# PEATONES POR DIA
-
-# Create dataframe
-peatones_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
-peatones_dia = peatones_dia.iloc[57:]
-
-# Change variable types
-peatones_dia['dia'] = pd.to_datetime(peatones_dia['dia'],
-    dayfirst = True)
-peatones_dia['peatones'] = pd.to_numeric(peatones_dia['peatones'])
-
-# Peatones per day
-peatones_dia = pd.pivot_table(peatones_dia, index = ['dia', 'dia_semana'],
-    values = 'peatones', aggfunc = 'sum')
-peatones_dia = peatones_dia.reset_index()
-
-# Maximo de peatones
-max_peatones_dia = peatones_dia.peatones.max() + 500
-
-# Graph
-peatones_dia = px.scatter(peatones_dia, x = 'dia', y = 'peatones',
-    labels = {'dia': '', 'peatones': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-peatones_dia.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-peatones_dia.update_xaxes(showgrid = False, showline = True)
-peatones_dia.update_yaxes(range = [0, max_peatones_dia])
-peatones_dia.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# PEATONES POR SEMANA
-
-# Create dataframe
-peatones_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
-peatones_semana = peatones_semana.iloc[57:]
-
-#Change variable types
-peatones_semana['dia'] = pd.to_datetime(peatones_semana['dia'],
-    dayfirst = True)
-peatones_semana['peatones'] = pd.to_numeric(peatones_semana['peatones'])
-
-# Peatones per week
-peatones_semana = pd.pivot_table(peatones_semana, index = ['dia'],
-    values = 'peatones', aggfunc = 'sum')
-peatones_semana = peatones_semana.resample('W').sum()
-peatones_semana = peatones_semana.reset_index()
-
-# Maximo de peatones
-max_peatones_semana = peatones_semana.peatones.max() + 5000
-
-# Graph
-peatones_semana = px.scatter(peatones_semana, x = 'dia', y = 'peatones',
-    labels = {'dia': '', 'peatones': ''}, template = 'plotly_white')
-
-peatones_semana.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-peatones_semana.update_xaxes(showgrid = False, showline = True)
-peatones_semana.update_yaxes(range = [0, max_peatones_semana])
-peatones_semana.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-
-# MOTOCICLETAS
-
-# MOTOCICLETAS POR HORA
-
-# Create dataframe
-motocicletas_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
-motocicletas_hora = motocicletas_hora.iloc[57:]
-
-# Change variable types
-motocicletas_hora['hora'] = motocicletas_hora['hora'].astype(str)
-motocicletas_hora['dia'] = motocicletas_hora['dia'].astype(str)
-
-# Create datetime variable
-motocicletas_hora['datetime'] = motocicletas_hora['dia'] + ' ' + motocicletas_hora['hora']
-
-# Change variable types
-motocicletas_hora['datetime'] = pd.to_datetime(motocicletas_hora['datetime'],
-    dayfirst = True, format = '%d/%m/%Y %H')
-motocicletas_hora['motorcycle'] = pd.to_numeric(motocicletas_hora['motorcycle'])
-
-# Maximo de motocicletas
-max_motocicletas_hora = motocicletas_hora.motorcycle.max() + 100
-
-# Graph
-motocicletas_hora = px.scatter(motocicletas_hora, x = 'datetime', y = 'motorcycle',
-    labels = {'datetime': '', 'motorcycle': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-motocicletas_hora.update_traces(mode = 'lines', fill='tozeroy')
-motocicletas_hora.update_xaxes(showgrid = False, showline = True)
-motocicletas_hora.update_yaxes(range = [0, max_motocicletas_hora])
-motocicletas_hora.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# MOTOCICLETAS POR DIA
-
-# Create dataframe
-motocicletas_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
-motocicletas_dia = motocicletas_dia.iloc[57:]
-
-# Change variable types
-motocicletas_dia['dia'] = pd.to_datetime(motocicletas_dia['dia'],
-    dayfirst = True)
-motocicletas_dia['motorcycle'] = pd.to_numeric(motocicletas_dia['motorcycle'])
-
-# Motorcycles per day
-motocicletas_dia = pd.pivot_table(motocicletas_dia, index = ['dia', 'dia_semana'],
-    values = 'motorcycle', aggfunc = 'sum')
-motocicletas_dia = motocicletas_dia.reset_index()
-
-# Maximo de motocicletas
-max_motocicletas_dia = motocicletas_dia.motorcycle.max() + 500
-
-# Graph
-motocicletas_dia = px.scatter(motocicletas_dia, x = 'dia', y = 'motorcycle',
-    labels = {'dia': '', 'motorcycle': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-motocicletas_dia.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-motocicletas_dia.update_xaxes(showgrid = False, showline = True)
-motocicletas_dia.update_yaxes(range = [0, max_motocicletas_dia])
-motocicletas_dia.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# MOTOCICLETAS POR SEMANA
-
-# Create dataframe
-motocicletas_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
-motocicletas_semana = motocicletas_semana.iloc[57:]
-
-#Change variable types
-motocicletas_semana['dia'] = pd.to_datetime(motocicletas_semana['dia'],
-    dayfirst = True)
-motocicletas_semana['motorcycle'] = pd.to_numeric(motocicletas_semana['motorcycle'])
-
-# Motorcycles per week
-motocicletas_semana = pd.pivot_table(motocicletas_semana, index = ['dia'],
-    values = 'motorcycle', aggfunc = 'sum')
-motocicletas_semana = motocicletas_semana.resample('W').sum()
-motocicletas_semana = motocicletas_semana.reset_index()
-
-# Maximo de motocicletas
-max_motocicletas_semana = motocicletas_semana.motorcycle.max() + 5000
-
-# Graph
-motocicletas_semana = px.scatter(motocicletas_semana, x = 'dia', y = 'motorcycle',
-    labels = {'dia': '', 'motorcycle': ''}, template = 'plotly_white')
-
-motocicletas_semana.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-motocicletas_semana.update_xaxes(showgrid = False, showline = True)
-motocicletas_semana.update_yaxes(range = [0, max_motocicletas_semana])
-motocicletas_semana.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-
-# AUTOBUSES
-
-# AUTOBUSES POR HORA
-
-# Create dataframe
-autobuses_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autobuses_hora = autobuses_hora.iloc[57:]
-
-# Change variable types
-autobuses_hora['hora'] = autobuses_hora['hora'].astype(str)
-autobuses_hora['dia'] = autobuses_hora['dia'].astype(str)
-
-# Create datetime variable
-autobuses_hora['datetime'] = autobuses_hora['dia'] + ' ' + autobuses_hora['hora']
-
-# Change variable types
-autobuses_hora['datetime'] = pd.to_datetime(autobuses_hora['datetime'],
-    dayfirst = True, format = '%d/%m/%Y %H')
-autobuses_hora['bus'] = pd.to_numeric(autobuses_hora['bus'])
-
-# Maximo de autobuses
-max_autobuses_hora = autobuses_hora.bus.max() + 50
-
-# Graph
-autobuses_hora = px.scatter(autobuses_hora, x = 'datetime', y = 'bus',
-    labels = {'datetime': '', 'bus': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-autobuses_hora.update_traces(mode = 'lines', fill='tozeroy')
-autobuses_hora.update_xaxes(showgrid = False, showline = True)
-autobuses_hora.update_yaxes(range = [0, max_autobuses_hora])
-autobuses_hora.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# AUTOBUSES POR DIA
-
-# Create dataframe
-autobuses_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autobuses_dia = autobuses_dia.iloc[57:]
-
-# Change variable types
-autobuses_dia['dia'] = pd.to_datetime(autobuses_dia['dia'],
-    dayfirst = True)
-autobuses_dia['bus'] = pd.to_numeric(autobuses_dia['bus'])
-
-# Buses per day
-autobuses_dia = pd.pivot_table(autobuses_dia, index = ['dia', 'dia_semana'],
-    values = 'bus', aggfunc = 'sum')
-autobuses_dia = autobuses_dia.reset_index()
-
-# Maximo de motocicletas
-max_autobuses_dia = autobuses_dia.bus.max() + 500
-
-# Graph
-autobuses_dia = px.scatter(autobuses_dia, x = 'dia', y = 'bus',
-    labels = {'dia': '', 'bus': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
-
-autobuses_dia.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-autobuses_dia.update_xaxes(showgrid = False, showline = True)
-autobuses_dia.update_yaxes(range = [0, max_autobuses_dia])
-autobuses_dia.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-# AUTOBUSES POR SEMANA
-
-# Create dataframe
-autobuses_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autobuses_semana = autobuses_semana.iloc[57:]
-
-#Change variable types
-autobuses_semana['dia'] = pd.to_datetime(autobuses_semana['dia'],
-    dayfirst = True)
-autobuses_semana['bus'] = pd.to_numeric(autobuses_semana['bus'])
-
-# Buses per week
-autobuses_semana = pd.pivot_table(autobuses_semana, index = ['dia'],
-    values = 'bus', aggfunc = 'sum')
-autobuses_semana = autobuses_semana.resample('W').sum()
-autobuses_semana = autobuses_semana.reset_index()
-
-# Maximo de autobuses
-max_autobuses_semana = autobuses_semana.bus.max() + 5000
-
-# Graph
-autobuses_semana = px.scatter(autobuses_semana, x = 'dia', y = 'bus',
-    labels = {'dia': '', 'bus': ''}, template = 'plotly_white')
-
-autobuses_semana.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-autobuses_semana.update_xaxes(showgrid = False, showline = True)
-autobuses_semana.update_yaxes(range = [0, max_autobuses_semana])
-autobuses_semana.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
-
-
-# AUTOS
+# AUTOS (CAR)
 
 # AUTOS POR HORA
 
 # Create dataframe
-autos_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autos_hora = autos_hora.iloc[57:]
+autos_vel_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+autos_vel_hora = autos_vel_hora.iloc[57:]
 
 # Change variable types
-autos_hora['hora'] = autos_hora['hora'].astype(str)
-autos_hora['dia'] = autos_hora['dia'].astype(str)
+autos_vel_hora['hora'] = autos_vel_hora['hora'].astype(str)
+autos_vel_hora['dia'] = autos_vel_hora['dia'].astype(str)
 
 # Create datetime variable
-autos_hora['datetime'] = autos_hora['dia'] + ' ' + autos_hora['hora']
+autos_vel_hora['datetime'] = autos_vel_hora['dia'] + ' ' + autos_vel_hora['hora']
 
 # Change variable types
-autos_hora['datetime'] = pd.to_datetime(autos_hora['datetime'],
+autos_vel_hora['datetime'] = pd.to_datetime(autos_vel_hora['datetime'],
     dayfirst = True, format = '%d/%m/%Y %H')
-autos_hora['autos'] = pd.to_numeric(autos_hora['autos'])
-
-# Maximo de autos
-max_autos_hora = autos_hora.autos.max() + 50
 
 # Graph
-autos_hora = px.scatter(autos_hora, x = 'datetime', y = 'autos',
-    labels = {'datetime': '', 'autos': ''}, template = 'plotly_white',
+autos_vel_hora = px.scatter(autos_vel_hora, x = 'datetime', y = 'avg_vel_car',
+    labels = {'datetime': '', 'avg_vel_autos': ''}, template = 'plotly_white',
     hover_data = ['dia_semana'])
 
-autos_hora.update_traces(mode = 'lines', fill='tozeroy')
-autos_hora.update_xaxes(showgrid = False, showline = True)
-autos_hora.update_yaxes(range = [0, max_autos_hora])
-autos_hora.update_layout(dragmode = False, hovermode = 'x',
+autos_vel_hora.update_traces(mode = 'lines', fill='tozeroy')
+autos_vel_hora.update_xaxes(showgrid = False, showline = True)
+autos_vel_hora.update_layout(dragmode = False, hovermode = 'x',
     hoverlabel = dict(font_size = 16))
 
-# AUTOS POR DIA
 
-# Create dataframe
-autos_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autos_dia = autos_dia.iloc[57:]
 
-# Change variable types
-autos_dia['dia'] = pd.to_datetime(autos_dia['dia'],
-    dayfirst = True)
-autos_dia['autos'] = pd.to_numeric(autos_dia['autos'])
 
-# Buses per day
-autos_dia = pd.pivot_table(autos_dia, index = ['dia', 'dia_semana'],
-    values = 'autos', aggfunc = 'sum')
-autos_dia = autos_dia.reset_index()
 
-# Maximo de motocicletas
-max_autos_dia = autos_dia.autos.max() + 20000
 
-# Graph
-autos_dia = px.scatter(autos_dia, x = 'dia', y = 'autos',
-    labels = {'dia': '', 'autos': ''}, template = 'plotly_white',
-    hover_data = ['dia_semana'])
 
-autos_dia.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-autos_dia.update_xaxes(showgrid = False, showline = True)
-autos_dia.update_yaxes(range = [0, max_autos_dia])
-autos_dia.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
 
-# AUTOS POR SEMANA
 
-# Create dataframe
-autos_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
-autos_semana = autos_semana.iloc[57:]
 
-#Change variable types
-autos_semana['dia'] = pd.to_datetime(autos_semana['dia'],
-    dayfirst = True)
-autos_semana['autos'] = pd.to_numeric(autos_semana['autos'])
 
-# Buses per week
-autos_semana = pd.pivot_table(autos_semana, index = ['dia'],
-    values = 'autos', aggfunc = 'sum')
-autos_semana = autos_semana.resample('W').sum()
-autos_semana = autos_semana.reset_index()
 
-# Maximo de autobuses
-max_autos_semana = autos_semana.autos.max() + 100000
-
-# Graph
-autos_semana = px.scatter(autos_semana, x = 'dia', y = 'autos',
-    labels = {'dia': '', 'autos': ''}, template = 'plotly_white')
-
-autos_semana.update_traces(mode = 'markers+lines', marker_size = 10, 
-    fill='tozeroy')
-autos_semana.update_xaxes(showgrid = False, showline = True)
-autos_semana.update_yaxes(range = [0, max_autos_semana])
-autos_semana.update_layout(dragmode = False, hovermode = 'x',
-    hoverlabel = dict(font_size = 16))
 
 #----------
 
@@ -576,14 +198,29 @@ def alfonsoreyes_1():
         dbc.Row(
             dbc.Col(
                 dcc.Dropdown(
-                    id='my_dropdown',
+                    id='my_dropdown_0',
                     options=[
-                             {'label': 'Bicicletas', 'value': 'bicycle'},
-                             {'label': 'Peatones', 'value': 'peatones'},
-                             {'label': 'Motocicletas', 'value': 'motorcycle'},
-                             {'label': 'Autobuses', 'value': 'bus'},
-                             {'label': 'Autos', 'value': 'autos'}
+                             {'label': 'Conteo', 'value': 'conteo'},
+                             {'label': 'Velocidad Promedio', 
+                                'value': 'velocidad_promedio'}
                     ],
+                    value='conteo',
+                    multi=False,
+                    clearable=False,
+                    style={"width": "50%"}
+                )
+
+            )
+
+        ),
+
+        html.Br(),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Dropdown(
+                    id='my_dropdown',
+                    options=[],
                     value='bicycle',
                     multi=False,
                     clearable=False,
@@ -648,37 +285,11 @@ def alfonsoreyes_1():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader('Bicicletas por Hora'),
+                    dbc.CardHeader('Hola'),
                     dbc.CardBody([
                         dcc.Graph(
-                            id = '',
-                            figure = bicicletas_hora,
-                            config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'toImage'],
-                            'displaylogo': False
-                            }
-                        )
-                    ])
-                ])
-
-            )
-        ),
-
-        html.Br(),
-
-        dbc.Row(
-
-            dbc.Col(
-
-                dbc.Card([
-                    dbc.CardHeader('Peatones por Semana'),
-                    dbc.CardBody([
-                        dcc.Graph(
-                            id = 'peatones_semana',
-                            figure = peatones_semana,
+                            id = 'autos_vel_hora',
+                            figure = {},
                             config={
                             'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
                             'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
@@ -693,56 +304,30 @@ def alfonsoreyes_1():
             )
         )
 
+
+
     ])
 
 #----------
 
-# Layout - Mapa
-def alfonsoreyes_2():
+# VARIABLES
 
-    return html.Div([
+# def render_opciones(my_dropdown_0):
 
-        # Hechos Viales por Año
+#     if my_dropdown_0 == 'conteo':
 
-        dbc.Row(
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardHeader("BiciRuta"),
-                    dbc.CardBody(
-                           dcc.Graph(
-                           id = 'juntasv_map',
-                           figure = juntasv_map,
-                           style={'height':'80vh'}
-                        )
-                    ),
-                    dbc.CardBody(
-                           dcc.Graph(
-                           id = 'camaras_map',
-                           figure = camaras_map,
-                           style={'height':'80vh'}
-                        )
-                    ),
-                    dbc.CardBody(
-                           dcc.Graph(
-                           id = 'biciracks_map',
-                           figure = biciracks_map,
-                           style={'height':'80vh'}
-                        )
-                    ),
-                ])
-            )
-        )
+#         return [{'label': 'Peatones', 'value': 'peatones'}]
 
-    ])
+#     elif my_dropdown_0 == 'velocidad_promedio':
 
+#         return [{'label': 'Autos', 'value': 'autos'}]
 
-#----------
 
 # CONTEO
 
-def render_conteo(my_dropdown_1, my_dropdown):
+def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
 
-    if my_dropdown_1 == 'hora':
+    if my_dropdown_0 == 'conteo' and my_dropdown_1 == 'hora':
 
         # Create dataframe
         conteo_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
@@ -771,7 +356,7 @@ def render_conteo(my_dropdown_1, my_dropdown):
 
         return conteo2
 
-    elif my_dropdown_1 == 'dia':
+    elif my_dropdown_0 == 'conteo' and my_dropdown_1 == 'dia':
 
         # Create dataframe
         conteo_dia = pd.read_csv('assets/camaras_viales.csv', header = [3])
@@ -798,8 +383,7 @@ def render_conteo(my_dropdown_1, my_dropdown):
 
         return conteo2
 
-    elif my_dropdown_1 == 'semana':
-
+    elif my_dropdown_0 == 'conteo' and my_dropdown_1 == 'semana':
 
         # Create dataframe
         conteo_semana = pd.read_csv('assets/camaras_viales.csv', header = [3])
@@ -826,14 +410,16 @@ def render_conteo(my_dropdown_1, my_dropdown):
 
         return conteo2
 
+    else:
+        return autos_vel_hora
+
 #----------
 
 # Display tabs
 def render_alfonsoreyes(tab):
     if tab == 'alfonsoreyes_1':
         return alfonsoreyes_1()
-    elif tab == 'alfonsoreyes_2':
-        return alfonsoreyes_2()
+
 
 
 
