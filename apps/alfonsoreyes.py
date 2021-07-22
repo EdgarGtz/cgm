@@ -8,7 +8,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import geopandas as gpd
-
+from datetime import datetime as dt
 #----------
 
 # Layout General
@@ -51,8 +51,10 @@ def alfonsoreyes_1():
 
     return html.Div([
 
-        dbc.Row(
+        dbc.Row([
+
             dbc.Col(
+
                 dcc.Dropdown(
                     id='my_dropdown_0',
                     options=[
@@ -64,16 +66,30 @@ def alfonsoreyes_1():
                     multi=False,
                     clearable=False,
                     style={"width": "50%"}
-                )
+                ), width = 8
 
-            )
+            ),
 
-        ),
+            dbc.Col(
+
+                dcc.DatePickerRange(
+                    id = 'calendario',
+                    min_date_allowed = dt(2021, 6, 21),
+                    max_date_allowed = dt(2021, 7, 19),
+                    start_date = dt(2021, 6, 21),
+                    end_date = dt(2021, 7, 19),
+                    first_day_of_week = 1,
+                    style = {'float': 'right'}         
+                ), width = 4)
+
+        ]),
 
         html.Br(),
 
         dbc.Row(
+
             dbc.Col(
+
                 dcc.Dropdown(
                     id='my_dropdown',
                     options=[],
@@ -81,7 +97,7 @@ def alfonsoreyes_1():
                     multi=False,
                     clearable=False,
                     style={"width": "50%"}
-                )
+                ), width = 8
 
             )
 
@@ -90,6 +106,7 @@ def alfonsoreyes_1():
         html.Br(),
 
         dbc.Row(
+
             dbc.Col(
                 dcc.Dropdown(
                     id='my_dropdown_1',
@@ -102,12 +119,11 @@ def alfonsoreyes_1():
                     multi=False,
                     clearable=False,
                     style={"width": "50%"}
-                )
+                ), width = 8
 
             )
 
         ),
-
 
         html.Br(),
 
@@ -122,11 +138,13 @@ def alfonsoreyes_1():
                             id = 'conteo2',
                             figure = {},
                             config={
-                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                            'hoverClosestCartesian', 'hoverCompareCartesian',
-                            'toggleSpikelines', 'select2d', 'toImage'],
-                            'displaylogo': False
+                                'modeBarButtonsToRemove':
+                                ['zoom2d', 'lasso2d', 'pan2d',
+                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d', 'toImage'],
+                                'displaylogo': False
                             }
                         )
                     ])
@@ -139,7 +157,7 @@ def alfonsoreyes_1():
 
 #----------
 
-# VARIABLES
+# OPCIONES
 
 def render_opciones(my_dropdown_0):
 
@@ -164,7 +182,7 @@ def render_opciones(my_dropdown_0):
 
 # CONTEO Y VELOCIDADES
 
-def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
+def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_date):
 
     if my_dropdown_0 == 'conteo' and my_dropdown_1 == 'hora':
 
@@ -183,9 +201,15 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         conteo_hora['datetime'] = pd.to_datetime(conteo_hora['datetime'], 
             dayfirst = True, format = '%d/%m/%Y %H')
 
+        conteo_hora['datetime1'] = conteo_hora['datetime']
+
+        # Filter on calendario
+        conteo_hora = conteo_hora.set_index('datetime')
+        conteo_hora = conteo_hora.loc[start_date:end_date]
+
         # Graph
-        conteo2 = px.scatter(conteo_hora, x = 'datetime', y = my_dropdown,
-            labels = {'datetime': ''}, template = 'plotly_white',
+        conteo2 = px.scatter(conteo_hora, x = 'datetime1', y = my_dropdown,
+            labels = {'datetime1': ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'lines', fill='tozeroy')
@@ -205,9 +229,14 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         conteo_dia['dia'] = pd.to_datetime(conteo_dia['dia'],
             dayfirst = True)
 
+        conteo_dia['dia1'] = conteo_dia['dia']
+        conteo_dia = conteo_dia.set_index('dia')
+        conteo_dia = conteo_dia.loc[start_date:end_date]
+
+
         # Graph
-        conteo2 = px.scatter(conteo_dia, x = 'dia', y = my_dropdown,
-            labels = {'dia': ''}, template = 'plotly_white',
+        conteo2 = px.scatter(conteo_dia, x = 'dia1', y = my_dropdown,
+            labels = {'dia1': ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
@@ -226,9 +255,13 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         conteo_semana['semana_fecha'] = pd.to_datetime(conteo_semana['semana_fecha'],
             dayfirst = True)
 
+        conteo_semana['semana_fecha1'] = conteo_semana['semana_fecha']
+        conteo_semana = conteo_semana.set_index('semana_fecha')
+        conteo_semana = conteo_semana.loc[start_date:end_date]
+
         # Graph
-        conteo2 = px.scatter(conteo_semana, x = 'semana_fecha', y = my_dropdown,
-            labels = {'semana_fecha': ''}, template = 'plotly_white')
+        conteo2 = px.scatter(conteo_semana, x = 'semana_fecha1', y = my_dropdown,
+            labels = {'semana_fecha1': ''}, template = 'plotly_white')
 
         conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
             fill='tozeroy')
@@ -255,9 +288,15 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         vel_hora['datetime'] = pd.to_datetime(vel_hora['datetime'],
             dayfirst = True, format = '%d/%m/%Y %H')
 
+        vel_hora['datetime1'] = vel_hora['datetime']
+
+        # Filter on calendario
+        vel_hora = vel_hora.set_index('datetime')
+        vel_hora = vel_hora.loc[start_date:end_date]
+
         # Graph
-        conteo2 = px.scatter(vel_hora, x = 'datetime', y = my_dropdown,
-            labels = {'datetime': ''}, template = 'plotly_white',
+        conteo2 = px.scatter(vel_hora, x = 'datetime1', y = my_dropdown,
+            labels = {'datetime1': ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'lines', fill='tozeroy')
@@ -277,9 +316,13 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         vel_dia['dia'] = pd.to_datetime(vel_dia['dia'],
             dayfirst = True)
 
+        vel_dia['dia1'] = vel_dia['dia']
+        vel_dia = vel_dia.set_index('dia')
+        vel_dia = vel_dia.loc[start_date:end_date]
+
         # Graph
-        conteo2 = px.scatter(vel_dia, x = 'dia', y = my_dropdown,
-            labels = {'dia': ''}, template = 'plotly_white',
+        conteo2 = px.scatter(vel_dia, x = 'dia1', y = my_dropdown,
+            labels = {'dia1': ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
@@ -298,9 +341,13 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0):
         vel_semana['semana_fecha'] = pd.to_datetime(vel_semana['semana_fecha'],
             dayfirst = True)
 
+        vel_semana['semana_fecha1'] = vel_semana['semana_fecha']
+        vel_semana = vel_semana.set_index('semana_fecha')
+        vel_semana = vel_semana.loc[start_date:end_date]
+
         # Graph
-        conteo2 = px.scatter(vel_semana, x = 'semana_fecha', y = my_dropdown,
-            labels = {'semana_fecha': ''}, template = 'plotly_white')
+        conteo2 = px.scatter(vel_semana, x = 'semana_fecha1', y = my_dropdown,
+            labels = {'semana_fecha1': ''}, template = 'plotly_white')
 
         conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
             fill='tozeroy')

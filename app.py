@@ -81,12 +81,16 @@ def get_opciones(tab):
 
 @app.callback(
 	Output('conteo2', 'figure'),
-	Input('my_dropdown_1', 'value'),
+	[Input('my_dropdown_1', 'value'),
 	Input('my_dropdown', 'value'),
-	Input('my_dropdown_0', 'value'))
+	Input('my_dropdown_0', 'value'),
+	Input('calendario', 'start_date'),
+	Input('calendario', 'end_date')])
 
-def get_conteo1(tab, tab1, tab2):
-    return render_conteo(tab, tab1, tab2)
+def get_conteo1(tab, tab1, tab2, tab3, tab4):
+    return render_conteo(tab, tab1, tab2, tab3, tab4)
+
+
 
 
 # Alfonso Reyes - General
