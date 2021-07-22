@@ -15,7 +15,8 @@ server = app.server
 
 # Connect to app pages
 from apps import home
-from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo)
+from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
+	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_ano, render_interseccion_hv_tipo, render_interseccion_hv_causa
@@ -68,12 +69,12 @@ def display_page(pathname):
 
 # Opciones
 
-# @app.callback(
-# 	Output('my_dropdown', 'value'),
-# 	Input('my_dropdown_0', 'value'))
+@app.callback(
+	Output('my_dropdown', 'options'),
+ 	Input('my_dropdown_0', 'value'))
 
-# def get_opciones(tab):
-#     return render_opciones(tab)
+def get_opciones(tab):
+    return render_opciones(tab)
 
 
 # Conteo

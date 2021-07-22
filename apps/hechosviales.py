@@ -87,7 +87,7 @@ vasconcelos_map.update_layout(clickmode='event+select')
 # HWCHOS VIALES POR HORA
 
 # Create dataframe
-bicicletas_hora = pd.read_csv('assets/camaras_viales.csv', header = [3])
+bicicletas_hora = pd.read_csv('assets/camaras_viales_hora.csv', header = [3])
 bicicletas_hora = bicicletas_hora.iloc[57:]
 
 # Change variable types
