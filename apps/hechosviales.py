@@ -138,33 +138,24 @@ def hv_vasconcelos():
                             max_date_allowed = dt(2021, 7, 19),
                             start_date = dt(2021, 6, 21),
                             end_date = dt(2021, 7, 19),
-                            first_day_of_week = 1,
-                            className="d-flex justify-content-center"
+                            first_day_of_week = 1
                         ),
-                        html.Br(),
-                        dcc.Checklist(
+                        dcc.Dropdown(
+                            id='my_dropdown_1',
                             options=[
-                                {'label': '  L', 'value': 'lunes'},
-                                {'label': '  M', 'value': 'martes'},
-                                {'label': '  MX', 'value': 'miercoles'},
-                                {'label': '  J', 'value': 'jueves'},
-                                {'label': '  V', 'value': 'viernes'},
-                                {'label': '  S', 'value': 'sabado'},
-                                {'label': '  D', 'value': 'domingo'}
+                                {'label': 'Hora', 'value': 'hora'},
+                                {'label': 'Día', 'value': 'dia'},
+                                {'label': 'Semana', 'value': 'semana'},
+                                {'label': 'Mes', 'value': 'mes'},
+                                {'label': 'Año', 'value': 'año'}
                             ],
-                            value=['lunes', 'martes', 'miercoles','jueves','viernes','sabado','domingo'],
-                            labelStyle={'display': 'inline-block', "padding":"0px 15px 0px 0"},
-                            className="d-flex justify-content-center mb-3, py-1"
-                        ) 
-                    ]),
-                    dcc.RangeSlider(
-                        marks={i: '{}'.format(i) for i in range(0, 24)},
-                        count=1,
-                        min=0,
-                        max=23,
-                        step=1,
-                        value=[0, 23]
-                    )  
+                            value = 'hora',
+                            multi = False,
+                            clearable = False,
+                            style={"width": "50%"},
+                            className="py-2 px-3"
+                        ),
+                    ],className="d-flex justify-content-center"),
                 ]),
 
                 html.Br(),
@@ -215,68 +206,16 @@ def hv_vasconcelos():
                         dbc.Card([
                             dbc.CardHeader('Hechos Viales por Año'),
                             dbc.CardBody([
-                                dcc.Tabs(id='tabs-example', value='tab-1', children=[
-                                    dcc.Tab(label='Año', children=[
-                                        dcc.Graph(
-                                            id = 'interseccion_hv_ano',
-                                            figure = {},
-                                            config={
-                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                           'hoverClosestCartesian', 'hoverCompareCartesian',
-                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                            }
-                                        )
-                                    ]),
-                                    dcc.Tab(label='Mes', children=[
-                                        dcc.Graph(
-                                            id = 'interseccion_hv_mes',
-                                            figure = {},
-                                            config={
-                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                           'hoverClosestCartesian', 'hoverCompareCartesian',
-                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                            }
-                                        )
-                                    ]),
-                                    dcc.Tab(label='Semana', children=[
-                                        dcc.Graph(
-                                            id = 'interseccion_hv_semana',
-                                            figure = {},
-                                            config={
-                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                           'hoverClosestCartesian', 'hoverCompareCartesian',
-                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                            }
-                                        )
-                                    ]),
-                                    dcc.Tab(label='Dia', children=[
-                                        dcc.Graph(
-                                            id = 'interseccion_hv_dia',
-                                            figure = {},
-                                            config={
-                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                           'hoverClosestCartesian', 'hoverCompareCartesian',
-                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                            }
-                                        )
-                                    ]),
-                                    dcc.Tab(label='Hora', children=[
-                                        dcc.Graph(
-                                            id = 'interseccion_hv_hora',
-                                            figure = {},
-                                            config={
-                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                           'hoverClosestCartesian', 'hoverCompareCartesian',
-                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                            }
-                                        )
-                                    ])
-                                ])
+                                dcc.Graph(
+                                    id = 'interseccion_hv_tiempo',
+                                    figure = {},
+                                    config={
+                                    'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                   'hoverClosestCartesian', 'hoverCompareCartesian',
+                                    'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                    }
+                                )
                             ])
                         ])
                     )
@@ -313,50 +252,28 @@ def render_interseccion_fal(clickData):
     return clickData['points'][0]['customdata'][1]
 
 # Hechos Viales por Año
-def render_interseccion_hv_ano(clickData):
+def render_interseccion_hv_tiempo(clickData):
 
     # Filter interseccion
-    interseccion_hv_ano = hvi[hvi['interseccion'] == 
+    interseccion_hv_tiempo = hvi[hvi['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
    
-
    # Graph
-    interseccion_hv_ano = px.bar(interseccion_hv_ano, y='hechos_viales', x='año',
+    interseccion_hv_tiempo = px.bar(interseccion_hv_tiempo, y='hechos_viales', x='año',
             labels = {'Año': '', 'Hechos viales': ''}, text = 'hechos_viales',
             hover_data={'año':False, 'hechos_viales':False}, opacity = .9,
             template = "plotly_white")
 
-    interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
-    interseccion_hv_ano.update_yaxes(showline=False, showgrid=False,
+    interseccion_hv_tiempo.update_xaxes(showline=True, showgrid=False)
+    interseccion_hv_tiempo.update_yaxes(showline=False, showgrid=False,
         showticklabels = False)
-    interseccion_hv_ano.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
+    interseccion_hv_tiempo.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
         hoverlabel_bordercolor='white')
-    interseccion_hv_ano.update(layout_coloraxis_showscale=False)
-    interseccion_hv_ano.update_layout(hovermode = False, dragmode=False)
+    interseccion_hv_tiempo.update(layout_coloraxis_showscale=False)
+    interseccion_hv_tiempo.update_layout(hovermode = False, dragmode=False)
 
     return interseccion_hv_ano
-
-# Hechos Viales por Mes
-def render_interseccion_hv_mes(clickData):
-
-    interseccion_hv_mes = hvi[hvi['interseccion'] == 
-    clickData['points'][0]['hovertext']]
-
-    # Graph
-    interseccion_hv_mes = px.bar(interseccion_hv_mes, y='hechos_viales', x='mes',
-            labels = {'mes': '', 'hechos_viales': ''}, text = 'hechos_viales',
-            hover_data={'mes':False, 'hechos_viales':False}, opacity = .9,
-            template = "plotly_white")
-    interseccion_hv_mes.update_xaxes(showline=True, showgrid=False)
-    interseccion_hv_mes.update_yaxes(showline=False, showgrid=False,
-        showticklabels = False)
-    interseccion_hv_mes.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
-        hoverlabel_bordercolor='white')
-    interseccion_hv_mes.update(layout_coloraxis_showscale=False)
-    interseccion_hv_mes.update_layout(hovermode = False, dragmode=False)
-    return interseccion_hv_mes
-
 
 
 #----------

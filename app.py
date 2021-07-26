@@ -19,7 +19,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_ano, render_interseccion_hv_mes,
+	render_interseccion_hv_tiempo,
 	)
 
 # Connect to config
@@ -137,17 +137,11 @@ def get(clickData):
 
 #-- Intersección - Hechos Viales por Año
 
-@app.callback(Output('interseccion_hv_ano', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_hv_tiempo', 'figure'), [Input('vasconcelos_map', 'clickData')])
 
 def get(clickData):
- 	return render_interseccion_hv_ano(clickData)
+ 	return render_interseccion_hv_tiempo(clickData)
 
-#-- Intersección - Hechos Viales por Mes
-
-@app.callback(Output('interseccion_hv_mes', 'figure'), [Input('vasconcelos_map', 'clickData')])
-
-def get(clickData):
- 	return render_interseccion_hv_mes(clickData)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
