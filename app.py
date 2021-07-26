@@ -80,7 +80,7 @@ def get_opciones(tab):
 
 @app.callback(
 	Output('conteo2', 'figure'),
-	[Input('my_dropdown_1', 'value'),
+	[Input('periodo', 'active_tab'),
 	Input('my_dropdown', 'value'),
 	Input('my_dropdown_0', 'value'),
 	Input('calendario', 'start_date'),
@@ -97,13 +97,6 @@ def get_conteo1(tab, tab1, tab2, tab3, tab4):
 
 def get_ayuda(tab):
     return render_alfonsoreyes(tab)
-
-# Alfonso Reyes - Gráficas
-
-#@app.callback(Output('alfonsoreyes_content', 'children'), [Input('tabs', 'active_tab')])
-
-#def get_ayuda(tab):
- #   return render_alfonsoreyes(tab)
 
 
 # Hechos Viales

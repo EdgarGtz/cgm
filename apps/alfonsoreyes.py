@@ -118,38 +118,79 @@ def alfonsoreyes_1():
 
         html.Br(),
 
-        # Dropdown de periodo de tiempo
-        dbc.Row(
+        # # Dropdown de periodo de tiempo
+        # dbc.Row(
 
-            dbc.Col(
+        #     dbc.Col(
 
-                dcc.Dropdown(
-                    id='my_dropdown_1',
-                    options=[
-                        {'label': 'Hora', 'value': 'hora'},
-                        {'label': 'Día', 'value': 'dia'},
-                        {'label': 'Semana', 'value': 'semana'}
-                    ],
-                    value = 'hora',
-                    multi = False,
-                    clearable = False,
-                    style={"width": "50%"}
-                ), width = 8
+        #         dcc.Dropdown(
+        #             id='my_dropdown_1',
+        #             options=[
+        #                 {'label': 'Hora', 'value': 'hora'},
+        #                 {'label': 'Día', 'value': 'dia'},
+        #                 {'label': 'Semana', 'value': 'semana'}
+        #             ],
+        #             value = 'hora',
+        #             multi = False,
+        #             clearable = False,
+        #             style={"width": "50%"}
+        #         ), width = 8
 
-            )
+        #     )
 
-        ),
+        # ),
+
+        # html.Br(),
+
+        # # Gráfica de línea
+        # dbc.Row(
+
+        #     dbc.Col(
+
+        #         dbc.Card([
+        #             dbc.CardBody([
+        #                 dcc.Graph(
+        #                     id = 'conteo2',
+        #                     figure = {},
+        #                     config={
+        #                         'modeBarButtonsToRemove':
+        #                         ['zoom2d', 'lasso2d', 'pan2d',
+        #                         'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+        #                         'resetScale2d', 'hoverClosestCartesian',
+        #                         'hoverCompareCartesian', 'toggleSpikelines',
+        #                         'select2d', 'toImage'],
+        #                         'displaylogo': False
+        #                     }
+        #                 )
+        #             ])
+        #         ])
+
+        #     )
+        # ),
 
         html.Br(),
 
-        # Gráfica de línea
+        # Gráfica de línea con tabs
         dbc.Row(
 
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader(''),
-                    dbc.CardBody([
+                    dbc.CardHeader(
+                        dbc.Tabs([
+                            dbc.Tab(label='Hora', tab_id='hora',
+                                disabled = False),
+                            dbc.Tab(label = 'Día', tab_id = 'dia',
+                                disabled = False),
+                            dbc.Tab(label = 'Semana', tab_id = 'semana',
+                                disabled = False)
+                        ],
+                        id='periodo',
+                        active_tab="hora",
+                        card=True
+                        )
+                    ),
+                    dbc.CardBody(
                         dcc.Graph(
                             id = 'conteo2',
                             figure = {},
@@ -163,10 +204,11 @@ def alfonsoreyes_1():
                                 'displaylogo': False
                             }
                         )
-                    ])
-                ])
+                    )
+                ]), lg=12
 
-            )
+            ), justify = 'center'
+
         )
 
     ])
@@ -197,7 +239,7 @@ def render_opciones(my_dropdown_0):
 #----------
 
 # Visualizar gráficas de línea para conteo y velocidad promedio
-def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_date):
+def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
     # Diferencia en días entre fecha de inicio y fecha final
     start_date_tiempo = pd.to_datetime(start_date)
@@ -209,7 +251,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
     dif_tiempo_loop = dif_tiempo
 
     # Conteo por hora
-    if my_dropdown_0 == 'conteo' and my_dropdown_1 == 'hora':
+    if my_dropdown_0 == 'conteo' and periodo == 'hora':
 
         # Leer csv
         conteo_hora = pd.read_csv('assets/camaras_viales_hora.csv', header = [3])
@@ -244,7 +286,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Conteo por día
-    elif my_dropdown_0 == 'conteo' and my_dropdown_1 == 'dia':
+    elif my_dropdown_0 == 'conteo' and periodo == 'dia':
 
         # Leer csv
         conteo_dia = pd.read_csv('assets/camaras_viales_dia.csv')
@@ -274,7 +316,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Conteo por semana - una semana o menos
-    elif my_dropdown_0 == 'conteo' and my_dropdown_1 == 'semana' and dif_tiempo < 7:
+    elif my_dropdown_0 == 'conteo' and periodo == 'semana' and dif_tiempo < 7:
 
         # Leer csv
         conteo_semana = pd.read_csv('assets/camaras_viales_dia.csv')
@@ -310,7 +352,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Conteo por semana - más de una semana
-    elif my_dropdown_0 == 'conteo' and my_dropdown_1 == 'semana':
+    elif my_dropdown_0 == 'conteo' and periodo == 'semana':
 
         # Leer csv
         conteo_semana = pd.read_csv('assets/camaras_viales_dia.csv')
@@ -372,7 +414,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Velocidad promedio por hora
-    elif my_dropdown_0 == 'velocidad_promedio' and my_dropdown_1 == 'hora':
+    elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'hora':
 
         # Leer csv
         vel_hora = pd.read_csv('assets/camaras_viales_hora.csv', header = [3])
@@ -407,7 +449,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Velocidad promedio por día
-    elif my_dropdown_0 == 'velocidad_promedio' and my_dropdown_1 == 'dia':
+    elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'dia':
 
         # Leer csv
         vel_dia = pd.read_csv('assets/camaras_viales_dia.csv')
@@ -437,7 +479,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Velocidad promedio por semana - una semana o menos
-    elif my_dropdown_0 == 'velocidad_promedio' and my_dropdown_1 == 'semana' and dif_tiempo < 7:
+    elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'semana' and dif_tiempo < 7:
 
         # Leer csv
         vel_semana = pd.read_csv('assets/camaras_viales_dia.csv')
@@ -473,7 +515,7 @@ def render_conteo(my_dropdown_1, my_dropdown, my_dropdown_0, start_date, end_dat
         return conteo2
 
     # Velocidad promedio por semana - más de una semana
-    elif my_dropdown_0 == 'velocidad_promedio' and my_dropdown_1 == 'semana':
+    elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'semana':
 
         # Leer csv
         vel_semana = pd.read_csv('assets/camaras_viales_dia.csv')
