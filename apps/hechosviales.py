@@ -143,9 +143,9 @@ def hv_vasconcelos():
                         dcc.Dropdown(
                             id='my_dropdown_1',
                             options=[
-                                {'label': 'Hora', 'value': 'hora'},
+                                #{'label': 'Hora', 'value': 'hora'},
                                 {'label': 'Día', 'value': 'dia'},
-                                {'label': 'Semana', 'value': 'semana'},
+                                #{'label': 'Semana', 'value': 'semana'},
                                 {'label': 'Mes', 'value': 'mes'},
                                 {'label': 'Año', 'value': 'año'}
                             ],
@@ -204,7 +204,7 @@ def hv_vasconcelos():
                 dbc.Row(
                     dbc.Col(
                         dbc.Card([
-                            dbc.CardHeader('Hechos Viales por Año'),
+                            dbc.CardHeader('Hechos Viales por'),
                             dbc.CardBody([
                                 dcc.Graph(
                                     id = 'interseccion_hv_tiempo',
@@ -258,8 +258,30 @@ def render_interseccion_hv_tiempo(clickData):
     interseccion_hv_tiempo = hvi[hvi['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
-   
-   # Graph
+    # Diferencia en días entre fecha de inicio y fecha final
+    start_date_tiempo = pd.to_datetime(start_date)
+    end_date_tiempo = pd.to_datetime(end_date)
+    dif_tiempo = end_date_tiempo - start_date_tiempo
+    dif_tiempo = dif_tiempo / np.timedelta64(1, 'D')
+
+    # Diferencia para el loop de semana
+    dif_tiempo_loop = dif_tiempo
+
+    # Conteo por hora
+    #if my_dropdown_0 == 'conteo' and periodo == 'mes':
+
+    #hvi["año"] = hvi["año"].astype(str)
+    #hvi["mes"] = hvi["mes"].astype(str)
+    #hvi["dia"] = hvi["dia"].astype(str)
+    #hvi["hora"] = hvi["hora"].astype(str)
+
+    #hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"] +" - "+ hvi["hora"]
+    #hvi["fecha"]  = pd.to_datetime(hvi["fecha2"], dayfirst = True, format ='%d/%m/%Y - %H')
+    #hvi["fecha"] 
+
+
+
+    # Graph
     interseccion_hv_tiempo = px.bar(interseccion_hv_tiempo, y='hechos_viales', x='año',
             labels = {'Año': '', 'Hechos viales': ''}, text = 'hechos_viales',
             hover_data={'año':False, 'hechos_viales':False}, opacity = .9,
