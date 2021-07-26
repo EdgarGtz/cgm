@@ -7,6 +7,7 @@ import plotly.graph_objs as go
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+from datetime import datetime as dt
 
 #----------
 
@@ -84,7 +85,9 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
 vasconcelos_map.update_layout(clickmode='event+select')
 
 
-# HWCHOS VIALES POR HORA
+# HECHOS VIALES
+
+hvi = pd.read_csv("assets/hechos_viales_interseccion.csv", encoding='ISO-8859-1')
 
 # Create dataframe
 bicicletas_hora = pd.read_csv('assets/camaras_viales_hora.csv', header = [3])
@@ -103,10 +106,8 @@ def hv_vasconcelos():
 
     return html.Div([
 
-
         # Mapa y principales indicadores
         dbc.Row([
-
             # Mapa
             dbc.Col(
 
@@ -129,9 +130,18 @@ def hv_vasconcelos():
             ),
 
             dbc.Col([
-
                 dbc.Card([
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        dcc.DatePickerRange(
+                            id = 'calendario',
+                            min_date_allowed = dt(2021, 6, 21),
+                            max_date_allowed = dt(2021, 7, 19),
+                            start_date = dt(2021, 6, 21),
+                            end_date = dt(2021, 7, 19),
+                            first_day_of_week = 1,
+                            className="d-flex justify-content-center"
+                        ),
+                        html.Br(),
                         dcc.Checklist(
                             options=[
                                 {'label': '  L', 'value': 'lunes'},
@@ -146,7 +156,7 @@ def hv_vasconcelos():
                             labelStyle={'display': 'inline-block', "padding":"0px 15px 0px 0"},
                             className="d-flex justify-content-center mb-3, py-1"
                         ) 
-                    ),
+                    ]),
                     dcc.RangeSlider(
                         marks={i: '{}'.format(i) for i in range(0, 24)},
                         count=1,
@@ -205,16 +215,68 @@ def hv_vasconcelos():
                         dbc.Card([
                             dbc.CardHeader('Hechos Viales por Año'),
                             dbc.CardBody([
-                                dcc.Graph(
-                                    id = 'interseccion_hv_ano',
-                                    figure = {},
-                                    config={
-                                    'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                    'hoverClosestCartesian', 'hoverCompareCartesian',
-                                    'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                    }
-                                )
+                                dcc.Tabs(id='tabs-example', value='tab-1', children=[
+                                    dcc.Tab(label='Año', children=[
+                                        dcc.Graph(
+                                            id = 'interseccion_hv_ano',
+                                            figure = {},
+                                            config={
+                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                           'hoverClosestCartesian', 'hoverCompareCartesian',
+                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                            }
+                                        )
+                                    ]),
+                                    dcc.Tab(label='Mes', children=[
+                                        dcc.Graph(
+                                            id = 'interseccion_hv_mes',
+                                            figure = {},
+                                            config={
+                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                           'hoverClosestCartesian', 'hoverCompareCartesian',
+                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                            }
+                                        )
+                                    ]),
+                                    dcc.Tab(label='Semana', children=[
+                                        dcc.Graph(
+                                            id = 'interseccion_hv_semana',
+                                            figure = {},
+                                            config={
+                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                           'hoverClosestCartesian', 'hoverCompareCartesian',
+                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                            }
+                                        )
+                                    ]),
+                                    dcc.Tab(label='Dia', children=[
+                                        dcc.Graph(
+                                            id = 'interseccion_hv_dia',
+                                            figure = {},
+                                            config={
+                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                           'hoverClosestCartesian', 'hoverCompareCartesian',
+                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                            }
+                                        )
+                                    ]),
+                                    dcc.Tab(label='Hora', children=[
+                                        dcc.Graph(
+                                            id = 'interseccion_hv_hora',
+                                            figure = {},
+                                            config={
+                                            'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
+                                            'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
+                                           'hoverClosestCartesian', 'hoverCompareCartesian',
+                                            'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                            }
+                                        )
+                                    ])
+                                ])
                             ])
                         ])
                     )
@@ -254,27 +316,15 @@ def render_interseccion_fal(clickData):
 def render_interseccion_hv_ano(clickData):
 
     # Filter interseccion
-    interseccion_hv_ano = vasconcelos[vasconcelos['interseccion'] == 
+    interseccion_hv_ano = hvi[hvi['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
-    # Filter columns
-    interseccion_hv_ano = interseccion_hv_ano[interseccion_hv_ano.columns[6:12]]
+   
 
-    # Transpose
-    interseccion_hv_ano = interseccion_hv_ano.T
-    interseccion_hv_ano = interseccion_hv_ano.reset_index()
-
-    # Rename columns and change to numeric
-    interseccion_hv_ano.columns = ['Años', 'Hechos Viales']
-    interseccion_hv_ano['Hechos Viales'] = pd.to_numeric(
-        interseccion_hv_ano['Hechos Viales'])
-
-    maxy = max(interseccion_hv_ano['Hechos Viales'])
-
-    # Graph
-    interseccion_hv_ano = px.bar(interseccion_hv_ano, x='Años', y='Hechos Viales',
-            labels = {'Años': '', 'Hechos Viales': ''}, text = 'Hechos Viales',
-            hover_data={'Años':False, 'Hechos Viales':False}, opacity = .9,
+   # Graph
+    interseccion_hv_ano = px.bar(interseccion_hv_ano, y='hechos_viales', x='año',
+            labels = {'Año': '', 'Hechos viales': ''}, text = 'hechos_viales',
+            hover_data={'año':False, 'hechos_viales':False}, opacity = .9,
             template = "plotly_white")
 
     interseccion_hv_ano.update_xaxes(showline=True, showgrid=False)
@@ -287,99 +337,26 @@ def render_interseccion_hv_ano(clickData):
 
     return interseccion_hv_ano
 
-# Tipo de Hechos Viales
-def render_interseccion_hv_tipo(clickData):
+# Hechos Viales por Mes
+def render_interseccion_hv_mes(clickData):
 
-    # Filter interseccion
-    interseccion_hv_tipo = vasconcelos[vasconcelos['interseccion'] == 
+    interseccion_hv_mes = hvi[hvi['interseccion'] == 
     clickData['points'][0]['hovertext']]
 
-    # Filter and Rename columns
-    interseccion_hv_tipo = interseccion_hv_tipo[interseccion_hv_tipo.columns[12:23]]
-    interseccion_hv_tipo.columns = ['Alcance', 'Atropello', 'Caida de Persona',
-        'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso',
-        'Choque Lateral', 'Estrellamiento', 'Incendio', 'Volcadura']
-
-    # Transpose
-    interseccion_hv_tipo = interseccion_hv_tipo.T
-    interseccion_hv_tipo = interseccion_hv_tipo.reset_index()
-
-    # Rename columns and change to numeric
-    interseccion_hv_tipo.columns = ['Tipo', 'Hechos Viales 2']
-    interseccion_hv_tipo['Hechos Viales 2'] = pd.to_numeric(
-        interseccion_hv_tipo['Hechos Viales 2'])
-
-    # Create new variable with percentage values
-    suma = interseccion_hv_tipo['Hechos Viales 2'].sum()
-    interseccion_hv_tipo['Hechos Viales'] = (interseccion_hv_tipo[
-        'Hechos Viales 2'] / suma) * 100
-    interseccion_hv_tipo['Hechos Viales'] = interseccion_hv_tipo[
-        'Hechos Viales'].round(decimals=0)
-
     # Graph
-    interseccion_hv_tipo = px.bar(interseccion_hv_tipo, x='Hechos Viales', y='Tipo',
-            labels = {'Tipo': '', 'Hechos Viales': ''}, text='Hechos Viales',
-            hover_data={'Tipo':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white",
-            opacity = .9)
+    interseccion_hv_mes = px.bar(interseccion_hv_mes, y='hechos_viales', x='mes',
+            labels = {'mes': '', 'hechos_viales': ''}, text = 'hechos_viales',
+            hover_data={'mes':False, 'hechos_viales':False}, opacity = .9,
+            template = "plotly_white")
+    interseccion_hv_mes.update_xaxes(showline=True, showgrid=False)
+    interseccion_hv_mes.update_yaxes(showline=False, showgrid=False,
+        showticklabels = False)
+    interseccion_hv_mes.update_traces(hoverlabel_bgcolor='white', textfont_size=14,
+        hoverlabel_bordercolor='white')
+    interseccion_hv_mes.update(layout_coloraxis_showscale=False)
+    interseccion_hv_mes.update_layout(hovermode = False, dragmode=False)
+    return interseccion_hv_mes
 
-    interseccion_hv_tipo.update_layout(yaxis={'categoryorder':'total ascending'},
-        hovermode = False, dragmode=False)
-    interseccion_hv_tipo.update(layout_coloraxis_showscale=False)
-    interseccion_hv_tipo.update_xaxes(showticklabels=False, showgrid=False)
-    interseccion_hv_tipo.update_traces(texttemplate='%{text:}% ')
-    interseccion_hv_tipo.layout.yaxis.ticksuffix = ' '
-
-    return interseccion_hv_tipo
-
-# Causa de Hechos Viales
-def render_interseccion_hv_causa(clickData):
-
-    # Filter interseccion
-    interseccion_hv_causa = vasconcelos[vasconcelos['interseccion'] == 
-    clickData['points'][0]['hovertext']]
-
-    # Filter and Rename columns
-    interseccion_hv_causa = interseccion_hv_causa[interseccion_hv_causa.columns[24:36]]
-    interseccion_hv_causa.columns = ['Distracción', 'Dormitando', 'Estado alcohólico',
-        'Exceso de Dimensiones', 'Exceso de Velocidad', 'Invadir Carril', 'Mal Estacionado',
-        'No Guardó Distancia', 'No Respetó Alto', 'No Respetó Semáforo', 'Viró Indevidamente',
-        'Otros']
-
-    # Transpose
-    interseccion_hv_causa = interseccion_hv_causa.T
-    interseccion_hv_causa = interseccion_hv_causa.reset_index()
-
-    # Rename columns and change to numeric
-    interseccion_hv_causa.columns = ['Causa', 'Hechos Viales 2']
-    interseccion_hv_causa['Hechos Viales 2'] = pd.to_numeric(
-        interseccion_hv_causa['Hechos Viales 2'])
-
-    # Create new variable with percentage values
-    suma = interseccion_hv_causa['Hechos Viales 2'].sum()
-    interseccion_hv_causa['Hechos Viales'] = (interseccion_hv_causa[
-        'Hechos Viales 2'] / suma) * 100
-    interseccion_hv_causa['Hechos Viales'] = interseccion_hv_causa[
-        'Hechos Viales'].round(decimals=0)
-
-    # Graph
-    interseccion_hv_causa = px.bar(interseccion_hv_causa, x='Hechos Viales', y='Causa',
-            labels = {'Causa': '', 'Hechos Viales': ''}, text='Hechos Viales',
-            hover_data={'Causa':False, 'Hechos Viales':False}, color = 'Hechos Viales',
-            color_continuous_scale=px.colors.sequential.Sunset, template = "plotly_white",
-            opacity = .9)
-
-    interseccion_hv_causa.update_layout(yaxis={'categoryorder':'total ascending'},
-        hovermode = False, dragmode=False)
-    interseccion_hv_causa.layout.yaxis.ticksuffix = ' '
-    interseccion_hv_causa.update(layout_coloraxis_showscale=False)
-    interseccion_hv_causa.update_xaxes(showticklabels=False, showgrid=False)
-    # interseccion_hv_causa.update_traces(hovertemplate='  %{x}')
-    # interseccion_hv_causa.update_layout(margin=dict(r=20))
-    interseccion_hv_causa.update_traces(texttemplate='%{text:}% ')
-
-# range=[0, 50], 
-    return interseccion_hv_causa
 
 
 #----------
