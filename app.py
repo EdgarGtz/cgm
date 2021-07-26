@@ -66,7 +66,6 @@ def display_page(pathname):
 
 #----------
 
-
 # Opciones
 
 @app.callback(
@@ -77,7 +76,7 @@ def get_opciones(tab):
     return render_opciones(tab)
 
 
-# Conteo
+# Conteo y Velocidades
 
 @app.callback(
 	Output('conteo2', 'figure'),
@@ -89,8 +88,6 @@ def get_opciones(tab):
 
 def get_conteo1(tab, tab1, tab2, tab3, tab4):
     return render_conteo(tab, tab1, tab2, tab3, tab4)
-
-
 
 
 # Alfonso Reyes - General
