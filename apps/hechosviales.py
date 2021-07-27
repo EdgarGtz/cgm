@@ -321,6 +321,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hv_mes', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
+        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
 
         return interseccion_hv_tiempo
