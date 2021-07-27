@@ -27,7 +27,7 @@ def alfonsoreyes():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='BiciRuta', tab_id='alfonsoreyes_1',
+                            dbc.Tab(label='Alfonso Reyes', tab_id='alfonsoreyes_1',
                                 disabled = False)
                         ],
                         id='tabs',
@@ -60,25 +60,36 @@ def alfonsoreyes_1():
 
     return html.Div([
 
-        # Dropdown de variables y calendario
         dbc.Row([
 
-            dbc.Col(
+            dbc.Col([
 
-                dcc.Dropdown(
-                    id='my_dropdown_0',
-                    options=[
+                dbc.RadioItems(
+                    id = 'my_dropdown_0',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'conteo',
+                    options = [
                         {'label': 'Conteo', 'value': 'conteo'},
-                        {'label': 'Velocidad Promedio', 
-                            'value': 'velocidad_promedio'}
-                    ],
-                    value='conteo',
-                    multi=False,
-                    clearable=False,
-                    style={"width": "50%"}
-                ), width = 8
+                        {'label': 'Velocidad Promedio', 'value': 'velocidad_promedio'}
+                    ]
+                ),
 
-            ),
+                html.Br(),
+
+                html.Br(),
+
+                dbc.RadioItems(
+                    id = 'my_dropdown',
+                    className = 'btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'bicycle',
+                    options = []
+                )
+
+            ]),
 
             dbc.Col(
 
@@ -91,86 +102,15 @@ def alfonsoreyes_1():
                     first_day_of_week = 1,
                     minimum_nights = 0,
                     updatemode = 'bothdates',
+                    display_format = 'DD MMMM YYYY',
                     style = {'float': 'right'}         
-                ), width = 4)
-
-        ]),
-
-        html.Br(),
-
-        # Dropdown de modo de transporte
-        dbc.Row(
-
-            dbc.Col(
-
-                dcc.Dropdown(
-                    id='my_dropdown',
-                    options=[],
-                    value = 'bicycle',
-                    multi = False,
-                    clearable = False,
-                    style={"width": "50%"}
-                ), width = 8
-
+                ),
             )
 
-        ),
+        ], className = 'radio-group'),
 
         html.Br(),
 
-        # # Dropdown de periodo de tiempo
-        # dbc.Row(
-
-        #     dbc.Col(
-
-        #         dcc.Dropdown(
-        #             id='my_dropdown_1',
-        #             options=[
-        #                 {'label': 'Hora', 'value': 'hora'},
-        #                 {'label': 'Día', 'value': 'dia'},
-        #                 {'label': 'Semana', 'value': 'semana'}
-        #             ],
-        #             value = 'hora',
-        #             multi = False,
-        #             clearable = False,
-        #             style={"width": "50%"}
-        #         ), width = 8
-
-        #     )
-
-        # ),
-
-        # html.Br(),
-
-        # # Gráfica de línea
-        # dbc.Row(
-
-        #     dbc.Col(
-
-        #         dbc.Card([
-        #             dbc.CardBody([
-        #                 dcc.Graph(
-        #                     id = 'conteo2',
-        #                     figure = {},
-        #                     config={
-        #                         'modeBarButtonsToRemove':
-        #                         ['zoom2d', 'lasso2d', 'pan2d',
-        #                         'zoomIn2d', 'zoomOut2d', 'autoScale2d',
-        #                         'resetScale2d', 'hoverClosestCartesian',
-        #                         'hoverCompareCartesian', 'toggleSpikelines',
-        #                         'select2d', 'toImage'],
-        #                         'displaylogo': False
-        #                     }
-        #                 )
-        #             ])
-        #         ])
-
-        #     )
-        # ),
-
-        html.Br(),
-
-        # Gráfica de línea con tabs
         dbc.Row(
 
             dbc.Col(
@@ -205,10 +145,9 @@ def alfonsoreyes_1():
                             }
                         )
                     )
-                ]), lg=12
+                ])
 
-            ), justify = 'center'
-
+            )
         )
 
     ])
