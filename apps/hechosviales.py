@@ -69,7 +69,7 @@ vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 #-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
-vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])
+vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])+100 #el 100 está sólo para que los puntos en el mapa se vean más grandes
 
 #-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
@@ -83,7 +83,7 @@ vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
     color_continuous_scale=px.colors.sequential.Sunset)
 
-vasconcelos_map.update_layout(clickmode='event+select')
+vasconcelos_map.update_layout(clickmode='event+select', mapbox=dict(center=dict(lat=25.6572,lon=-100.3689)))
 
 
 #----------
@@ -136,7 +136,7 @@ def hv_vasconcelos():
                                 {'label': 'Mes', 'value': 'mes'},
                                 {'label': 'Año', 'value': 'año'}
                             ],
-                            value = 'mes',
+                            value = 'dia',
                             multi = False,
                             clearable = False,
                             style={"width": "50%"},
@@ -228,7 +228,7 @@ def render_interseccion_nombre(clickData):
 
 # Hechos Viales
 def render_interseccion_hv(clickData):
-    return clickData['points'][0]['marker.size']
+    return clickData['points'][0]['marker.size']-100
 
 # Lesionados
 def render_interseccion_les(clickData):
@@ -251,7 +251,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
     dif_tiempo_loop = dif_tiempo
 
     # Conteo por hora
-    if periodo_hv == 'mes':
+    if periodo_hv == 'dia':
 
         # Leer csv
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
@@ -280,14 +280,15 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
         
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='num_afect', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode = 'lines', fill='tozeroy')
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", rangemode="normal",rangebreaks=[dict(pattern="day of week")])
+        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1, range=[0,2])
+        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
 
         return interseccion_hv_tiempo
 
-    elif periodo_hv == 'año':
+    elif periodo_hv == 'mes':
     
         # Leer csv
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
@@ -316,8 +317,8 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
         
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='año',y='num_afect', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode = 'lines', fill='tozeroy')
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='mes',y='num_afect', labels = {'fecha2': ''}, template = 'plotly_white')
+        #interseccion_hv_tiempo.update_traces(mode = 'lines', fill='tozeroy')
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
         interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
 
