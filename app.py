@@ -108,8 +108,7 @@ def get_hechosviales(tab):
 
 #-- Interseccion - Nombre
 
-@app.callback(Output('interseccion_nombre', 'children'),
-	[Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_nombre', 'children'), [Input('vasconcelos_map', 'clickData')])
 
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
@@ -137,10 +136,14 @@ def get(clickData):
 
 #-- Intersección - Hechos Viales por Año
 
-@app.callback(Output('interseccion_hv_tiempo', 'figure'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_hv_tiempo', 'figure'),
+	[Input('vasconcelos_map', 'clickData'),
+	Input('periodo_hv', 'value'),
+	Input('calendario', 'start_date'),
+	Input('calendario', 'end_date')])
 
-def get(clickData):
- 	return render_interseccion_hv_tiempo(clickData)
+def get(clickData, value, start_date, end_date):
+ 	return render_interseccion_hv_tiempo(clickData, value, start_date, end_date)
 
 
 if __name__ == '__main__':
