@@ -63,33 +63,38 @@ def alfonsoreyes_1():
         dbc.Row([
 
             dbc.Col([
+                # dbc.Card(
+                    # dbc.CardBody([
+                        dbc.RadioItems(
+                            id = 'my_dropdown_0',
+                            className = 'radio-group btn-group',
+                            labelClassName = 'btn btn-secondary',
+                            labelCheckedClassName = 'active',
+                            value = 'conteo',
+                            options = [
+                                {'label': 'Conteo', 'value': 'conteo'},
+                                {'label': 'Velocidad', 'value': 'velocidad_promedio'}
+                            ]
+                        ),
 
-                dbc.RadioItems(
-                    id = 'my_dropdown_0',
-                    className = 'radio-group btn-group',
-                    labelClassName = 'btn btn-secondary',
-                    labelCheckedClassName = 'active',
-                    value = 'conteo',
-                    options = [
-                        {'label': 'Conteo', 'value': 'conteo'},
-                        {'label': 'Velocidad Promedio', 'value': 'velocidad_promedio'}
-                    ]
-                ),
+                        html.Br(),
 
-                html.Br(),
+                        html.Br(),
 
-                html.Br(),
+                        dbc.RadioItems(
+                            id = 'my_dropdown',
+                            className = 'btn-group',
+                            labelClassName = 'btn btn-secondary',
+                            labelCheckedClassName = 'active',
+                            value = 'bicycle',
+                            options = []
+                        )
 
-                dbc.RadioItems(
-                    id = 'my_dropdown',
-                    className = 'btn-group',
-                    labelClassName = 'btn btn-secondary',
-                    labelCheckedClassName = 'active',
-                    value = 'bicycle',
-                    options = []
-                )
 
-            ]),
+                    # ])
+                # )
+
+            ],lg = 4),
 
             dbc.Col(
 
