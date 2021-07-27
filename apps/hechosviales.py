@@ -134,7 +134,7 @@ def hv_vasconcelos():
                                 {'label': 'Día', 'value': 'dia'},
                                 #{'label': 'Semana', 'value': 'semana'},
                                 {'label': 'Mes', 'value': 'mes'},
-                                {'label': 'Año', 'value': 'año'}
+                                #{'label': 'Año', 'value': 'año'}
                             ],
                             value = 'dia',
                             multi = False,
@@ -280,7 +280,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
         
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.line(interseccion_hv_tiempo_data, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", rangemode="normal",rangebreaks=[dict(pattern="day of week")])
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1, range=[0,2])
@@ -315,10 +315,48 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
 
         # Filtro por calendario
         interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
-        
+        interseccion_hv_tiempo_data["hv_mes"] = interseccion_hv_tiempo_data["hechos_viales"].resample("M").sum()
+
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='mes',y='num_afect', labels = {'fecha2': ''}, template = 'plotly_white')
-        #interseccion_hv_tiempo.update_traces(mode = 'lines', fill='tozeroy')
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hv_mes', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
+        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
+
+        return interseccion_hv_tiempo
+
+    elif periodo_hv == 'año':
+    
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
+        interseccion_hv_tiempo_data["hv_año"] = interseccion_hv_tiempo_data["hechos_viales"].resample("M").sum()
+
+        # Graph
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hv_año', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
         interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
 
