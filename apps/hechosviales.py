@@ -78,7 +78,7 @@ px.set_mapbox_access_token(mapbox_access_token)
 #-- Graph
 vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size = 'Hechos Viales',
-    size_max=15, zoom=12.5, hover_name='interseccion', color='Hechos Viales',
+    size_max=15, zoom=12.2, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
     color_continuous_scale=px.colors.sequential.Sunset)
@@ -110,7 +110,7 @@ def hv_vasconcelos():
                             },
                             style={'height':'80vh'}
                         ),
-                    style={'padding':'0px'}
+                    style={'padding':'0px'},
                     )
                 ]), lg=7
 
@@ -126,21 +126,6 @@ def hv_vasconcelos():
                             start_date = dt(2015, 1, 1),
                             end_date = dt(2020, 12, 31),
                             first_day_of_week = 1
-                        ),
-                        dcc.Dropdown(
-                            id='periodo_hv',
-                            options=[
-                                #{'label': 'Hora', 'value': 'hora'},
-                                {'label': 'Día', 'value': 'dia'},
-                                #{'label': 'Semana', 'value': 'semana'},
-                                {'label': 'Mes', 'value': 'mes'},
-                                #{'label': 'Año', 'value': 'año'}
-                            ],
-                            value = 'dia',
-                            multi = False,
-                            clearable = False,
-                            style={"width": "50%"},
-                            className="py-2 px-3"
                         ),
                     ],className="d-flex justify-content-center"),
                 ]),
@@ -191,7 +176,32 @@ def hv_vasconcelos():
                 dbc.Row(
                     dbc.Col(
                         dbc.Card([
-                            dbc.CardHeader('Hechos Viales por'),
+                            dbc.CardHeader([
+                                dbc.Row([
+                                    dbc.Col(
+                                        'Hechos Viales por', 
+                                        width=3, 
+                                        className="pt-1", 
+                                        style={'textAlign':'center'}
+                                    ),
+                                    dbc.Col(
+                                        dcc.Dropdown(
+                                            id='periodo_hv',
+                                            options=[
+                                                #{'label': 'Hora', 'value': 'hora'},
+                                                {'label': 'Día', 'value': 'dia'},
+                                                #{'label': 'Semana', 'value': 'semana'},
+                                                {'label': 'Mes', 'value': 'mes'},
+                                                {'label': 'Año', 'value': 'año'}
+                                            ],
+                                            value = 'mes',
+                                            multi = False,
+                                            clearable = False,
+                                            #style={"width": "50%"},
+                                        ), width=2
+                                    )
+                                ], className="d-flex justify-content-center")
+                            ]),
                             dbc.CardBody([
                                 dcc.Graph(
                                     id = 'interseccion_hv_tiempo',
@@ -312,17 +322,19 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
+        interseccion_hv_tiempo_data = hvi
 
         # Filtro por calendario
-        interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
-        interseccion_hv_tiempo_data["hv_mes"] = interseccion_hv_tiempo_data["hechos_viales"].resample("M").sum()
+        interseccion_hv_tiempo_data = interseccion_hv_tiempo_data.loc[start_date:end_date]
+        interseccion_hv_tiempo_data_res = interseccion_hv_tiempo_data.resample("M").sum()
+        interseccion_hv_tiempo_data_res["fecha_2"] = interseccion_hv_tiempo_data_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hv_mes', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
 
         return interseccion_hv_tiempo
 
@@ -350,16 +362,19 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
+        interseccion_hv_tiempo_data = hvi
 
         # Filtro por calendario
-        interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
-        interseccion_hv_tiempo_data["hv_año"] = interseccion_hv_tiempo_data["hechos_viales"].resample("M").sum()
+        interseccion_hv_tiempo_data = interseccion_hv_tiempo_data.loc[start_date:end_date]
+        interseccion_hv_tiempo_data_res = interseccion_hv_tiempo_data.resample("Y").sum()
+        interseccion_hv_tiempo_data_res["fecha_2"] = interseccion_hv_tiempo_data_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data, x='fecha2',y='hv_año', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True)
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
+        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
+        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
 
         return interseccion_hv_tiempo
 
