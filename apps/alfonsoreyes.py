@@ -63,41 +63,39 @@ def alfonsoreyes_1():
         dbc.Row([
 
             dbc.Col([
-                # dbc.Card(
-                    # dbc.CardBody([
-                        dbc.RadioItems(
-                            id = 'my_dropdown_0',
-                            className = 'radio-group btn-group',
-                            labelClassName = 'btn btn-secondary',
-                            labelCheckedClassName = 'active',
-                            value = 'conteo',
-                            options = [
-                                {'label': 'Conteo', 'value': 'conteo'},
-                                {'label': 'Velocidad', 'value': 'velocidad_promedio'}
-                            ]
-                        ),
 
-                        html.Br(),
+                # Conteo y Velocidad
+                dbc.RadioItems(
+                    id = 'my_dropdown_0',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'conteo',
+                    options = [
+                        {'label': 'Conteo', 'value': 'conteo'},
+                        {'label': 'Velocidad', 'value': 'velocidad_promedio'}
+                    ]
+                ),
 
-                        html.Br(),
+                html.Br(),
 
-                        dbc.RadioItems(
-                            id = 'my_dropdown',
-                            className = 'btn-group',
-                            labelClassName = 'btn btn-secondary',
-                            labelCheckedClassName = 'active',
-                            value = 'bicycle',
-                            options = []
-                        )
+                html.Br(),
 
+                # Modos de transporte
+                dbc.RadioItems(
+                    id = 'my_dropdown',
+                    className = 'btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'bicycle',
+                    options = []
+                )
 
-                    # ])
-                # )
-
-            ],lg = 4),
+            ], lg = 6),
 
             dbc.Col(
 
+                # Calendario
                 dcc.DatePickerRange(
                     id = 'calendario',
                     min_date_allowed = dt(2021, 6, 21),
@@ -109,7 +107,7 @@ def alfonsoreyes_1():
                     updatemode = 'bothdates',
                     display_format = 'DD MMMM YYYY',
                     style = {'float': 'right'}         
-                ),
+                ), lg = 6
             )
 
         ], className = 'radio-group'),
@@ -120,6 +118,7 @@ def alfonsoreyes_1():
 
             dbc.Col(
 
+                # Gráficas
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([

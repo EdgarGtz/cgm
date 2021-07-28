@@ -1,3 +1,5 @@
+
+
 .radio-group .custom-control-input ~ .custom-control-label::before {
   content: none;
 }
@@ -26,5 +28,55 @@
   background-color: #F7F7F7;
   color: #535353;
 }
+
+
+/* Calendario /*
+
+/* Calendar date start and end */
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
+  background: rgb(17, 17, 17) !important; /* gris boton activado */
+  border: 1px double rgb(17, 17, 17) !important; /* gris boton activado */
+  color: rgb(255, 255, 255) !important; /* blanco */
+}
+
+/* Calendar in between start and end date */
+.CalendarDay__selected_span {
+    background: rgb(84, 91, 98) !important; /* gris boton activado */
+    border: 1px double rgb(84, 91, 98) !important; /* gris boton activado */
+    color: rgb(255, 255, 255) !important; /* blanco */
+}
+
+.CalendarDay__selected_span:active, .CalendarDay__selected_span:hover {
+    background: rgb(170, 170, 170) !important;
+    border: 1px double rgb(170, 170, 170) !important;
+    color: rgb(255, 255, 255) !important; /* blanco */
+}
+
+/* Shortcut */
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+    border-top: 26px solid transparent;
+    border-right: 33px solid #ffffff;
+    bottom: 0;
+    right: 0;
+}
+
+/* Delineado date */
+.DateInput_input__focused {
+    outline: 0;
+    background: #ffffff;
+    border: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 2px solid #111111;
+    border-left: 0;
+}
+
+.nav-link {
+    display: block;
+    padding: .5rem 1rem;
+    color: #535353;
+}
+
+
 
 
