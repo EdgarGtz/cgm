@@ -115,35 +115,44 @@ def get_interseccion_nombre(clickData):
 
 #-- Interseccion - Hechos Viales
 
-@app.callback(Output('interseccion_hv', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_hv', 'children'), 
+	[Input('vasconcelos_map', 'clickData'),
+	Input('calendario', 'start_date'),
+	Input('calendario', 'end_date')])
 
-def get(clickData):
- 	return render_interseccion_hv(clickData)
+def get(clickData, start_date, end_date):
+ 	return render_interseccion_hv(clickData, start_date, end_date)
 
 #-- Interseccion - Lesionados
 
-@app.callback(Output('interseccion_les', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_les', 'children'), 
+	[Input('vasconcelos_map', 'clickData'),
+	Input('calendario', 'start_date'),
+	Input('calendario', 'end_date')])
 
-def get(clickData):
- 	return render_interseccion_les(clickData)
+def get(clickData, start_date, end_date):
+ 	return render_interseccion_les(clickData, start_date, end_date)
 
 #-- Interseccion - Fallecidos
 
-@app.callback(Output('interseccion_fal', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_fal', 'children'), 
+	[Input('vasconcelos_map', 'clickData'),
+	Input('calendario', 'start_date'),
+	Input('calendario', 'end_date')])
 
-def get(clickData):
- 	return render_interseccion_fal(clickData)
+def get(clickData, start_date, end_date):
+ 	return render_interseccion_fal(clickData, start_date, end_date)
 
 #-- Intersección - Hechos Viales por Año
 
 @app.callback(Output('interseccion_hv_tiempo', 'figure'),
 	[Input('vasconcelos_map', 'clickData'),
-	Input('periodo_hv', 'value'),
+	Input('periodo_hv', 'active_tab'),
 	Input('calendario', 'start_date'),
 	Input('calendario', 'end_date')])
 
-def get(clickData, value, start_date, end_date):
- 	return render_interseccion_hv_tiempo(clickData, value, start_date, end_date)
+def get(clickData, active_tab, start_date, end_date):
+ 	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date)
 
 
 if __name__ == '__main__':
