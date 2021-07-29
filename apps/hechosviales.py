@@ -119,46 +119,6 @@ def hv_vasconcelos():
 
             dbc.Col([
 
-                # Nombre Intersección
-                dbc.Card(
-                        dbc.CardHeader(id='interseccion_nombre'),
-                        style={'textAlign':'center'}, inverse=False, outline = False),
-
-                html.Br(),
-
-                # Tarjetas Indicadores
-                dbc.Row([
-                        dbc.Col(
-                            
-                            dbc.Card([
-                                dbc.CardHeader('Hechos Viales'),
-                                dbc.CardBody(
-                                    html.H3(id = 'interseccion_hv')
-                                )
-                            ], style={'textAlign':'center'}),
-                        ),
-
-                        dbc.Col(
-                             dbc.Card([
-                                dbc.CardHeader('Lesionados'),
-                                dbc.CardBody(
-                                    html.H3(id = 'interseccion_les')
-                                )
-                            ], style={'textAlign':'center'}),
-                        ),
-
-                        dbc.Col(
-                            dbc.Card([
-                                dbc.CardHeader('Fallecidos'),
-                                dbc.CardBody(
-                                    html.H3(id = 'interseccion_fal')
-                                )
-                            ], style={'textAlign':'center'})
-                        )
-                ]),
-
-                html.Br(),
-
                 dbc.Card([
                     dbc.CardBody([
                         dcc.DatePickerRange(
@@ -215,6 +175,47 @@ def hv_vasconcelos():
                             updatemode='drag',
                         ),
                     ]),
+                ]),
+
+                html.Br(),
+
+
+                # Nombre Intersección
+                dbc.Card(
+                        dbc.CardHeader(id='interseccion_nombre'),
+                        style={'textAlign':'center'}, inverse=False, outline = False),
+
+                html.Br(),
+
+                # Tarjetas Indicadores
+                dbc.Row([
+                        dbc.Col(
+                            
+                            dbc.Card([
+                                dbc.CardHeader('Hechos Viales'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_hv')
+                                )
+                            ], style={'textAlign':'center'}),
+                        ),
+
+                        dbc.Col(
+                             dbc.Card([
+                                dbc.CardHeader('Lesionados'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_les')
+                                )
+                            ], style={'textAlign':'center'}),
+                        ),
+
+                        dbc.Col(
+                            dbc.Card([
+                                dbc.CardHeader('Fallecidos'),
+                                dbc.CardBody(
+                                    html.H3(id = 'interseccion_fal')
+                                )
+                            ], style={'textAlign':'center'})
+                        )
                 ]),
 
                 html.Br(),
