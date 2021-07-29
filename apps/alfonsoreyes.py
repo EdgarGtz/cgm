@@ -45,11 +45,13 @@ def alfonsoreyes():
         ),
 
         #Footer 
-        dbc.Row(
+        dbc.Row([
             dbc.Col(
-                html.H6('San Pedro Garza García, Nuevo León, México')
-            ), className='px-3 py-4', style={'background-color': 'black','color': 'white'}
-        )
+                html.H6('Instituto Municipal de Planeación y Gestión Urbana')),
+            dbc.Col(
+                html.H6('San Pedro Garza García, Nuevo León, México',
+                    style = {'textAlign': 'right'}))
+        ], className='px-3 py-4', style={'background-color': 'black','color': 'white'})
 
     ])
 
@@ -91,9 +93,13 @@ def alfonsoreyes_1():
                     options = []
                 )
 
-            ], lg = 6),
+            ], lg = 8),
 
-            dbc.Col(
+            dbc.Col([
+
+                html.Br(),
+                
+                html.Br(),
 
                 # Calendario
                 dcc.DatePickerRange(
@@ -107,8 +113,8 @@ def alfonsoreyes_1():
                     updatemode = 'bothdates',
                     display_format = 'DD MMMM YYYY',
                     style = {'float': 'right'}         
-                ), lg = 6
-            )
+                )
+            ], lg = 4)
 
         ], className = 'radio-group'),
 
@@ -218,13 +224,13 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_hora, x = 'datetime1', y = my_dropdown,
-            labels = {'datetime1': ''}, template = 'plotly_white',
+            labels = {'datetime1': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
-            hoverlabel = dict(font_size = 16))
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
+        conteo2.update_xaxes(showgrid = False, showline = True),
+        conteo2.update_layout(hovermode = 'x',
+            hoverlabel = dict(font_size = 16)),
 
         return conteo2
 
@@ -248,12 +254,12 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_dia, x = 'dia1', y = my_dropdown,
-            labels = {'dia1': ''}, template = 'plotly_white',
+            labels = {'dia1': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
@@ -284,12 +290,12 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_semana, x = 'fecha', y = 'suma',
-            labels = {'fecha': ''}, template = 'plotly_white',
+            labels = {'fecha': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['fecha'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size =16))
 
         return conteo2
@@ -346,17 +352,17 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_semana_graph, x = 'fecha', y = 'suma',
-            labels = {'fecha': ''}, template = 'plotly_white',
+            labels = {'fecha': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['fecha'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size =16))
 
         return conteo2
 
-    # Velocidad promedio por hora
+    # Velocidad por hora
     elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'hora':
 
         # Leer csv
@@ -381,17 +387,18 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_hora, x = 'datetime1', y = my_dropdown,
-            labels = {'datetime1': ''}, template = 'plotly_white',
+            labels = {'datetime1': '', my_dropdown: ''},
+            template = 'plotly_white',
             hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
+        conteo2.update_xaxes(showgrid = False, showline = True),
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
 
-    # Velocidad promedio por día
+    # Velocidad por día
     elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'dia':
 
         # Leer csv
@@ -411,17 +418,18 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_dia, x = 'dia1', y = my_dropdown,
-            labels = {'dia1': ''}, template = 'plotly_white',
+            labels = {'dia1': '', my_dropdown: ''}, 
+            template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_xaxes(showgrid = False, showline = True),
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
 
-    # Velocidad promedio por semana - una semana o menos
+    # Velocidad por semana - una semana o menos
     elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'semana' and dif_tiempo < 7:
 
         # Leer csv
@@ -447,17 +455,18 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_semana, x = 'fecha', y = 'mean',
-            labels = {'fecha': ''}, template = 'plotly_white')
+            labels = {'fecha': '', 'mean': ''}, 
+            template = 'plotly_white')
 
         conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
             fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_xaxes(showgrid = False, showline = True),
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
 
-    # Velocidad promedio por semana - más de una semana
+    # Velocidad por semana - más de una semana
     elif my_dropdown_0 == 'velocidad_promedio' and periodo == 'semana':
 
         # Leer csv
@@ -509,15 +518,20 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_semana_graph, x = 'fecha', y = 'mean',
-            labels = {'fecha': ''}, template = 'plotly_white',
+            labels = {'fecha': '', 'mean': ''},
+            template = 'plotly_white',
             hover_data = ['fecha'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(dragmode = False, hovermode = 'x',
+        conteo2.update_xaxes(showgrid = False, showline = True),
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size =16))
 
         return conteo2
+
+
+
+        
 
 #----------
 

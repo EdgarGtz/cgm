@@ -36,12 +36,13 @@ def hechosviales():
         ),
 
         #Footer 
-        dbc.Row(
+        dbc.Row([
             dbc.Col(
-                html.H6('San Pedro Garza García, Nuevo León, México')
-            ), className='px-3 py-4',
-            style={'background-color': 'black','color': 'white'}
-        )
+                html.H6('Instituto Municipal de Planeación y Gestión Urbana')),
+            dbc.Col(
+                html.H6('San Pedro Garza García, Nuevo León, México',
+                    style = {'textAlign': 'right'}))
+        ], className='px-3 py-4', style={'background-color': 'black','color': 'white'})
 
     ])
 
