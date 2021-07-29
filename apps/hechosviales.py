@@ -100,7 +100,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader("Da click en una intersección y desliza la página para conocer más",
+                    dbc.CardHeader("Da click en una intersección para saber su información",
                         style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
@@ -109,7 +109,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'80vh'}
+                            style={'height':'90vh'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -118,20 +118,6 @@ def hv_vasconcelos():
             ),
 
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        dcc.DatePickerRange(
-                            id = 'calendario',
-                            min_date_allowed = dt(2015, 1, 1),
-                            max_date_allowed = dt(2020, 12, 31),
-                            start_date = dt(2015, 1, 1),
-                            end_date = dt(2020, 12, 31),
-                            first_day_of_week = 1
-                        ),
-                    ],className="d-flex justify-content-center"),
-                ]),
-
-                html.Br(),
 
                 # Nombre Intersección
                 dbc.Card(
@@ -173,35 +159,83 @@ def hv_vasconcelos():
 
                 html.Br(),
 
+                dbc.Card([
+                    dbc.CardBody([
+                        dcc.DatePickerRange(
+                            id = 'calendario',
+                            min_date_allowed = dt(2015, 1, 1),
+                            max_date_allowed = dt(2020, 12, 31),
+                            start_date = dt(2015, 1, 1),
+                            end_date = dt(2020, 12, 31),
+                            first_day_of_week = 1,
+                            className="d-flex justify-content-center"
+                        ),
+
+                        html.Br(),
+
+                        dcc.Checklist(
+                            id='checklist_dias',
+                            options=[
+                                {'label': 'Lunes', 'value': 'Lunes'},
+                                {'label': 'Martes', 'value': 'Martes'},
+                                {'label': 'Miércoles', 'value': 'Miércoles'},
+                                {'label': 'Jueves', 'value': 'Jueves'},
+                                {'label': 'Viernes', 'value': 'Viernes'},
+                                {'label': 'Sábado', 'value': 'Sábado'},
+                                {'label': 'Domingo', 'value': 'Domingo'},
+                            ],
+                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                            labelStyle={'display': 'inline-block'},
+                            inputClassName='form-check-input',
+                            labelClassName="px-3",
+                            className="d-flex justify-content-center pt-3"
+                        ),
+
+                        html.Br(),
+
+                        dcc.RangeSlider(
+                            id='slider_hora',
+                            min=0,
+                            max=23,
+                            value=[0, 23],
+                            marks={
+                                0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                3: {'label': '3'},
+                                6: {'label': '6'},
+                                9: {'label': '9'},
+                                12: {'label': '12'},
+                                15: {'label': '15'},
+                                18: {'label': '18'},
+                                21: {'label': '21'},
+                                23: {'label': '23'}
+                            },
+                            allowCross=False,
+                            dots=True,
+                            tooltip={'always_visible': False , "placement":"bottom"},
+                            updatemode='drag',
+                        ),
+                    ]),
+                ]),
+
+                html.Br(),
+
                 # Hechos viales por año
                 dbc.Row(
                     dbc.Col(
                         dbc.Card([
                             dbc.CardHeader([
-                                dbc.Row([
-                                    dbc.Col(
-                                        'Hechos Viales por', 
-                                        width=3, 
-                                        className="pt-1", 
-                                        style={'textAlign':'center'}
-                                    ),
-                                    dbc.Col(
-                                        dcc.Dropdown(
-                                            id='periodo_hv',
-                                            options=[
-                                                #{'label': 'Hora', 'value': 'hora'},
-                                                {'label': 'Día', 'value': 'dia'},
-                                                #{'label': 'Semana', 'value': 'semana'},
-                                                {'label': 'Mes', 'value': 'mes'},
-                                                {'label': 'Año', 'value': 'año'}
-                                            ],
-                                            value = 'mes',
-                                            multi = False,
-                                            clearable = False,
-                                            #style={"width": "50%"},
-                                        ), width=2
-                                    )
-                                ], className="d-flex justify-content-center")
+                                dbc.Tabs([
+                                    dbc.Tab(label='Día', tab_id='dia',
+                                        disabled = False),
+                                    dbc.Tab(label = 'Mes', tab_id = 'mes',
+                                        disabled = False),
+                                    dbc.Tab(label = 'Año', tab_id = 'año',
+                                        disabled = False)
+                                ],
+                                id='periodo_hv',
+                                active_tab="mes",
+                                card=True
+                                )
                             ]),
                             dbc.CardBody([
                                 dcc.Graph(
@@ -214,7 +248,7 @@ def hv_vasconcelos():
                                     'toggleSpikelines', 'select2d'], 'displaylogo': False
                                     }
                                 )
-                            ])
+                            ]),
                         ])
                     )
                 )
@@ -238,19 +272,127 @@ def render_interseccion_nombre(clickData):
         return clickData['points'][0]['hovertext']
 
 # Hechos Viales
-def render_interseccion_hv(clickData):
-    return clickData['points'][0]['marker.size']-100
+def render_interseccion_hv(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Leer csv
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+    # Filter interseccion
+    hvi = hvi[hvi['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+    #hvi["hora"] = hvi["hora"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    # +" - "+ hvi["hora"]                # - %H
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+
+    #Filtro por día de la semana
+    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+    
+    #Sumo los hechos viales
+    interseccion_hv = hv_tiempo_data_cal_dsm_hora["hechos_viales"].sum()
+
+    return interseccion_hv
 
 # Lesionados
-def render_interseccion_les(clickData):
-    return clickData['points'][0]['customdata'][0]
+def render_interseccion_les(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Leer csv
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+    # Filter interseccion
+    hvi = hvi[hvi['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+    #hvi["hora"] = hvi["hora"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    # +" - "+ hvi["hora"]                # - %H
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+
+    #Filtro por día de la semana
+    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+    #Sumo los lesionados
+    interseccion_les = hv_tiempo_data_cal_dsm_hora["lesionados"].sum()
+
+    return interseccion_les
 
 # Fallecidos
-def render_interseccion_fal(clickData):
-    return clickData['points'][0]['customdata'][1]
+def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checklist_dias):
 
-# Hechos Viales por Año
-def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
+     # Leer csv
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+    # Filter interseccion
+    hvi = hvi[hvi['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+    
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+    #hvi["hora"] = hvi["hora"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    # +" - "+ hvi["hora"]                # - %H
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+    
+    #Filtro por día de la semana
+    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+    #Sumo los fallecidos
+    interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
+
+    return interseccion_fal
+
+# Hechos Viales por 
+def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, slider_hora, checklist_dias):
 
     # Diferencia en días entre fecha de inicio y fecha final
     start_date_tiempo = pd.to_datetime(start_date)
@@ -288,10 +430,11 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         hvi = hvi.sort_index()
 
         # Filtro por calendario
-        interseccion_hv_tiempo_data = hvi.loc[start_date:end_date]
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+        hv_tiempo_data_cal_hora = hv_tiempo_data_cal[(hv_tiempo_data_cal['hora']>=slider_hora[0])&(hv_tiempo_data_cal['hora']<=slider_hora[1])]
         
         # Graph
-        interseccion_hv_tiempo = px.line(interseccion_hv_tiempo_data, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.line(hv_tiempo_data_cal_hora, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", rangemode="normal",rangebreaks=[dict(pattern="day of week")])
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1, range=[0,2])
@@ -323,15 +466,25 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
-        interseccion_hv_tiempo_data = hvi
+        hv_tiempo_data_cal = hvi
 
         # Filtro por calendario
-        interseccion_hv_tiempo_data = interseccion_hv_tiempo_data.loc[start_date:end_date]
-        interseccion_hv_tiempo_data_res = interseccion_hv_tiempo_data.resample("M").sum()
-        interseccion_hv_tiempo_data_res["fecha_2"] = interseccion_hv_tiempo_data_res.index
+        hv_tiempo_data_cal = hv_tiempo_data_cal.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+        #Transformar datos en meses
+        hv_tiempo_data_cal_dsm_hora_res = hv_tiempo_data_cal_dsm_hora.resample("M").sum()
+        
+        #Agregar fecha
+        hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
@@ -363,15 +516,25 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date):
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
-        interseccion_hv_tiempo_data = hvi
+        hv_tiempo_data_cal = hvi
 
-        # Filtro por calendario
-        interseccion_hv_tiempo_data = interseccion_hv_tiempo_data.loc[start_date:end_date]
-        interseccion_hv_tiempo_data_res = interseccion_hv_tiempo_data.resample("Y").sum()
-        interseccion_hv_tiempo_data_res["fecha_2"] = interseccion_hv_tiempo_data_res.index
+         # Filtro por calendario
+        hv_tiempo_data_cal = hv_tiempo_data_cal.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+        #Transformar datos en años
+        hv_tiempo_data_cal_dsm_hora_res = hv_tiempo_data_cal_dsm_hora.resample("Y").sum()
+        
+        #Agregar fecha
+        hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(interseccion_hv_tiempo_data_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
