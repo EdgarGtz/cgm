@@ -113,13 +113,13 @@ def hv_vasconcelos():
                         ),
                     style={'padding':'0px'},
                     )
-                ]), lg=7
+                ]), lg=7, md=7
 
             ),
 
             dbc.Col([
 
-                dbc.Card([
+                                dbc.Card([
                     dbc.CardBody([
                         dcc.DatePickerRange(
                             id = 'calendario',
@@ -253,7 +253,7 @@ def hv_vasconcelos():
                         ])
                     )
                 )
-            ])
+            ], lg=5, md=5)
 
             
 
@@ -429,13 +429,25 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
+        hv_tiempo_data_cal = hvi
 
         # Filtro por calendario
-        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-        hv_tiempo_data_cal_hora = hv_tiempo_data_cal[(hv_tiempo_data_cal['hora']>=slider_hora[0])&(hv_tiempo_data_cal['hora']<=slider_hora[1])]
+        hv_tiempo_data_cal = hv_tiempo_data_cal.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
         
+        #Transformar datos en dias
+        #hv_tiempo_data_cal_dsm_hora_res = hv_tiempo_data_cal_dsm_hora.resample("d").sum()
+        
+        #Agregar fecha
+        #hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
+
         # Graph
-        interseccion_hv_tiempo = px.line(hv_tiempo_data_cal_hora, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
         interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", rangemode="normal",rangebreaks=[dict(pattern="day of week")])
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1, range=[0,2])
