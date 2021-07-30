@@ -116,7 +116,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'90vh'}
+                            style={'height':'110vh'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -143,17 +143,18 @@ def hv_vasconcelos():
                         dcc.Checklist(
                             id='checklist_dias',
                             options=[
-                                {'label': 'Lunes', 'value': 'Lunes'},
-                                {'label': 'Martes', 'value': 'Martes'},
-                                {'label': 'Miércoles', 'value': 'Miércoles'},
-                                {'label': 'Jueves', 'value': 'Jueves'},
-                                {'label': 'Viernes', 'value': 'Viernes'},
-                                {'label': 'Sábado', 'value': 'Sábado'},
-                                {'label': 'Domingo', 'value': 'Domingo'},
+                                {'label': 'L', 'value': 'Lunes'},
+                                {'label': 'M', 'value': 'Martes'},
+                                {'label': 'MX', 'value': 'Miércoles'},
+                                {'label': 'J', 'value': 'Jueves'},
+                                {'label': 'V', 'value': 'Viernes'},
+                                {'label': 'S', 'value': 'Sábado'},
+                                {'label': 'D', 'value': 'Domingo'},
                             ],
                             value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                             labelStyle={'display': 'inline-block'},
                             inputClassName='form-check-input',
+                            inputStyle={"margin-right": "20px"},
                             labelClassName="px-3",
                             className="d-flex justify-content-center pt-3"
                         ),
