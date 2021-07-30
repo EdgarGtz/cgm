@@ -120,7 +120,7 @@ def hv_vasconcelos():
                         ),
                     style={'padding':'0px'},
                     )
-                ]), lg=6, md=6
+                ]), lg=7, md=7
 
             ),
 
@@ -261,7 +261,7 @@ def hv_vasconcelos():
                         ])
                     )
                 )
-            ], lg=6, md=6)
+            ], lg=5, md=5)
 
             
 
