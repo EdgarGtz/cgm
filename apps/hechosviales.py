@@ -70,22 +70,29 @@ vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
 #-- Convert to numeric
 vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
 vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
-vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])+100 #el 100 está sólo para que los puntos en el mapa se vean más grandes
+vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])+50 #el 100 está sólo para que los puntos en el mapa se vean más grandes
 
 #-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
 #-- Graph
-vasconcelos_map = px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
+vasconcelos_map = go.Figure(
+    px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
     size = 'Hechos Viales',
-    size_max=15, zoom=12.2, hover_name='interseccion', color='Hechos Viales',
+    size_max=20, zoom=12.2, hover_name='interseccion', color='Hechos Viales',
     custom_data=['lesionados', 'fallecidos'],
     hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
-    color_continuous_scale=px.colors.sequential.Sunset)
+    color_continuous_scale=px.colors.sequential.Sunsetdark,
+    opacity=0.9))
 
-vasconcelos_map.update_layout(clickmode='event+select', mapbox=dict(center=dict(lat=25.6572,lon=-100.3689)))
-
+vasconcelos_map.update_layout(clickmode='event+select', 
+     mapbox=dict(
+        accesstoken=mapbox_access_token,
+        center=dict(lat=25.6572, lon=-100.3689),
+        style='outdoors'
+    )
+)
 
 #----------
 
@@ -100,7 +107,7 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader("Da click en una intersección para saber su información",
+                    dbc.CardHeader(html.H5("Da click en una intersección para saber más información"),
                         style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
@@ -109,15 +116,77 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'90vh'}
+                            style={'height':'110vh'}
                         ),
                     style={'padding':'0px'},
                     )
-                ]), lg=7
+                ]), lg=7, md=7
 
             ),
 
             dbc.Col([
+
+                                dbc.Card([
+                    dbc.CardBody([
+                        dcc.DatePickerRange(
+                            id = 'calendario',
+                            min_date_allowed = dt(2015, 1, 1),
+                            max_date_allowed = dt(2020, 12, 31),
+                            start_date = dt(2015, 1, 1),
+                            end_date = dt(2020, 12, 31),
+                            first_day_of_week = 1,
+                            className="d-flex justify-content-center"
+                        ),
+
+                        html.Br(),
+
+                        dcc.Checklist(
+                            id='checklist_dias',
+                            options=[
+                                {'label': 'L', 'value': 'Lunes'},
+                                {'label': 'M', 'value': 'Martes'},
+                                {'label': 'MX', 'value': 'Miércoles'},
+                                {'label': 'J', 'value': 'Jueves'},
+                                {'label': 'V', 'value': 'Viernes'},
+                                {'label': 'S', 'value': 'Sábado'},
+                                {'label': 'D', 'value': 'Domingo'},
+                            ],
+                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                            labelStyle={'display': 'inline-block'},
+                            inputClassName='form-check-input',
+                            inputStyle={"margin-right": "20px"},
+                            labelClassName="px-3",
+                            className="d-flex justify-content-center pt-3"
+                        ),
+
+                        html.Br(),
+
+                        dcc.RangeSlider(
+                            id='slider_hora',
+                            min=0,
+                            max=23,
+                            value=[0, 23],
+                            marks={
+                                0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                3: {'label': '3'},
+                                6: {'label': '6'},
+                                9: {'label': '9'},
+                                12: {'label': '12'},
+                                15: {'label': '15'},
+                                18: {'label': '18'},
+                                21: {'label': '21'},
+                                23: {'label': '23'}
+                            },
+                            allowCross=False,
+                            dots=True,
+                            tooltip={'always_visible': False , "placement":"bottom"},
+                            updatemode='drag',
+                        ),
+                    ]),
+                ]),
+
+                html.Br(),
+
 
                 # Nombre Intersección
                 dbc.Card(
@@ -159,66 +228,6 @@ def hv_vasconcelos():
 
                 html.Br(),
 
-                dbc.Card([
-                    dbc.CardBody([
-                        dcc.DatePickerRange(
-                            id = 'calendario',
-                            min_date_allowed = dt(2015, 1, 1),
-                            max_date_allowed = dt(2020, 12, 31),
-                            start_date = dt(2015, 1, 1),
-                            end_date = dt(2020, 12, 31),
-                            first_day_of_week = 1,
-                            className="d-flex justify-content-center"
-                        ),
-
-                        html.Br(),
-
-                        dcc.Checklist(
-                            id='checklist_dias',
-                            options=[
-                                {'label': 'Lunes', 'value': 'Lunes'},
-                                {'label': 'Martes', 'value': 'Martes'},
-                                {'label': 'Miércoles', 'value': 'Miércoles'},
-                                {'label': 'Jueves', 'value': 'Jueves'},
-                                {'label': 'Viernes', 'value': 'Viernes'},
-                                {'label': 'Sábado', 'value': 'Sábado'},
-                                {'label': 'Domingo', 'value': 'Domingo'},
-                            ],
-                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                            labelStyle={'display': 'inline-block'},
-                            inputClassName='form-check-input',
-                            labelClassName="px-3",
-                            className="d-flex justify-content-center pt-3"
-                        ),
-
-                        html.Br(),
-
-                        dcc.RangeSlider(
-                            id='slider_hora',
-                            min=0,
-                            max=23,
-                            value=[0, 23],
-                            marks={
-                                0: {'label': '0', 'style': {'color': '#77b0b1'}},
-                                3: {'label': '3'},
-                                6: {'label': '6'},
-                                9: {'label': '9'},
-                                12: {'label': '12'},
-                                15: {'label': '15'},
-                                18: {'label': '18'},
-                                21: {'label': '21'},
-                                23: {'label': '23'}
-                            },
-                            allowCross=False,
-                            dots=True,
-                            tooltip={'always_visible': False , "placement":"bottom"},
-                            updatemode='drag',
-                        ),
-                    ]),
-                ]),
-
-                html.Br(),
-
                 # Hechos viales por año
                 dbc.Row(
                     dbc.Col(
@@ -252,7 +261,7 @@ def hv_vasconcelos():
                         ])
                     )
                 )
-            ])
+            ], lg=5, md=5)
 
             
 
@@ -428,17 +437,29 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
+        hv_tiempo_data_cal = hvi
 
         # Filtro por calendario
-        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-        hv_tiempo_data_cal_hora = hv_tiempo_data_cal[(hv_tiempo_data_cal['hora']>=slider_hora[0])&(hv_tiempo_data_cal['hora']<=slider_hora[1])]
+        hv_tiempo_data_cal = hv_tiempo_data_cal.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
         
+        #Transformar datos en dias
+        hv_tiempo_data_cal_dsm_hora_res = hv_tiempo_data_cal_dsm_hora.resample("D").sum()
+        
+        #Agregar fecha
+        hv_tiempo_data_cal_dsm_hora_res["fecha_dos"] = hv_tiempo_data_cal_dsm_hora_res.index
+
         # Graph
-        interseccion_hv_tiempo = px.line(hv_tiempo_data_cal_hora, x='fecha2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", rangemode="normal",rangebreaks=[dict(pattern="day of week")])
-        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1, range=[0,2])
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_dos',y='hechos_viales', labels = {'fecha_dos': ''}, template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers", fill='tozeroy', hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
+        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1,autorange=True, rangemode="normal")
+        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
@@ -485,10 +506,10 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         # Graph
         interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="<b>%{x|%m/%Y}</b><br> %{y} hechos viales")
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='', type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
@@ -535,10 +556,10 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         # Graph
         interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="") 
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="<b>%{x|%Y}</b><br> %{y} hechos viales")
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='', type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, hovermode = 'x unified', hoverlabel = dict(font_size = 16))
+        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
