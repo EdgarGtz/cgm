@@ -229,7 +229,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16)),
 
         return conteo2
@@ -259,7 +259,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
@@ -295,7 +295,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size =16))
 
         return conteo2
@@ -357,7 +357,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size =16))
 
         return conteo2
@@ -393,7 +393,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
@@ -424,7 +424,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
@@ -461,7 +461,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
         conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
             fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16))
 
         return conteo2
@@ -524,7 +524,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
+        conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size =16))
 
         return conteo2
