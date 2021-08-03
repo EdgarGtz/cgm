@@ -90,7 +90,7 @@ vasconcelos_map.update_layout(clickmode='event+select',
      mapbox=dict(
         accesstoken=mapbox_access_token,
         center=dict(lat=25.6572, lon=-100.3689),
-        style='outdoors'
+        style="mapbox://styles/mapbox/navigation-night-v1" #light
     )
 )
 
@@ -142,6 +142,7 @@ def hv_vasconcelos():
 
                         dcc.Checklist(
                             id='checklist_dias',
+                            className="d-flex justify-content-center pt-3  btn-group",
                             options=[
                                 {'label': 'L', 'value': 'Lunes'},
                                 {'label': 'M', 'value': 'Martes'},
@@ -152,11 +153,8 @@ def hv_vasconcelos():
                                 {'label': 'D', 'value': 'Domingo'},
                             ],
                             value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                            labelStyle={'display': 'inline-block'},
                             inputClassName='form-check-input',
-                            inputStyle={"margin-right": "20px"},
-                            labelClassName="px-3",
-                            className="d-flex justify-content-center pt-3"
+                            labelClassName="btn btn-secondary label_class",
                         ),
 
                         html.Br(),
