@@ -187,7 +187,7 @@ def render_opciones(my_dropdown_0):
 
 #----------
 
-# Visualizar gráficas de línea para conteo y velocidad promedio
+# Visualizar gráficas de línea para conteo y velocidad
 def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
     # Diferencia en días entre fecha de inicio y fecha final
@@ -227,7 +227,8 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
             labels = {'datetime1': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = None)
         conteo2.update_xaxes(showgrid = False, showline = True),
         conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16)),
@@ -261,6 +262,20 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
         conteo2.update_xaxes(showgrid = False, showline = True)
         conteo2.update_layout(hovermode = 'x unified',
             hoverlabel = dict(font_size = 16))
+
+
+
+        # interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_dos',y='hechos_viales', labels = {'fecha_dos': ''}, template = 'plotly_white')
+        # interseccion_hv_tiempo.update_traces(mode="markers", fill='tozeroy', hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
+        # interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
+        # interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1,autorange=True, rangemode="normal")
+        # interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
+
+
+
+
+
+        
 
         return conteo2
 
@@ -529,9 +544,6 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         return conteo2
 
-
-
-        
 
 #----------
 
