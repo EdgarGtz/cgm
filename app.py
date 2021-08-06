@@ -4,7 +4,9 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc 
 from dash.dependencies import Input, Output, State
 import dash_auth
-
+import pandas as pd
+from dash_extensions import Download
+from dash_extensions.snippets import send_data_frame
 
 app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
 				external_stylesheets = [dbc.themes.BOOTSTRAP],
@@ -19,7 +21,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo,
+	render_interseccion_hv_tiempo, render_mapa,
 	)
 
 # Connect to config
@@ -110,6 +112,18 @@ def update_hora_selec(value):
 def get_hechosviales(tab):
     return render_hechosviales(tab)
 
+#-- Mapa
+
+@app.callback(Output('mapa_data', 'figure'), 
+	[Input('calendario', 'start_date'),
+	Input('calendario', 'end_date'),
+	Input('slider_hora', 'value'),
+	Input('checklist_dias', 'value')])
+
+def get(start_date, end_date, hora, diasem):
+ 	return render_mapa(start_date, end_date, hora, diasem)
+
+
 #-- Interseccion - Nombre
 
 @app.callback(Output('interseccion_nombre', 'children'), [Input('vasconcelos_map', 'clickData')])
@@ -166,6 +180,13 @@ def get(clickData, start_date, end_date, hora, diasem):
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
  	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
+#-- Intersección - Hechos Viales por Año
+
+@app.callback(
+    Output("download-dataframe-csv", "data"),Input("btn_csv", "n_clicks"), prevent_initial_call=True,)
+
+def generate_csv(n_nlicks):
+    return send_data_frame(df.to_csv, filename="some_name.csv")
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
