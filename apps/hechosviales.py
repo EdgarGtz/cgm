@@ -417,49 +417,6 @@ def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checkl
 
     return interseccion_fal
 
-
-
-# Fallecidos
-def render_mapa(start_date, end_date, slider_hora, checklist_dias):
-
-    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-
-    # Cambiar variables a string
-    hvi["año"] = hvi["año"].astype(str)
-    hvi["mes"] = hvi["mes"].astype(str)
-    hvi["dia"] = hvi["dia"].astype(str)
-
-    # Crear variable datetime
-    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-    # +" - "+ hvi["hora"]                # - %H
-    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-    # Duplicar columna de fecha y set index
-    hvi["fecha2"] = hvi["fecha"]
-    hvi = hvi.set_index("fecha")
-    hvi = hvi.sort_index()
-
-    # Filtro por calendario
-    hvi_cal = hvi.loc[start_date:end_date]
-
-    #Filtro por día de la semana
-    hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-    #Filtro por hora
-    hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-    coords = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["lat","lon"]).reset_index().rename_axis(None, axis=1)
-    hechosviales = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc='count').reset_index().rename_axis(None, axis=1)
-    les_fall = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-    mapa_data = coords[["interseccion","lat","lon"]]
-    mapa_data["Hechos Viales"] = hechosviales["hechos_viales"]
-    mapa_data[["lesionados","fallecidos"]] = les_fall[["lesionados","fallecidos"]]
-
-    return mapa_data
-
-
-
 # Hechos Viales por 
 def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, slider_hora, checklist_dias):
 

@@ -21,7 +21,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa,
+	render_interseccion_hv_tiempo, 
 	)
 
 # Connect to config
@@ -111,18 +111,6 @@ def update_hora_selec(value):
 
 def get_hechosviales(tab):
     return render_hechosviales(tab)
-
-#-- Mapa
-
-@app.callback(Output('mapa_data', 'figure'), 
-	[Input('calendario', 'start_date'),
-	Input('calendario', 'end_date'),
-	Input('slider_hora', 'value'),
-	Input('checklist_dias', 'value')])
-
-def get(start_date, end_date, hora, diasem):
- 	return render_mapa(start_date, end_date, hora, diasem)
-
 
 #-- Interseccion - Nombre
 
