@@ -89,7 +89,7 @@ vasconcelos_map.update_layout(clickmode='event+select',
      mapbox=dict(
         accesstoken=mapbox_access_token,
         center=dict(lat=25.6572, lon=-100.3689),
-        style="mapbox://styles/mapbox/navigation-night-v1" #light
+        style="mapbox://styles/mapbox/navigation-night-v1",
     )
 )
 vasconcelos_map.update_traces(marker_color="#03cafc",
@@ -113,8 +113,8 @@ def hv_vasconcelos():
                         style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
-                            id = 'vasconcelos_map',
-                            figure = vasconcelos_map,
+                            id = 'mapa',
+                            figure = {},
                             config={
                             'displayModeBar': False
                             },
@@ -399,6 +399,74 @@ def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checkl
     interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
 
     return interseccion_fal
+
+
+# Mapa
+def render_mapa(start_date, end_date, slider_hora, checklist_dias):
+
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hvi_cal = hvi.loc[start_date:end_date]
+
+    #Filtro por día de la semana
+    hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+    coords = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+    hechosviales = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+    les_fall = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+
+    join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
+
+    join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
+
+    mapa_data = join_hv_lf
+    
+    #-- Mapbox Access Token
+    mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
+    px.set_mapbox_access_token(mapbox_access_token)
+    
+    #-- Graph
+    mapa = go.Figure(
+        px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
+        size = 'hechos_viales',
+        size_max=20, 
+        zoom=12.2, 
+        hover_name='interseccion', 
+        custom_data=['lesionados', 'fallecidos'],
+        hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
+        opacity=0.9))
+
+    mapa.update_layout(clickmode='event+select', 
+         mapbox=dict(
+            accesstoken=mapbox_access_token,
+            center=dict(lat=25.6572, lon=-100.3689),
+            style="mapbox://styles/mapbox/navigation-night-v1" #light
+        )
+    )
+    mapa.update_traces(marker_color="#03cafc",
+        selected_marker_color="red",
+        unselected_marker_opacity=.5)
+    
+    return mapa
+
 
 # Hechos Viales por 
 def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, slider_hora, checklist_dias):
