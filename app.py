@@ -112,7 +112,7 @@ def get_hechosviales(tab):
 
 #-- Interseccion - Nombre
 
-@app.callback(Output('interseccion_nombre', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_nombre', 'children'), [Input('mapa', 'clickData')])
 
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
