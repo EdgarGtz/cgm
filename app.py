@@ -19,7 +19,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo,
+	render_interseccion_hv_tiempo, render_mapa
 	)
 
 # Connect to config
@@ -112,7 +112,7 @@ def get_hechosviales(tab):
 
 #-- Interseccion - Nombre
 
-@app.callback(Output('interseccion_nombre', 'children'), [Input('vasconcelos_map', 'clickData')])
+@app.callback(Output('interseccion_nombre', 'children'), [Input('mapa', 'clickData')])
 
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
@@ -120,7 +120,7 @@ def get_interseccion_nombre(clickData):
 #-- Interseccion - Hechos Viales
 
 @app.callback(Output('interseccion_hv', 'children'), 
-	[Input('vasconcelos_map', 'clickData'),
+	[Input('mapa', 'clickData'),
 	Input('calendario', 'start_date'),
 	Input('calendario', 'end_date'),
 	Input('slider_hora', 'value'),
@@ -132,7 +132,7 @@ def get(clickData, start_date, end_date, hora, diasem):
 #-- Interseccion - Lesionados
 
 @app.callback(Output('interseccion_les', 'children'), 
-	[Input('vasconcelos_map', 'clickData'),
+	[Input('mapa', 'clickData'),
 	Input('calendario', 'start_date'),
 	Input('calendario', 'end_date'),
 	Input('slider_hora', 'value'),
@@ -144,7 +144,7 @@ def get(clickData, start_date, end_date, hora, diasem):
 #-- Interseccion - Fallecidos
 
 @app.callback(Output('interseccion_fal', 'children'), 
-	[Input('vasconcelos_map', 'clickData'),
+	[Input('mapa', 'clickData'),
 	Input('calendario', 'start_date'),
 	Input('calendario', 'end_date'),
 	Input('slider_hora', 'value'),
@@ -153,10 +153,22 @@ def get(clickData, start_date, end_date, hora, diasem):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_fal(clickData, start_date, end_date, hora, diasem)
 
+#-- Mapa
+
+@app.callback(Output('mapa', 'figure'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')],
+            prevent_initial_call=False)
+
+def get(start_date, end_date, slider_hora, checklist_dias):
+    return render_mapa(start_date, end_date, slider_hora, checklist_dias)
+
 #-- Intersección - Hechos Viales por Año
 
 @app.callback(Output('interseccion_hv_tiempo', 'figure'),
-	[Input('vasconcelos_map', 'clickData'),
+	[Input('mapa', 'clickData'),
 	Input('periodo_hv', 'active_tab'),
 	Input('calendario', 'start_date'),
 	Input('calendario', 'end_date'),
@@ -169,4 +181,3 @@ def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
-
