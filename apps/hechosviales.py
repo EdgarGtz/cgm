@@ -421,7 +421,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
         mapa = go.Figure(
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
-            size_max=20, 
+            size_max=1, 
             zoom=12.2, 
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
             opacity=0.9))
@@ -430,11 +430,11 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
              mapbox=dict(
                 accesstoken=mapbox_access_token,
                 center=dict(lat=25.6572, lon=-100.3689),
-                style="mapbox://styles/mapbox/navigation-night-v1" #light
+                style="dark"
             )
         )
-        mapa.update_traces(marker_color="#03cafc",
-            selected_marker_color="red",
+        mapa.update_traces(marker_color="#c6cc14",
+            selected_marker_color="#cc5b14",
             unselected_marker_opacity=.5)
     
         return mapa
@@ -489,17 +489,18 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
-            opacity=0.9))
+            opacity=1))
 
         mapa.update_layout(clickmode='event+select', 
              mapbox=dict(
                 accesstoken=mapbox_access_token,
                 center=dict(lat=25.6572, lon=-100.3689),
-                style="mapbox://styles/mapbox/navigation-night-v1" #light
+                style="dark"
             )
         )
-        mapa.update_traces(marker_color="#03cafc",
-            selected_marker_color="red",
+        mapa.update_traces(marker_color="#c6cc14",
+            selected_marker_color="#cc5b14",
+            selected_marker_size=28,
             unselected_marker_opacity=.5)
 
         return mapa
