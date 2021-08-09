@@ -136,7 +136,7 @@ def alfonsoreyes_1():
                                 disabled = False)
                         ],
                         id='periodo',
-                        active_tab="hora",
+                        active_tab="dia",
                         card=True
                         )
                     ),
@@ -227,10 +227,9 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
             labels = {'datetime1': '', my_dropdown: ''}, template = 'plotly_white',
             hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
-            hovertemplate = None)
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
         conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x unified',
+        conteo2.update_layout(hovermode = 'x',
             hoverlabel = dict(font_size = 16)),
 
         return conteo2
@@ -255,13 +254,14 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_dia, x = 'dia1', y = my_dropdown,
-            labels = {'dia1': '', my_dropdown: ''}, template = 'plotly_white',
+            template = 'plotly_white',
             hover_data = ['dia_semana'])
 
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size = 16))
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size = 16))
+        conteo2.update_yaxes(title_text = '')
+
 
 
 
@@ -272,7 +272,13 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
         # interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
 
 
-
+# fig.update_layout(
+#     hoverlabel=dict(
+#         bgcolor="white",
+#         font_size=16,
+#         font_family="Rockwell"
+#     )
+# )
 
 
         
