@@ -224,13 +224,15 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_hora, x = 'datetime1', y = my_dropdown,
-            labels = {'datetime1': '', my_dropdown: ''}, template = 'plotly_white',
-            hover_data = ['dia_semana'])
+            template = 'plotly_white', hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x',
-            hoverlabel = dict(font_size = 16)),
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' +  conteo_hora['dia_semana'] + '<br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True,
+            title_text = ''),
+        conteo2.update_yaxes(title_text = ''),
+        conteo2.update_layout(hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
 
         return conteo2
 
@@ -257,31 +259,12 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
             template = 'plotly_white',
             hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' +  conteo_dia['dia_semana'] + '<br>' + '%{x}')
         conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
-        conteo2.update_layout(hoverlabel = dict(font_size = 16))
+        conteo2.update_layout(hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
         conteo2.update_yaxes(title_text = '')
-
-
-
-
-        # interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_dos',y='hechos_viales', labels = {'fecha_dos': ''}, template = 'plotly_white')
-        # interseccion_hv_tiempo.update_traces(mode="markers", fill='tozeroy', hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
-        # interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
-        # interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1,autorange=True, rangemode="normal")
-        # interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
-
-
-# fig.update_layout(
-#     hoverlabel=dict(
-#         bgcolor="white",
-#         font_size=16,
-#         font_family="Rockwell"
-#     )
-# )
-
-
-        
 
         return conteo2
 
@@ -311,13 +294,14 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_semana, x = 'fecha', y = 'suma',
-            labels = {'fecha': '', my_dropdown: ''}, template = 'plotly_white',
-            hover_data = ['fecha'])
+            template = 'plotly_white')
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size =16))
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size =16),
+            hoverlabel_align = 'right')
 
         return conteo2
 
@@ -373,13 +357,14 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(conteo_semana_graph, x = 'fecha', y = 'suma',
-            labels = {'fecha': '', my_dropdown: ''}, template = 'plotly_white',
-            hover_data = ['fecha'])
+            template = 'plotly_white')
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True)
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size =16))
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size =16),
+            hoverlabel_align = 'right')
 
         return conteo2
 
