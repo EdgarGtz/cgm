@@ -393,14 +393,14 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_hora, x = 'datetime1', y = my_dropdown,
-            labels = {'datetime1': '', my_dropdown: ''},
-            template = 'plotly_white',
-            hover_data = ['dia_semana'])
+            template = 'plotly_white', hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size = 16))
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' +  vel_hora['dia_semana'] + '<br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True,
+            title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size = 16), hoverlabel_align = 'right')
 
         return conteo2
 
@@ -424,14 +424,13 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_dia, x = 'dia1', y = my_dropdown,
-            labels = {'dia1': '', my_dropdown: ''}, 
-            template = 'plotly_white',
-            hover_data = ['dia_semana'])
+            template = 'plotly_white',hover_data = ['dia_semana'])
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size = 16))
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' +  vel_dia['dia_semana'] + '<br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size = 16), hoverlabel_align = 'right')
 
         return conteo2
 
@@ -460,15 +459,15 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
         vel_semana = pd.DataFrame(dict(fecha = fecha, mean = mean))
 
         # Graph
-        conteo2 = px.scatter(vel_semana, x = 'fecha', y = 'mean',
-            labels = {'fecha': '', 'mean': ''}, 
+        conteo2 = px.scatter(vel_semana, x = 'fecha', y = 'mean', 
             template = 'plotly_white')
 
-        conteo2.update_traces(mode = 'markers+lines', marker_size = 10,
-            fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x unified',
-            hoverlabel = dict(font_size = 16))
+        conteo2.update_traces(mode = 'markers+lines',
+            fill='tozeroy', hovertemplate = '<b>%{y}</b><br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
 
         return conteo2
 
@@ -524,13 +523,13 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
 
         # Graph
         conteo2 = px.scatter(vel_semana_graph, x = 'fecha', y = 'mean',
-            labels = {'fecha': '', 'mean': ''},
-            template = 'plotly_white',
-            hover_data = ['fecha'])
+            template = 'plotly_white')
 
-        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy')
-        conteo2.update_xaxes(showgrid = False, showline = True),
-        conteo2.update_layout(hovermode = 'x unified',
+        conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
+            hovertemplate = '<b>%{y}</b><br>' + '%{x}')
+        conteo2.update_xaxes(showgrid = False, showline = True, title_text = '')
+        conteo2.update_yaxes(title_text = '')
+        conteo2.update_layout(hoverlabel_align = 'right',
             hoverlabel = dict(font_size =16))
 
         return conteo2
