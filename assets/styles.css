@@ -77,3 +77,26 @@
     color: #535353;
 }
 
+
+
+.rc-slider-track {
+  background-color: #636EFA;
+}
+
+.rc-slider-dot-active {  
+  border-color: #636EFA;
+  border: solid 2px #636EFA;
+}
+
+.rc-slider-handle {
+  background-color: #636EFA;
+  border-color: #636EFA;
+}
+
+.rc-slider-handle:hover {
+  border-color: #636EFA;
+}
+
+.rc-slider-handle-active:active {
+  border-color: #636EFA;
+}
