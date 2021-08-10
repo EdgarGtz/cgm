@@ -9,8 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import numpy as np
 from datetime import datetime as dt
-from dash_extensions import Download
-from dash_extensions.snippets import send_data_frame
+
 #----------
 
 # Layout General
@@ -147,17 +146,17 @@ def hv_vasconcelos():
                             id='checklist_dias',
                             className="d-flex justify-content-center pt-3  btn-group",
                             options=[
-                                {'label': 'LUN', 'value': 'Lunes'},
-                                {'label': 'MAR', 'value': 'Martes'},
-                                {'label': 'MIE', 'value': 'Miércoles'},
-                                {'label': 'JUE', 'value': 'Jueves'},
-                                {'label': 'VIE', 'value': 'Viernes'},
-                                {'label': 'SAB', 'value': 'Sábado'},
-                                {'label': 'DOM', 'value': 'Domingo'},
+                                {'label': 'L', 'value': 'Lunes'},
+                                {'label': 'M', 'value': 'Martes'},
+                                {'label': 'MX', 'value': 'Miércoles'},
+                                {'label': 'J', 'value': 'Jueves'},
+                                {'label': 'V', 'value': 'Viernes'},
+                                {'label': 'S', 'value': 'Sábado'},
+                                {'label': 'D', 'value': 'Domingo'},
                             ],
                             value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                             inputClassName='form-check-input',
-                            labelClassName="btn btn-secondary label_class",
+                            labelClassName="btn btn-secondary label_class"
                         ),
 
                         html.Br(),
@@ -176,7 +175,7 @@ def hv_vasconcelos():
                                 15: {'label': '15'},
                                 18: {'label': '18'},
                                 21: {'label': '21'},
-                                23: {'label': '23'},
+                                23: {'label': '23'}
                             },
                             allowCross=False,
                             dots=True,
@@ -259,12 +258,6 @@ def hv_vasconcelos():
                                     }
                                 )
                             ]),
-
-                            html.Br(),
-
-                            #html.Button("Descargar CSV", id="down_data", className="btn btn-secondary", n_clicks=None),
-                            #dcc.Store(id='intermediate_value'),
-                            #Download(id="stored_data"),
                         ])
                     )
                 )
@@ -411,10 +404,8 @@ def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checkl
 # Mapa
 def render_mapa(start_date, end_date, slider_hora, checklist_dias):
     
-    # Si no hay nada seleccionado en dias de la semana muestra lo siguiente
     if checklist_dias == []:
     
-        #Mapa vacío con una sola coordenada
         mapa_data = {
            "Lat": pd.Series(25.6572),
            "Lon": pd.Series(-100.3689),
@@ -448,8 +439,6 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
     
         return mapa
 
-
-    # Si hay algo seleccionado en dias de la semana muestra lo siguiente
     elif checklist_dias != []:
 
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
@@ -477,19 +466,12 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
         #Filtro por hora
         hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
 
-        #Tabla pivote por intersección tomando las latitudes y longitudes
         coords = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-        
-        #Tabla pivote por intersección tomando la suma de hechos viales
         hechosviales = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        #Tabla pivote por intersección tomando la suma de lesionados y fallecidos
         les_fall = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
-        #Union por intersección del número de hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
 
-        #Union por intersección del número de hechos viales y lesionados y fallecidos
         join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
 
         mapa_data = join_hv_lf
@@ -507,7 +489,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
-            opacity=.95))
+            opacity=1))
 
         mapa.update_layout(clickmode='event+select', 
              mapbox=dict(
@@ -686,6 +668,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
+
 
 #----------
 
