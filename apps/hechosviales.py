@@ -434,7 +434,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
             )
         )
         mapa.update_traces(marker_color="#c6cc14",
-            selected_marker_color="#cc5b14",
+            selected_marker_color="#636EFA",
             unselected_marker_opacity=.5)
     
         return mapa
@@ -499,7 +499,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
             )
         )
         mapa.update_traces(marker_color="#c6cc14",
-            selected_marker_color="#cc5b14",
+            selected_marker_color="#636EFA",
             selected_marker_size=28,
             unselected_marker_opacity=.5)
 
@@ -561,11 +561,30 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hv_tiempo_data_cal_dsm_hora_res["fecha_dos"] = hv_tiempo_data_cal_dsm_hora_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_dos',y='hechos_viales', labels = {'fecha_dos': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers", fill='tozeroy', hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
-        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', tick0 = 0, dtick = 1,autorange=True, rangemode="normal")
-        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, 
+            x='fecha_dos',
+            y='hechos_viales', 
+            labels = {'fecha_dos': ''}, 
+            template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers", 
+            fill='tozeroy', 
+            hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, 
+            showline = True, 
+            type="date", 
+            spikemode="toaxis+across+marker", 
+            spikesnap="data", 
+            spikecolor="gray", 
+            spikethickness=2,
+            tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
+        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', 
+            tick0 = 0, 
+            dtick = 1,
+            autorange=True, 
+            rangemode="normal")
+        interseccion_hv_tiempo.update_layout(dragmode = False, 
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
@@ -611,11 +630,27 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="<b>%{x|%m/%Y}</b><br> %{y} hechos viales")
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='', type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto")
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, 
+            x='fecha_2',
+            y='hechos_viales', 
+            labels = {'fecha2': ''}, 
+            template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", 
+            fill='tozeroy', 
+            hovertemplate="<b>%{x|%m/%Y}</b><br> %{y} hechos viales")
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, 
+            showline = True, 
+            title_text='', 
+            type="date", 
+            spikemode="toaxis+across+marker", 
+            spikesnap="data", 
+            spikecolor="gray", 
+            spikethickness=2,
+            tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
+        interseccion_hv_tiempo.update_layout(dragmode = False, 
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
@@ -661,11 +696,25 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
 
         # Graph
-        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, x='fecha_2',y='hechos_viales', labels = {'fecha2': ''}, template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="markers+lines", fill='tozeroy', hovertemplate="<b>%{x|%Y}</b><br> %{y} hechos viales")
-        interseccion_hv_tiempo.update_xaxes(showgrid = False, showline = True, title_text='', type="date", spikemode="toaxis+across+marker", spikesnap="data", spikecolor="gray", spikethickness=2,tickmode="auto")
+        interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, 
+            x='fecha_2',
+            y='hechos_viales', 
+            labels = {'fecha2': ''}, 
+            template = 'plotly_white')
+        interseccion_hv_tiempo.update_traces(mode="markers+lines", 
+            fill='tozeroy', hovertemplate="<b>%{x|%Y}</b><br> %{y} hechos viales")
+        interseccion_hv_tiempo.update_xaxes(showgrid = False, 
+            showline = True, title_text='', 
+            type="date", 
+            spikemode="toaxis+across+marker", 
+            spikesnap="data", 
+            spikecolor="gray", 
+            spikethickness=2,
+            tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, hoverlabel = dict(font_size = 16),hoverlabel_align = 'right')
+        interseccion_hv_tiempo.update_layout(dragmode = False, 
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
