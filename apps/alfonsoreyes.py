@@ -203,8 +203,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
     if my_dropdown_0 == 'conteo' and periodo == 'hora':
 
         # Leer csv
-        conteo_hora = pd.read_csv('assets/camaras_viales_hora.csv', header = [3])
-        conteo_hora = conteo_hora.iloc[57:]
+        conteo_hora = pd.read_csv('assets/camaras_viales_hora_correcto.csv')
 
         # Cambiar variables a string
         conteo_hora['hora'] = conteo_hora['hora'].astype(str)
