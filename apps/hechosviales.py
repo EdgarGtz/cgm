@@ -9,6 +9,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import numpy as np
 from datetime import datetime as dt
+from dash_extensions import Download
+from dash_extensions.snippets import send_data_frame
 
 #----------
 
@@ -59,42 +61,13 @@ gc = gspread.authorize(credentials)
 
 # Map
 
-#-- Connect to data
-spreadsheet_key = '1NoDDBG09EkE2RR6urkC0FBUWw3hro_u7cqgEPYF98DA'
-book = gc.open_by_key(spreadsheet_key)
-
-vasconcelos = book.worksheet('vasconcelos')
-vasconcelos = vasconcelos.get_all_values()
-vasconcelos = pd.DataFrame(vasconcelos[1:], columns = vasconcelos[0])
-
-#-- Convert to numeric
-vasconcelos['lat'] = pd.to_numeric(vasconcelos['lat'])
-vasconcelos['lon'] = pd.to_numeric(vasconcelos['lon'])
-vasconcelos['Hechos Viales'] = pd.to_numeric(vasconcelos['Hechos Viales'])+50 #el 100 está sólo para que los puntos en el mapa se vean más grandes
-
 #-- Mapbox Access Token
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-#-- Graph
-vasconcelos_map = go.Figure(
-    px.scatter_mapbox(vasconcelos, lat="lat", lon="lon",
-    size = 'Hechos Viales',
-    size_max=20, zoom=12.2, hover_name='interseccion',
-    custom_data=['lesionados', 'fallecidos'],
-    hover_data={'lat':False, 'lon':False, 'Hechos Viales':False},
-    opacity=0.9))
 
-vasconcelos_map.update_layout(clickmode='event+select', 
-     mapbox=dict(
-        accesstoken=mapbox_access_token,
-        center=dict(lat=25.6572, lon=-100.3689),
-        style="mapbox://styles/mapbox/navigation-night-v1",
-    )
-)
-vasconcelos_map.update_traces(marker_color="#03cafc",
-    selected_marker_color="red",
-    unselected_marker_opacity=.5)
+# Base de datos
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 
 #----------
 
@@ -260,10 +233,17 @@ def hv_vasconcelos():
                             ]),
                         ])
                     )
-                )
-            ], lg=5, md=5)
+                ),
 
-            
+                html.Br(),
+
+                dbc.Row(
+                    dbc.Col([
+                        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-secondary btn-lg btn-block", n_clicks=None),
+                        Download(id="download-dataframe-csv"),
+                    ])
+                )
+            ], lg=5, md=5),
 
         ]),
 
@@ -413,10 +393,6 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
            }
         mapa_data = pd.DataFrame(mapa_data)
 
-        #-- Mapbox Access Token
-        mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
-        px.set_mapbox_access_token(mapbox_access_token)
-
         #-- Graph
         mapa = go.Figure(
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
@@ -475,11 +451,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
         join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
 
         mapa_data = join_hv_lf
-        
-        #-- Mapbox Access Token
-        mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
-        px.set_mapbox_access_token(mapbox_access_token)
-        
+
         #-- Graph
         mapa = go.Figure(
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
@@ -717,6 +689,10 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
+
+def render_down_data(n_clicks):
+    down_data = send_data_frame(hvi.to_csv, "hechos_viales.csv")
+    return down_data
 
 #----------
 
