@@ -140,7 +140,7 @@ def hv_vasconcelos():
                             dbc.ModalFooter(
 
                                 dbc.Button(
-                                    "Close", 
+                                    "Cerrar", 
                                     id="close1", 
                                     className="ml-auto btn btn-danger", 
                                     n_clicks=0
