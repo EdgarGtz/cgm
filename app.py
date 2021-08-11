@@ -19,7 +19,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa, render_down_data
+	render_interseccion_hv_tiempo, render_mapa, render_down_data, toggle_modal
 	)
 
 # Connect to config
@@ -186,6 +186,17 @@ def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
 
 def func(n_clicks):
     return render_down_data(n_clicks)
+
+@app.callback(
+    Output("modal", "is_open"),
+    [Input("open1", "n_clicks"), 
+    Input("close1", "n_clicks")],
+    [State("modal", "is_open")],
+)
+def toggle_modal(open1, close1, modal):
+    if open1 or close1:
+        return not modal
+    return modal
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

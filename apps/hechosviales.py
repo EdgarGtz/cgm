@@ -11,6 +11,7 @@ import numpy as np
 from datetime import datetime as dt
 from dash_extensions import Download
 from dash_extensions.snippets import send_data_frame
+import base64
 
 #----------
 
@@ -65,9 +66,15 @@ gc = gspread.authorize(credentials)
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-
 # Base de datos
 hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+img1 = 'assets/ssp.png' # replace with your own image
+encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
+
+img2 = 'assets/implang.png' # replace with your own image
+encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
+
 
 #----------
 
@@ -82,7 +89,70 @@ def hv_vasconcelos():
             dbc.Col(
 
                 dbc.Card([
-                    dbc.CardHeader(html.H5("Da click en una intersección para saber más información"),
+                    dbc.CardHeader([
+                        
+                        html.H5("Da click en una intersección para saber más información", 
+                            style={'display':'inline-block'},
+                            className="pt-2"),
+                        
+
+                        html.Span(
+                            
+                            dbc.Button(html.B("?"), id="open1", 
+                                n_clicks=0, 
+                                className="btn btn-info rounded-pill mb-1 mr-3", 
+                                style={'display':'inline-block','float':'right','background-color':'#636EFA','border-color':'#636EFA'}),
+
+                            id="tooltip-target",
+                            style={"textDecoration": "underline", "cursor": "pointer"},
+                        ),
+
+                        dbc.Tooltip(
+                            "Más información",
+                            target="tooltip-target",
+                        ),
+                        
+                        dbc.Modal([
+
+                            dbc.ModalHeader(html.H2("Hechos Viales en San Pedro Garza García")),
+
+                            dbc.ModalBody(html.H3(["La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG. Haz click ", 
+                                html.A("aquí",href="", target="_blank", style={"text-decoration":'none'}) ,
+                                " si quieres saber más sobre este proceso.",
+
+                                html.Br(),
+
+                                html.Div([
+
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'18%'},
+                                        className="px-3"),
+
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                        style={'width':'20%','height':'20%'},
+                                        className="px-3 pt-2")
+
+                                ], className="d-flex justify-content-center")
+                            ], style={"textAlign":"justify"})
+                            
+                            ),
+
+                            dbc.ModalFooter(
+
+                                dbc.Button(
+                                    "Close", 
+                                    id="close1", 
+                                    className="ml-auto btn btn-danger", 
+                                    n_clicks=0
+                                )
+                            ),
+
+                            ],
+                            id="modal",
+                            centered=True,
+                            size="lg",
+                            is_open=False,
+                        )],
                         style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
@@ -91,7 +161,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'110vh'}
+                            style={'height':'125vh'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -100,8 +170,7 @@ def hv_vasconcelos():
             ),
 
             dbc.Col([
-
-                                dbc.Card([
+                dbc.Card([
                     dbc.CardBody([
                         dcc.DatePickerRange(
                             id = 'calendario',
@@ -693,6 +762,11 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 def render_down_data(n_clicks):
     down_data = send_data_frame(hvi.to_csv, "hechos_viales.csv")
     return down_data
+
+def toggle_modal(open1, close1, modal):
+    if open1 or close1:
+        return not modal
+    return modal
 
 #----------
 
