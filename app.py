@@ -19,7 +19,8 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa, render_down_data)
+	render_interseccion_hv_tiempo, render_mapa, #render_down_data
+	)
 
 # Connect to config
 from config import user, password
@@ -177,14 +178,14 @@ def get(start_date, end_date, slider_hora, checklist_dias):
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
  	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
-@app.callback(
-    Output("download-dataframe-csv", "data"),
-    Input("btn_csv", "n_clicks"),
-    prevent_initial_call=True,
-)
+#@app.callback(
+#    Output("download-dataframe-csv", "data"),
+#    Input("btn_csv", "n_clicks"),
+#    prevent_initial_call=True,
+#)
 
-def func(n_clicks):
-    return render_down_data(n_clicks)
+#def func(n_clicks):
+#    return render_down_data(n_clicks)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
