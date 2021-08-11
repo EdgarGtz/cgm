@@ -6,6 +6,7 @@ dash-html-components==1.1.2
 dash-bootstrap-components==0.11.3
 dash-table==4.11.2
 dash_auth==1.4.1
+dash-extensions=0.0.60
 gunicorn==20.0.4
 gspread==3.7.0
 oauth2client==4.1.3
