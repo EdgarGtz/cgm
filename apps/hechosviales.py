@@ -146,13 +146,13 @@ def hv_vasconcelos():
                             id='checklist_dias',
                             className="d-flex justify-content-center pt-3  btn-group",
                             options=[
-                                {'label': 'L', 'value': 'Lunes'},
-                                {'label': 'M', 'value': 'Martes'},
-                                {'label': 'MX', 'value': 'Miércoles'},
-                                {'label': 'J', 'value': 'Jueves'},
-                                {'label': 'V', 'value': 'Viernes'},
-                                {'label': 'S', 'value': 'Sábado'},
-                                {'label': 'D', 'value': 'Domingo'},
+                                {'label': 'LUN', 'value': 'Lunes'},
+                                {'label': 'MAR', 'value': 'Martes'},
+                                {'label': 'MIE', 'value': 'Miércoles'},
+                                {'label': 'JUE', 'value': 'Jueves'},
+                                {'label': 'VIE', 'value': 'Viernes'},
+                                {'label': 'SAB', 'value': 'Sábado'},
+                                {'label': 'DOM', 'value': 'Domingo'},
                             ],
                             value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                             inputClassName='form-check-input',
@@ -717,7 +717,6 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
-
 
 #----------
 

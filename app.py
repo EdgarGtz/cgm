@@ -177,6 +177,5 @@ def get(start_date, end_date, slider_hora, checklist_dias):
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
  	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
-
 if __name__ == '__main__':
 	app.run_server(debug=True)
