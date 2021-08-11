@@ -9,8 +9,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import numpy as np
 from datetime import datetime as dt
-#from dash_extensions import Download
-#from dash_extensions.snippets import send_data_frame
+from dash_extensions import Download
+from dash_extensions.snippets import send_data_frame
 
 #----------
 
@@ -67,7 +67,7 @@ px.set_mapbox_access_token(mapbox_access_token)
 
 
 # Base de datos
-#hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 
 #----------
 
@@ -237,12 +237,12 @@ def hv_vasconcelos():
 
                 html.Br(),
 
-                #dbc.Row(
-                #    dbc.Col([
-                #        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-secondary btn-lg btn-block", n_clicks=None),
-                #        Download(id="download-dataframe-csv"),
-                #    ])
-                #)
+                dbc.Row(
+                    dbc.Col([
+                        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-secondary btn-lg btn-block", n_clicks=None),
+                        Download(id="download-dataframe-csv"),
+                    ])
+                )
             ], lg=5, md=5),
 
         ]),
@@ -690,9 +690,9 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         return interseccion_hv_tiempo
 
-#def render_down_data(n_clicks):
-#    down_data = send_data_frame(hvi.to_csv, "hechos_viales.csv")
-#    return down_data
+def render_down_data(n_clicks):
+    down_data = send_data_frame(hvi.to_csv, "hechos_viales.csv")
+    return down_data
 
 #----------
 
