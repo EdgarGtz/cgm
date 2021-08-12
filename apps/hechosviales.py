@@ -161,11 +161,11 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'125vh'}
+                            style={'height':'95vh'}
                         ),
                     style={'padding':'0px'},
                     )
-                ]), lg=7, md=7
+                ]), lg=6, md=6
 
             ),
 
@@ -209,7 +209,7 @@ def hv_vasconcelos():
                             max=23,
                             value=[0, 23],
                             marks={
-                                0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                0: {'label': '0'},
                                 3: {'label': '3'},
                                 6: {'label': '6'},
                                 9: {'label': '9'},
@@ -297,9 +297,9 @@ def hv_vasconcelos():
                                     'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
                                    'hoverClosestCartesian', 'hoverCompareCartesian',
                                     'toggleSpikelines', 'select2d'], 'displaylogo': False
-                                    }
+                                    },
                                 )
-                            ]),
+                            ],style={'padding':'0'}),
                         ])
                     )
                 ),
@@ -312,7 +312,7 @@ def hv_vasconcelos():
                         Download(id="download-dataframe-csv"),
                     ])
                 )
-            ], lg=5, md=5),
+            ], lg=6, md=6),
 
         ]),
 
@@ -526,7 +526,7 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=12.2, 
+            zoom=13, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -625,7 +625,10 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             rangemode="normal")
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right')
+            hoverlabel_align = 'right',
+            xaxis=dict(
+                rangeslider=dict(visible=True))
+        )
 
         return interseccion_hv_tiempo
 
@@ -691,7 +694,10 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right')
+            hoverlabel_align = 'right',
+            xaxis=dict(
+                rangeslider=dict(visible=True))
+        )
 
         return interseccion_hv_tiempo
 
@@ -755,7 +761,9 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right')
+            hoverlabel_align = 'right',
+            xaxis=dict(
+                rangeslider=dict(visible=True)))
 
         return interseccion_hv_tiempo
 
