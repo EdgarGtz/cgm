@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime as dt
 from dash_extensions import Download
-from dash_extensions.snippets import send_data_frame
+from dash_extensions.snippets import send_file
 import base64
 
 #----------
@@ -66,15 +66,14 @@ gc = gspread.authorize(credentials)
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-# Base de datos
-hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-
-img1 = 'assets/ssp.png' # replace with your own image
+img1 = 'assets/cal-icon.png' # replace with your own image
 encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
 
-img2 = 'assets/implang.png' # replace with your own image
+img2 = 'assets/clock-icon.png' # replace with your own image
 encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
 
+img3 = 'assets/i-letter.png' # replace with your own image
+encoded_img3 = base64.b64encode(open(img3, 'rb').read()).decode('ascii')
 
 #----------
 
@@ -83,77 +82,166 @@ def hv_vasconcelos():
 
     return html.Div([
 
+        dbc.Row(
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+
+                        dbc.Row([
+
+                            dbc.Col([
+
+                                html.Span(
+                            
+                                    dbc.Button(
+                                        html.H2('?'), 
+                                        id="open1", 
+                                        n_clicks=0, 
+                                        className="btn btn-success rounded-square border border-3 px-4", 
+                                        style={'display':'inline-block',
+                                                'float':'right',
+                                                'height':'85%',
+                                                'background-color':'#636EFA',
+                                                'margin-top':'4px'
+                                                }),
+
+                                    id="tooltip-target",
+                                    style={"textDecoration": "underline", "cursor": "pointer"},
+                                ),
+
+                                dbc.Tooltip(
+                                    "Más información",
+                                    target="tooltip-target",
+                                ),
+                                
+                                dbc.Modal([
+
+                                    dbc.ModalHeader(html.H2("Hechos Viales en San Pedro Garza García")),
+
+                                    dbc.ModalBody(["La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG. Haz click ", 
+                                            html.A("aquí",href="", target="_blank", style={"text-decoration":'none'}) ,
+                                            " si quieres saber más sobre este proceso.",
+
+                                    ],style={"textAlign":"justify",'font-size':'120%'}),
+
+                                    dbc.ModalFooter([
+                                        
+                                        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-success", n_clicks=None),
+                                        Download(id="download-dataframe-csv"),
+
+                                        dbc.Button(
+                                            "Cerrar", 
+                                            id="close1", 
+                                            className="ml-auto btn btn-danger", 
+                                            n_clicks=0
+                                        )
+                                    ]),
+
+                                    ],
+                                    id="modal",
+                                    centered=True,
+                                    size="lg",
+                                    is_open=False,
+                                ),
+                            ], className="d-flex justify-content-center"),
+
+                            dbc.Col([
+
+                                html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'12%','float':'left'},
+                                        className=""),
+
+                                dcc.DatePickerRange(
+                                    id = 'calendario',
+                                    min_date_allowed = dt(2015, 1, 1),
+                                    max_date_allowed = dt(2020, 12, 31),
+                                    start_date = dt(2015, 1, 1),
+                                    end_date = dt(2020, 12, 31),
+                                    first_day_of_week = 1,
+                                    className="d-flex justify-content-center",
+                                    style={'width':'80%','float':'left'}
+                                ),
+                            ], style={'display':'inline-block'}, 
+                            className="d-flex align-items-center",
+                            lg=3, md=3),
+                           
+                            dbc.Col([
+
+                                dcc.Checklist(
+                                    id='checklist_dias',
+                                    className="d-flex justify-content-center pt-3  btn-group ",
+                                    options=[
+                                        {'label': 'LUN', 'value': 'Lunes'},
+                                        {'label': 'MAR', 'value': 'Martes'},
+                                        {'label': 'MIE', 'value': 'Miércoles'},
+                                        {'label': 'JUE', 'value': 'Jueves'},
+                                        {'label': 'VIE', 'value': 'Viernes'},
+                                        {'label': 'SAB', 'value': 'Sábado'},
+                                        {'label': 'DOM', 'value': 'Domingo'},
+                                    ],
+                                    value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                    inputClassName='form-check-input ',
+                                    labelClassName="btn btn-secondary ",
+                                    inputStyle={'background-color:':'#767c85!important;'},
+                                    style={'display':'inline-block'}
+                                ),  
+                            ],className="pb-1", lg=4, md=4),
+
+                            dbc.Col([
+
+                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                        style={'width':'7%','float':'left'},
+                                        className="pt-2"),
+
+                                html.Div(
+                                    dcc.RangeSlider(
+                                        id='slider_hora',
+                                        min=0,
+                                        max=23,
+                                        value=[0, 23],
+                                        marks={
+                                            0: {'label': '0'},
+                                            3: {'label': '3'},
+                                            6: {'label': '6'},
+                                            9: {'label': '9'},
+                                            12: {'label': '12'},
+                                            15: {'label': '15'},
+                                            18: {'label': '18'},
+                                            21: {'label': '21'},
+                                            23: {'label': '23'}
+                                        },
+                                        allowCross=False,
+                                        dots=True,
+                                        tooltip={'always_visible': False , "placement":"bottom"},
+                                        updatemode='drag'
+                                    ), style={'float':'left','width':'90%'}, className="pt-4"
+                                ),
+                            ], lg=4, md=4, className="ml-2"),
+
+                        ], className="d-flex justify-content-between py-2 px-3",),
+
+                    ]),
+                ]),
+
+                html.Br(),
+
+            ])
+        ),
+
         # Mapa y principales indicadores
         dbc.Row([
             # Mapa
             dbc.Col(
 
                 dbc.Card([
+
+                    # Nombre Intersección
                     dbc.CardHeader([
                         
-                        html.H5("Da click en una intersección para saber más información", 
-                            style={'display':'inline-block'},
-                            className="pt-2"),
-                        
+                        ],id='interseccion_nombre',
+                        style={'textAlign': 'center','color':'white'},
+                        className="card bg-secondary"),
 
-                        html.Span(
-                            
-                            dbc.Button(html.B("?"), id="open1", 
-                                n_clicks=0, 
-                                className="btn btn-info rounded-pill mb-1 mr-3", 
-                                style={'display':'inline-block','float':'right','background-color':'#636EFA','border-color':'#636EFA'}),
-
-                            id="tooltip-target",
-                            style={"textDecoration": "underline", "cursor": "pointer"},
-                        ),
-
-                        dbc.Tooltip(
-                            "Más información",
-                            target="tooltip-target",
-                        ),
-                        
-                        dbc.Modal([
-
-                            dbc.ModalHeader(html.H2("Hechos Viales en San Pedro Garza García")),
-
-                            dbc.ModalBody(html.H3(["La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG. Haz click ", 
-                                html.A("aquí",href="", target="_blank", style={"text-decoration":'none'}) ,
-                                " si quieres saber más sobre este proceso.",
-
-                                html.Br(),
-
-                                html.Div([
-
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'18%'},
-                                        className="px-3"),
-
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
-                                        style={'width':'20%','height':'20%'},
-                                        className="px-3 pt-2")
-
-                                ], className="d-flex justify-content-center")
-                            ], style={"textAlign":"justify"})
-                            
-                            ),
-
-                            dbc.ModalFooter(
-
-                                dbc.Button(
-                                    "Cerrar", 
-                                    id="close1", 
-                                    className="ml-auto btn btn-danger", 
-                                    n_clicks=0
-                                )
-                            ),
-
-                            ],
-                            id="modal",
-                            centered=True,
-                            size="lg",
-                            is_open=False,
-                        )],
-                        style={'textAlign': 'center'}),
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'mapa',
@@ -161,7 +249,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'95vh'}
+                            style={'height':'55vh'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -170,72 +258,6 @@ def hv_vasconcelos():
             ),
 
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        dcc.DatePickerRange(
-                            id = 'calendario',
-                            min_date_allowed = dt(2015, 1, 1),
-                            max_date_allowed = dt(2020, 12, 31),
-                            start_date = dt(2015, 1, 1),
-                            end_date = dt(2020, 12, 31),
-                            first_day_of_week = 1,
-                            className="d-flex justify-content-center"
-                        ),
-
-                        html.Br(),
-
-                        dcc.Checklist(
-                            id='checklist_dias',
-                            className="d-flex justify-content-center pt-3  btn-group",
-                            options=[
-                                {'label': 'LUN', 'value': 'Lunes'},
-                                {'label': 'MAR', 'value': 'Martes'},
-                                {'label': 'MIE', 'value': 'Miércoles'},
-                                {'label': 'JUE', 'value': 'Jueves'},
-                                {'label': 'VIE', 'value': 'Viernes'},
-                                {'label': 'SAB', 'value': 'Sábado'},
-                                {'label': 'DOM', 'value': 'Domingo'},
-                            ],
-                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                            inputClassName='form-check-input',
-                            labelClassName="btn btn-secondary label_class"
-                        ),
-
-                        html.Br(),
-
-                        dcc.RangeSlider(
-                            id='slider_hora',
-                            min=0,
-                            max=23,
-                            value=[0, 23],
-                            marks={
-                                0: {'label': '0'},
-                                3: {'label': '3'},
-                                6: {'label': '6'},
-                                9: {'label': '9'},
-                                12: {'label': '12'},
-                                15: {'label': '15'},
-                                18: {'label': '18'},
-                                21: {'label': '21'},
-                                23: {'label': '23'}
-                            },
-                            allowCross=False,
-                            dots=True,
-                            tooltip={'always_visible': False , "placement":"bottom"},
-                            updatemode='drag',
-                        ),
-                    ]),
-                ]),
-
-                html.Br(),
-
-
-                # Nombre Intersección
-                dbc.Card(
-                        dbc.CardHeader(id='interseccion_nombre'),
-                        style={'textAlign':'center'}, inverse=False, outline = False),
-
-                html.Br(),
 
                 # Tarjetas Indicadores
                 dbc.Row([
@@ -281,7 +303,7 @@ def hv_vasconcelos():
                                     dbc.Tab(label = 'Mes', tab_id = 'mes',
                                         disabled = False),
                                     dbc.Tab(label = 'Año', tab_id = 'año',
-                                        disabled = False)
+                                        disabled = False),
                                 ],
                                 id='periodo_hv',
                                 active_tab="mes",
@@ -303,15 +325,6 @@ def hv_vasconcelos():
                         ])
                     )
                 ),
-
-                html.Br(),
-
-                dbc.Row(
-                    dbc.Col([
-                        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-secondary btn-lg btn-block", n_clicks=None),
-                        Download(id="download-dataframe-csv"),
-                    ])
-                )
             ], lg=6, md=6),
 
         ]),
@@ -325,7 +338,7 @@ def hv_vasconcelos():
 # Nombre
 def render_interseccion_nombre(clickData):
     if clickData is None:
-        return 'Intersección'
+        return 'Da click en una intersección para saber más información'
     else:
         return clickData['points'][0]['hovertext']
 
@@ -625,9 +638,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             rangemode="normal")
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            xaxis=dict(
-                rangeslider=dict(visible=True))
+            hoverlabel_align = 'right'
         )
 
         return interseccion_hv_tiempo
@@ -694,9 +705,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            xaxis=dict(
-                rangeslider=dict(visible=True))
+            hoverlabel_align = 'right'
         )
 
         return interseccion_hv_tiempo
@@ -761,14 +770,12 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            xaxis=dict(
-                rangeslider=dict(visible=True)))
+            hoverlabel_align = 'right')
 
         return interseccion_hv_tiempo
 
 def render_down_data(n_clicks):
-    down_data = send_data_frame(hvi.to_csv, "hechos_viales.csv")
+    down_data = send_file("assets/hechosviales.xlsx")
     return down_data
 
 def toggle_modal(open1, close1, modal):
