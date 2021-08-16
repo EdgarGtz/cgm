@@ -66,15 +66,6 @@ gc = gspread.authorize(credentials)
 mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
 px.set_mapbox_access_token(mapbox_access_token)
 
-img1 = 'assets/cal-icon.png' # replace with your own image
-encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
-
-img2 = 'assets/clock-icon.png' # replace with your own image
-encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
-
-img3 = 'assets/i-letter.png' # replace with your own image
-encoded_img3 = base64.b64encode(open(img3, 'rb').read()).decode('ascii')
-
 #----------
 
 # Layout - Intersecciones
@@ -85,106 +76,92 @@ def hv_vasconcelos():
         # Controles
         dbc.Row(
             dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
+                 dbc.Row([
 
-                        dbc.Row([
+                        dbc.Col([
 
-                            dbc.Col([
+                            dbc.Card([
+                                dbc.CardHeader('Calendario', style={'text-align':'center'}),
+                                dbc.CardBody([
 
+                                    dcc.DatePickerRange(
+                                        id = 'calendario',
+                                        min_date_allowed = dt(2015, 1, 1),
+                                        max_date_allowed = dt(2020, 12, 31),
+                                        start_date = dt(2015, 1, 1),
+                                        end_date = dt(2020, 12, 31),
+                                        first_day_of_week = 1,
+                                        className="d-flex justify-content-center"
+                                    ),
+                                ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center')
+                            ])
 
-                                dbc.Card([
-                                    dbc.CardBody([
+                        ], lg=4, md=4),
+                       
+                        dbc.Col([
 
-                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'12%','float':'left'},
-                                        className=""),
-
-                                        dcc.DatePickerRange(
-                                            id = 'calendario',
-                                            min_date_allowed = dt(2015, 1, 1),
-                                            max_date_allowed = dt(2020, 12, 31),
-                                            start_date = dt(2015, 1, 1),
-                                            end_date = dt(2020, 12, 31),
-                                            first_day_of_week = 1,
-                                            className="d-flex justify-content-center",
-                                            style={'width':'80%','float':'left'}
-                                        ),
-
-                                    ])
-                                ])
-
-                            ], lg=4, md=4),
-                           
-                            dbc.Col([
-
-                                dbc.Card([
-                                    dbc.CardBody([
-                                    
-                                        dcc.Checklist(
-                                            id='checklist_dias',
-                                            className="d-flex justify-content-center pt-3  btn-group ",
-                                            options=[
-                                                {'label': 'LUN', 'value': 'Lunes'},
-                                                {'label': 'MAR', 'value': 'Martes'},
-                                                {'label': 'MIE', 'value': 'Miércoles'},
-                                                {'label': 'JUE', 'value': 'Jueves'},
-                                                {'label': 'VIE', 'value': 'Viernes'},
-                                                {'label': 'SAB', 'value': 'Sábado'},
-                                                {'label': 'DOM', 'value': 'Domingo'},
-                                            ],
-                                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                                            inputClassName='form-check-input ',
-                                            labelClassName="btn btn-secondary ",
-                                            inputStyle={'background-color:':'#767c85!important;'},
-                                            style={'display':'inline-block'}
-                                        ),
-
-                                    ])
-                                ])
-     
-                            ],lg=4, md=4),
-
-                            dbc.Col([
-
-                                dbc.Card([
-                                    dbc.CardBody([
-                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
-                                        style={'width':'7%','float':'left'},
-                                        className="pt-2"),
-
-                                        html.Div(
-                                            dcc.RangeSlider(
-                                                id='slider_hora',
-                                                min=0,
-                                                max=23,
-                                                value=[0, 23],
-                                                marks={
-                                                    0: {'label': '0'},
-                                                    3: {'label': '3'},
-                                                    6: {'label': '6'},
-                                                    9: {'label': '9'},
-                                                    12: {'label': '12'},
-                                                    15: {'label': '15'},
-                                                    18: {'label': '18'},
-                                                    21: {'label': '21'},
-                                                    23: {'label': '23'}
-                                                },
-                                                allowCross=False,
-                                                dots=True,
-                                                tooltip={'always_visible': False , "placement":"bottom"},
-                                                updatemode='drag'
-                                            ), style={'float':'left','width':'90%'}, className="pt-4"
-                                        ),
-                                    ])
-                                ])
+                            dbc.Card([
+                                dbc.CardHeader('Días de la semana', style={'text-align':'center'}),
+                                dbc.CardBody([
                                 
-                            ], lg=4, md=4),
+                                    dcc.Checklist(
+                                        id='checklist_dias',
+                                        className="d-flex justify-content-center btn-group ",
+                                        options=[
+                                            {'label': 'LUN', 'value': 'Lunes'},
+                                            {'label': 'MAR', 'value': 'Martes'},
+                                            {'label': 'MIE', 'value': 'Miércoles'},
+                                            {'label': 'JUE', 'value': 'Jueves'},
+                                            {'label': 'VIE', 'value': 'Viernes'},
+                                            {'label': 'SAB', 'value': 'Sábado'},
+                                            {'label': 'DOM', 'value': 'Domingo'},
+                                        ],
+                                        value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                        inputClassName='form-check-input ',
+                                        labelClassName="btn btn-secondary ",
+                                        inputStyle={'background-color:':'#767c85!important;'},
+                                        style={'display':'inline-block'}
+                                    ),
 
-                        ], className="d-flex justify-content-between ",),
+                                ], style={'height':'90px'}, className='pt-4')
+                            ])
+ 
+                        ],lg=4, md=4),
 
-                    ]),
-                ]),
+                        dbc.Col([
+                            dbc.Card([
+                            dbc.CardHeader('Horario', style={'text-align':'center'}),
+                                dbc.CardBody([
+                                   
+                                    html.Div(
+                                        dcc.RangeSlider(
+                                            id='slider_hora',
+                                            min=0,
+                                            max=23,
+                                            value=[0, 23],
+                                            marks={
+                                                0: {'label': '0'},
+                                                3: {'label': '3'},
+                                                6: {'label': '6'},
+                                                9: {'label': '9'},
+                                                12: {'label': '12'},
+                                                15: {'label': '15'},
+                                                18: {'label': '18'},
+                                                21: {'label': '21'},
+                                                23: {'label': '23'}
+                                            },
+                                            allowCross=False,
+                                            dots=True,
+                                            tooltip={'always_visible': False , "placement":"bottom"},
+                                            updatemode='drag'
+                                        ),
+                                    ),
+                                ], style={'height':'90px'}, className='pt-4')
+                            ])
+                            
+                        ], lg=4, md=4),
+
+                    ], className="d-flex justify-content-between ",),
 
                 html.Br(),
 
@@ -212,7 +189,7 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'70vh'}
+                            style={'height':'80vh'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -225,7 +202,8 @@ def hv_vasconcelos():
                     dbc.CardBody(
                         dcc.Graph(
                             id = 'tabla',
-                            figure = {}
+                            figure = {},
+                            config={'displaylogo': False}
                             ),
                     style={'padding':'0px'}
                     )
@@ -374,7 +352,8 @@ def hv_vasconcelos():
                         dcc.Graph(
                             id = 'treemap',
                             figure = {},
-                    style={'padding':'0px'}
+                            style={'padding':'0px'},
+                            config={'displaylogo': False}
                             )
                     )
                 ]),
@@ -387,9 +366,11 @@ def hv_vasconcelos():
 
         dbc.Row([
             dbc.Col([
-                dbc.Card(
+                dbc.Card([
+                    dbc.CardHeader('Datos abiertos'),
                     dbc.CardBody([
-                        html.H4('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG.'),
+                        'La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.',
+                        html.Br(),
                         html.Br(),
                         html.Div([
                             html.Button(
@@ -397,12 +378,12 @@ def hv_vasconcelos():
                                 id="btn_csv",
                                 className="btn btn-success",
                                 n_clicks=None,
-                                style={'float':'right'}
+                                style={'float':'left'}
                             ),
                             Download(id="download-dataframe-csv"),
                         ])
                     ])
-                )
+                ])
             ])
         ], className="pt-4")
 
@@ -919,8 +900,10 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
                     align='center'),
                 cells=dict(values=[tipo_acc.tipo_accidente, tipo_acc.hechos_viales, tipo_acc.lesionados, tipo_acc.fallecidos],
                    fill_color='#F7F7F7',
-                   align='center'))
+                   align='center',
+                   height=35))
         ])
+    tabla.update_layout(margin = dict(t=20, l=20, r=20, b=0))
     
     return tabla
 
@@ -962,7 +945,16 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
     st_causas = causa_acc['hechos_viales'].stack()
     df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
 
-    treemap = px.treemap(df_causas, path=['tipo_accidente', 'causa_accidente'], values='hechos_viales')
+    treemap = px.treemap(df_causas, 
+                    path=['tipo_accidente', 'causa_accidente'], 
+                    values='hechos_viales',
+                    color='causa_accidente',
+                    )
+
+    #treemap.update_traces(root_color="lightgrey")
+    treemap.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+    treemap.data[0].hovertemplate = '%{label}<br>%{value}'
+
 
     return treemap
 
