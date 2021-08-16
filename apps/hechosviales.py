@@ -26,7 +26,7 @@ def hechosviales():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Hechos viales', tab_id='hv_vasconcelos')
+                            dbc.Tab(label='Hechos viales', tab_id='hv_vasconcelos'),
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -82,6 +82,7 @@ def hv_vasconcelos():
 
     return html.Div([
 
+        # Controles
         dbc.Row(
             dbc.Col([
                 dbc.Card([
@@ -91,134 +92,96 @@ def hv_vasconcelos():
 
                             dbc.Col([
 
-                                html.Span(
-                            
-                                    dbc.Button(
-                                        html.H2('?'), 
-                                        id="open1", 
-                                        n_clicks=0, 
-                                        className="btn btn-success rounded-square border border-3 px-4", 
-                                        style={'display':'inline-block',
-                                                'float':'right',
-                                                'height':'85%',
-                                                'background-color':'#636EFA',
-                                                'margin-top':'4px'
-                                                }),
 
-                                    id="tooltip-target",
-                                    style={"textDecoration": "underline", "cursor": "pointer"},
-                                ),
+                                dbc.Card([
+                                    dbc.CardBody([
 
-                                dbc.Tooltip(
-                                    "Más información",
-                                    target="tooltip-target",
-                                ),
-                                
-                                dbc.Modal([
-
-                                    dbc.ModalHeader(html.H2("Hechos Viales en San Pedro Garza García")),
-
-                                    dbc.ModalBody(["La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG. Haz click ", 
-                                            html.A("aquí",href="", target="_blank", style={"text-decoration":'none'}) ,
-                                            " si quieres saber más sobre este proceso.",
-
-                                    ],style={"textAlign":"justify",'font-size':'120%'}),
-
-                                    dbc.ModalFooter([
-                                        
-                                        html.Button(html.B("Descarga la base de datos completa"), id="btn_csv", className="btn btn-success", n_clicks=None),
-                                        Download(id="download-dataframe-csv"),
-
-                                        dbc.Button(
-                                            "Cerrar", 
-                                            id="close1", 
-                                            className="ml-auto btn btn-danger", 
-                                            n_clicks=0
-                                        )
-                                    ]),
-
-                                    ],
-                                    id="modal",
-                                    centered=True,
-                                    size="lg",
-                                    is_open=False,
-                                ),
-                            ], className="d-flex justify-content-center"),
-
-                            dbc.Col([
-
-                                html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
                                         style={'width':'12%','float':'left'},
                                         className=""),
 
-                                dcc.DatePickerRange(
-                                    id = 'calendario',
-                                    min_date_allowed = dt(2015, 1, 1),
-                                    max_date_allowed = dt(2020, 12, 31),
-                                    start_date = dt(2015, 1, 1),
-                                    end_date = dt(2020, 12, 31),
-                                    first_day_of_week = 1,
-                                    className="d-flex justify-content-center",
-                                    style={'width':'80%','float':'left'}
-                                ),
-                            ], style={'display':'inline-block'}, 
-                            className="d-flex align-items-center",
-                            lg=3, md=3),
+                                        dcc.DatePickerRange(
+                                            id = 'calendario',
+                                            min_date_allowed = dt(2015, 1, 1),
+                                            max_date_allowed = dt(2020, 12, 31),
+                                            start_date = dt(2015, 1, 1),
+                                            end_date = dt(2020, 12, 31),
+                                            first_day_of_week = 1,
+                                            className="d-flex justify-content-center",
+                                            style={'width':'80%','float':'left'}
+                                        ),
+
+                                    ])
+                                ])
+
+                            ], lg=4, md=4),
                            
                             dbc.Col([
 
-                                dcc.Checklist(
-                                    id='checklist_dias',
-                                    className="d-flex justify-content-center pt-3  btn-group ",
-                                    options=[
-                                        {'label': 'LUN', 'value': 'Lunes'},
-                                        {'label': 'MAR', 'value': 'Martes'},
-                                        {'label': 'MIE', 'value': 'Miércoles'},
-                                        {'label': 'JUE', 'value': 'Jueves'},
-                                        {'label': 'VIE', 'value': 'Viernes'},
-                                        {'label': 'SAB', 'value': 'Sábado'},
-                                        {'label': 'DOM', 'value': 'Domingo'},
-                                    ],
-                                    value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                                    inputClassName='form-check-input ',
-                                    labelClassName="btn btn-secondary ",
-                                    inputStyle={'background-color:':'#767c85!important;'},
-                                    style={'display':'inline-block'}
-                                ),  
-                            ],className="pb-1", lg=4, md=4),
+                                dbc.Card([
+                                    dbc.CardBody([
+                                    
+                                        dcc.Checklist(
+                                            id='checklist_dias',
+                                            className="d-flex justify-content-center pt-3  btn-group ",
+                                            options=[
+                                                {'label': 'LUN', 'value': 'Lunes'},
+                                                {'label': 'MAR', 'value': 'Martes'},
+                                                {'label': 'MIE', 'value': 'Miércoles'},
+                                                {'label': 'JUE', 'value': 'Jueves'},
+                                                {'label': 'VIE', 'value': 'Viernes'},
+                                                {'label': 'SAB', 'value': 'Sábado'},
+                                                {'label': 'DOM', 'value': 'Domingo'},
+                                            ],
+                                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                            inputClassName='form-check-input ',
+                                            labelClassName="btn btn-secondary ",
+                                            inputStyle={'background-color:':'#767c85!important;'},
+                                            style={'display':'inline-block'}
+                                        ),
+
+                                    ])
+                                ])
+     
+                            ],lg=4, md=4),
 
                             dbc.Col([
 
-                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
                                         style={'width':'7%','float':'left'},
                                         className="pt-2"),
 
-                                html.Div(
-                                    dcc.RangeSlider(
-                                        id='slider_hora',
-                                        min=0,
-                                        max=23,
-                                        value=[0, 23],
-                                        marks={
-                                            0: {'label': '0'},
-                                            3: {'label': '3'},
-                                            6: {'label': '6'},
-                                            9: {'label': '9'},
-                                            12: {'label': '12'},
-                                            15: {'label': '15'},
-                                            18: {'label': '18'},
-                                            21: {'label': '21'},
-                                            23: {'label': '23'}
-                                        },
-                                        allowCross=False,
-                                        dots=True,
-                                        tooltip={'always_visible': False , "placement":"bottom"},
-                                        updatemode='drag'
-                                    ), style={'float':'left','width':'90%'}, className="pt-4"
-                                ),
-                            ], lg=4, md=4, className="ml-2"),
+                                        html.Div(
+                                            dcc.RangeSlider(
+                                                id='slider_hora',
+                                                min=0,
+                                                max=23,
+                                                value=[0, 23],
+                                                marks={
+                                                    0: {'label': '0'},
+                                                    3: {'label': '3'},
+                                                    6: {'label': '6'},
+                                                    9: {'label': '9'},
+                                                    12: {'label': '12'},
+                                                    15: {'label': '15'},
+                                                    18: {'label': '18'},
+                                                    21: {'label': '21'},
+                                                    23: {'label': '23'}
+                                                },
+                                                allowCross=False,
+                                                dots=True,
+                                                tooltip={'always_visible': False , "placement":"bottom"},
+                                                updatemode='drag'
+                                            ), style={'float':'left','width':'90%'}, className="pt-4"
+                                        ),
+                                    ])
+                                ])
+                                
+                            ], lg=4, md=4),
 
-                        ], className="d-flex justify-content-between py-2 px-3",),
+                        ], className="d-flex justify-content-between ",),
 
                     ]),
                 ]),
@@ -231,7 +194,7 @@ def hv_vasconcelos():
         # Mapa y principales indicadores
         dbc.Row([
             # Mapa
-            dbc.Col(
+            dbc.Col([
 
                 dbc.Card([
 
@@ -239,8 +202,8 @@ def hv_vasconcelos():
                     dbc.CardHeader([
                         
                         ],id='interseccion_nombre',
-                        style={'textAlign': 'center','color':'white'},
-                        className="card bg-secondary"),
+                        style={'textAlign': 'center','color':'black'},
+                        className="card bg-light"),
 
                     dbc.CardBody(
                         dcc.Graph(
@@ -249,13 +212,26 @@ def hv_vasconcelos():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'55vh'}
+                            style={'height':'70vh'}
                         ),
                     style={'padding':'0px'},
                     )
-                ]), lg=6, md=6
+                ]), 
 
-            ),
+                html.Br(),
+                
+                dbc.Card([
+                    dbc.CardHeader('Tipos de hechos viales'),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'tabla',
+                            figure = {}
+                            ),
+                    style={'padding':'0px'}
+                    )
+                ])
+
+            ],lg=6, md=6),
 
             dbc.Col([
 
@@ -325,9 +301,110 @@ def hv_vasconcelos():
                         ])
                     )
                 ),
+
+                html.Br(),
+                
+                dbc.Card([
+                    dbc.CardHeader([
+
+                        html.Div([
+                            'Hechos viales por tipo y causa',
+                            ],
+                            className="mt-1", 
+                            style={'width':'90%','display':'inline-block'}),
+
+                        html.Span(
+                            dbc.Button(
+                                html.B('i'), 
+                                id="open1", 
+                                n_clicks=0, 
+                                className="btn btn-success rounded-circle", 
+                                style={'display':'inline-block',
+                                        'float':'right',
+                                        'background-color':'#636EFA','margin':'0px'}
+                                ),
+
+                            id="tooltip-target",
+                            style={"textDecoration": "underline", "cursor": "pointer"},
+                        ),
+
+                        dbc.Tooltip(
+                            "Más información",
+                            target="tooltip-target",
+                        ),
+                            
+                        dbc.Modal([
+
+                            dbc.ModalHeader(html.H4("Tipos de hechos Viales")),
+
+                            dbc.ModalBody([
+                                html.Ul([
+                                    html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
+                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad.']),
+                                    html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
+                                    html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
+                                    html.Li([html.B('Choque de Frente:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación opuestos, los cuales chocan cuando uno de ellos invade parcial o totalmente el carril, arroyo de circulación o trayectoria contraria. ']),
+                                    html.Li([html.B('Choque Diverso:'),' En esta clasificación queda cualquier hecho de tránsito no especificado en los puntos anteriores. ']),
+                                    html.Li([html.B('Choque Lateral:'),' Ocurre entre dos o más vehículos cuyos conductores circulan en carriles o con trayectorias paralelas, en el mismo sentido chocando los vehículos entre sí, cuando uno de ellos invada parcial o totalmente el carril o trayectoria donde circula el otro.']),
+                                    html.Li([html.B('Estrellamiento:'),' Ocurre cuando un vehículo en movimiento en cualquier sentido choca con algo que se encuentra provisional o permanentemente estático.'])
+
+                                ], style={'list-style-type':'none'}, className="p-1")
+
+                            ],style={"textAlign":"justify",'font-size':'120%'}),
+
+                            dbc.ModalFooter([
+                                
+                                dbc.Button(
+                                    "Cerrar", 
+                                    id="close1", 
+                                    className="ml-auto btn btn-secondary", 
+                                    n_clicks=0
+                                )
+                            ]),
+
+                            ],
+                            id="modal",
+                            centered=True,
+                            size="lg",
+                            is_open=False,
+                        ),
+
+                    ]),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'treemap',
+                            figure = {},
+                    style={'padding':'0px'}
+                            )
+                    )
+                ]),
+
+                
+
             ], lg=6, md=6),
 
         ]),
+
+        dbc.Row([
+            dbc.Col([
+                dbc.Card(
+                    dbc.CardBody([
+                        html.H4('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública del Municipio de San Pedro Garza García y procesados por el IMPLANG.'),
+                        html.Br(),
+                        html.Div([
+                            html.Button(
+                                html.B("Descarga la base de datos completa"), 
+                                id="btn_csv",
+                                className="btn btn-success",
+                                n_clicks=None,
+                                style={'float':'right'}
+                            ),
+                            Download(id="download-dataframe-csv"),
+                        ])
+                    ])
+                )
+            ])
+        ], className="pt-4")
 
     ])
 
@@ -345,122 +422,139 @@ def render_interseccion_nombre(clickData):
 # Hechos Viales
 def render_interseccion_hv(clickData, start_date, end_date, slider_hora, checklist_dias):
 
-    # Leer csv
-    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    if clickData is None:
+        
+        return '0'
 
-    # Filter interseccion
-    hvi = hvi[hvi['interseccion'] == 
-    clickData['points'][0]['hovertext']]
-    
-    # Cambiar variables a string
-    hvi["año"] = hvi["año"].astype(str)
-    hvi["mes"] = hvi["mes"].astype(str)
-    hvi["dia"] = hvi["dia"].astype(str)
-    #hvi["hora"] = hvi["hora"].astype(str)
+    elif clickData is not None:
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 
-    # Crear variable datetime
-    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-    # +" - "+ hvi["hora"]                # - %H
-    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
 
-    # Duplicar columna de fecha y set index
-    hvi["fecha2"] = hvi["fecha"]
-    hvi = hvi.set_index("fecha")
-    hvi = hvi.sort_index()
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
 
-    # Filtro por calendario
-    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
 
-    #Filtro por día de la semana
-    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
 
-    #Filtro por hora
-    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
-    
-    #Sumo los hechos viales
-    interseccion_hv = hv_tiempo_data_cal_dsm_hora["hechos_viales"].sum()
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
 
-    return interseccion_hv
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+        
+        #Sumo los hechos viales
+        interseccion_hv = hv_tiempo_data_cal_dsm_hora["hechos_viales"].sum()
+
+        return interseccion_hv
 
 # Lesionados
 def render_interseccion_les(clickData, start_date, end_date, slider_hora, checklist_dias):
 
-    # Leer csv
-    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    if clickData is None:
+        
+        return '0'
 
-    # Filter interseccion
-    hvi = hvi[hvi['interseccion'] == 
-    clickData['points'][0]['hovertext']]
-    
-    # Cambiar variables a string
-    hvi["año"] = hvi["año"].astype(str)
-    hvi["mes"] = hvi["mes"].astype(str)
-    hvi["dia"] = hvi["dia"].astype(str)
-    #hvi["hora"] = hvi["hora"].astype(str)
+    elif clickData is not None:
 
-    # Crear variable datetime
-    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-    # +" - "+ hvi["hora"]                # - %H
-    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 
-    # Duplicar columna de fecha y set index
-    hvi["fecha2"] = hvi["fecha"]
-    hvi = hvi.set_index("fecha")
-    hvi = hvi.sort_index()
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
 
-    # Filtro por calendario
-    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
 
-    #Filtro por día de la semana
-    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
 
-    #Filtro por hora
-    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
 
-    #Sumo los lesionados
-    interseccion_les = hv_tiempo_data_cal_dsm_hora["lesionados"].sum()
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
 
-    return interseccion_les
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+        #Sumo los lesionados
+        interseccion_les = hv_tiempo_data_cal_dsm_hora["lesionados"].sum()
+
+        return interseccion_les
 
 # Fallecidos
 def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checklist_dias):
 
-     # Leer csv
-    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    if clickData is None:
+        
+        return '0'
 
-    # Filter interseccion
-    hvi = hvi[hvi['interseccion'] == 
-    clickData['points'][0]['hovertext']]
+    elif clickData is not None:
     
-    # Cambiar variables a string
-    hvi["año"] = hvi["año"].astype(str)
-    hvi["mes"] = hvi["mes"].astype(str)
-    hvi["dia"] = hvi["dia"].astype(str)
-    #hvi["hora"] = hvi["hora"].astype(str)
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 
-    # Crear variable datetime
-    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-    # +" - "+ hvi["hora"]                # - %H
-    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
 
-    # Duplicar columna de fecha y set index
-    hvi["fecha2"] = hvi["fecha"]
-    hvi = hvi.set_index("fecha")
-    hvi = hvi.sort_index()
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
 
-    # Filtro por calendario
-    hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-    
-    #Filtro por día de la semana
-    hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
 
-    #Filtro por hora
-    hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+        
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
 
-    #Sumo los fallecidos
-    interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
 
-    return interseccion_fal
+        #Sumo los fallecidos
+        interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
+
+        return interseccion_fal
 
 
 # Mapa
@@ -782,6 +876,95 @@ def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
+    
+    # Leer csv
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    
+    # Filter interseccion
+    hvi = hvi[hvi['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hvi_cal = hvi.loc[start_date:end_date]
+
+    #Filtro por día de la semana
+    hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+    tipo_acc = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", values=["hechos_viales","lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1).sort_values(by=['hechos_viales'], ascending=[0])
+
+    tabla = go.Figure(
+        [go.Table(
+                header=dict(values=list(['Tipo de accidente','Hechos viales','Fallecidos','Lesionados']),
+                    fill_color='#343332',
+                    font=dict(color='white'),
+                    align='center'),
+                cells=dict(values=[tipo_acc.tipo_accidente, tipo_acc.hechos_viales, tipo_acc.lesionados, tipo_acc.fallecidos],
+                   fill_color='#F7F7F7',
+                   align='center'))
+        ])
+    
+    return tabla
+
+def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Leer csv
+    hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+    
+    # Filter interseccion
+    hvi = hvi[hvi['interseccion'] == 
+    clickData['points'][0]['hovertext']]
+
+    # Cambiar variables a string
+    hvi["año"] = hvi["año"].astype(str)
+    hvi["mes"] = hvi["mes"].astype(str)
+    hvi["dia"] = hvi["dia"].astype(str)
+
+    # Crear variable datetime
+    hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+    hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+    # Duplicar columna de fecha y set index
+    hvi["fecha2"] = hvi["fecha"]
+    hvi = hvi.set_index("fecha")
+    hvi = hvi.sort_index()
+
+    # Filtro por calendario
+    hvi_cal = hvi.loc[start_date:end_date]
+
+    #Filtro por día de la semana
+    hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+    #Filtro por hora
+    hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+                        
+    causa_acc = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum)
+    causa_acc = causa_acc.fillna(0)
+
+    st_causas = causa_acc['hechos_viales'].stack()
+    df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+
+    treemap = px.treemap(df_causas, path=['tipo_accidente', 'causa_accidente'], values='hechos_viales')
+
+    return treemap
 
 #----------
 

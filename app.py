@@ -19,7 +19,8 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa, render_down_data, toggle_modal
+	render_interseccion_hv_tiempo, render_mapa, render_down_data, toggle_modal, render_tabla,
+	render_treemap
 	)
 
 # Connect to config
@@ -197,6 +198,26 @@ def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+@app.callback(Output('tabla', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+	return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+@app.callback(Output('treemap', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+	return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
