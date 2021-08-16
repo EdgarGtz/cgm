@@ -100,19 +100,3 @@
 .rc-slider-handle-active:active {
   border-color: #767c85;
 }
-
-.mapboxgl-map
-{
-  width: 100% !important; 
-  height: 100% !important; 
-  left: 0px !important; 
-  top: 0px !important;
-}
-
-.mapboxgl-canvas
-{
-  width: 100% !important;
-  height: 100% !important; 
-  left: 0px !important; 
-  top: 0px !important;
-}

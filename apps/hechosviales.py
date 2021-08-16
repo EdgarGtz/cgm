@@ -287,7 +287,7 @@ def hv_vasconcelos():
                     dbc.CardHeader([
 
                         html.Div([
-                            'Hechos viales por Tipo y Causa',
+                            'Hechos Viales por Tipo y Causa',
                             ],
                             className="mt-1", 
                             style={'width':'90%','display':'inline-block'}),
@@ -629,7 +629,8 @@ def render_mapa(start_date, end_date, slider_hora, checklist_dias):
                 accesstoken=mapbox_access_token,
                 center=dict(lat=25.6572, lon=-100.3689),
                 style="dark"
-            )
+            ),
+            margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa.update_traces(marker_color="#c6cc14",
             selected_marker_color="#636EFA",
@@ -717,7 +718,8 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             rangemode="normal")
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right'
+            hoverlabel_align = 'right',
+            margin = dict(t=0, l=0, r=0, b=0)
         )
 
         return interseccion_hv_tiempo
