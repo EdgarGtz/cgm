@@ -109,13 +109,13 @@ def hv_vasconcelos():
                                         id='checklist_dias',
                                         className="d-flex justify-content-center btn-group ",
                                         options=[
-                                            {'label': 'LUN', 'value': 'Lunes'},
-                                            {'label': 'MAR', 'value': 'Martes'},
-                                            {'label': 'MIE', 'value': 'Miércoles'},
-                                            {'label': 'JUE', 'value': 'Jueves'},
-                                            {'label': 'VIE', 'value': 'Viernes'},
-                                            {'label': 'SAB', 'value': 'Sábado'},
-                                            {'label': 'DOM', 'value': 'Domingo'},
+                                            {'label': 'LU', 'value': 'Lunes'},
+                                            {'label': 'MA', 'value': 'Martes'},
+                                            {'label': 'MI', 'value': 'Miércoles'},
+                                            {'label': 'JU', 'value': 'Jueves'},
+                                            {'label': 'VI', 'value': 'Viernes'},
+                                            {'label': 'SA', 'value': 'Sábado'},
+                                            {'label': 'DO', 'value': 'Domingo'},
                                         ],
                                         value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                                         inputClassName='form-check-input ',
@@ -208,7 +208,7 @@ def hv_vasconcelos():
                             ),
                     style={'padding':'0px'}
                     )
-                ])
+                ], style={'height':'500px'})
 
             ],lg=6, md=6),
 
@@ -355,7 +355,7 @@ def hv_vasconcelos():
                             figure = {},
                             style={'padding':'0px'},
                             config={'displaylogo': False}
-                            )
+                            ), style={'height':'500px'}
                     )
                 ]),
 
@@ -718,8 +718,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             rangemode="normal")
         interseccion_hv_tiempo.update_layout(dragmode = False, 
             hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            margin = dict(t=0, l=0, r=0, b=0)
+            hoverlabel_align = 'right'
         )
 
         return interseccion_hv_tiempo
