@@ -26,7 +26,8 @@ def hechosviales():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Hechos viales', tab_id='hv_vasconcelos'),
+                            dbc.Tab(label='Datos Generales', tab_id='', disabled=True),
+                            dbc.Tab(label='Intersecciones', tab_id='hv_vasconcelos'),
                         ],
                         id='tabs',
                         active_tab="hv_vasconcelos",
@@ -101,7 +102,7 @@ def hv_vasconcelos():
                         dbc.Col([
 
                             dbc.Card([
-                                dbc.CardHeader('Días de la semana', style={'text-align':'center'}),
+                                dbc.CardHeader('Día de la Semana', style={'text-align':'center'}),
                                 dbc.CardBody([
                                 
                                     dcc.Checklist(
@@ -180,7 +181,7 @@ def hv_vasconcelos():
                         
                         ],id='interseccion_nombre',
                         style={'textAlign': 'center','color':'black'},
-                        className="card bg-light"),
+                        ),
 
                     dbc.CardBody(
                         dcc.Graph(
@@ -286,7 +287,7 @@ def hv_vasconcelos():
                     dbc.CardHeader([
 
                         html.Div([
-                            'Hechos viales por tipo y causa',
+                            'Hechos viales por Tipo y Causa',
                             ],
                             className="mt-1", 
                             style={'width':'90%','display':'inline-block'}),
@@ -296,10 +297,10 @@ def hv_vasconcelos():
                                 html.B('i'), 
                                 id="open1", 
                                 n_clicks=0, 
-                                className="btn btn-success rounded-circle", 
+                                className="btn btn-success rounded-pill", 
                                 style={'display':'inline-block',
                                         'float':'right',
-                                        'background-color':'#636EFA','margin':'0px'}
+                                        'background-color':'#636EFA','margin':'0px','width':'4%'}
                                 ),
 
                             id="tooltip-target",
@@ -313,7 +314,7 @@ def hv_vasconcelos():
                             
                         dbc.Modal([
 
-                            dbc.ModalHeader(html.H4("Tipos de hechos Viales")),
+                            dbc.ModalHeader(html.H4("Tipos de Hechos Viales")),
 
                             dbc.ModalBody([
                                 html.Ul([
@@ -367,22 +368,25 @@ def hv_vasconcelos():
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader('Datos abiertos'),
-                    dbc.CardBody([
-                        'La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.',
-                        html.Br(),
-                        html.Br(),
-                        html.Div([
-                            html.Button(
-                                html.B("Descarga la base de datos completa"), 
-                                id="btn_csv",
-                                className="btn btn-success",
-                                n_clicks=None,
-                                style={'float':'left'}
-                            ),
-                            Download(id="download-dataframe-csv"),
+                    dbc.CardHeader('Datos Completos'),
+                    dbc.CardBody(
+                        dbc.Row([
+                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=6, md=6),
+                            dbc.Col(
+                                html.Div([
+                                    html.Button(
+                                        html.B("Descarga la base de datos completa"), 
+                                        id="btn_csv",
+                                        className="btn btn-success",
+                                        n_clicks=None,
+                                        style={'float':'right'}
+                                    ),
+                                    Download(id="download-dataframe-csv")
+                                ]), lg=6, md=6, style={'display':'inline-block'}
+                            )
                         ])
-                    ])
+
+                    )
                 ])
             ])
         ], className="pt-4")
