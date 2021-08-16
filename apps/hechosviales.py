@@ -208,7 +208,7 @@ def hv_vasconcelos():
                             ),
                     style={'padding':'0px'}
                     )
-                ], style={'height':'500px'})
+                ])
 
             ],lg=6, md=6),
 
@@ -355,7 +355,7 @@ def hv_vasconcelos():
                             figure = {},
                             style={'padding':'0px'},
                             config={'displaylogo': False}
-                            ), style={'height':'500px'}
+                            ), style={'height':'550px'}
                     )
                 ]),
 
@@ -908,7 +908,7 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
                    align='center',
                    height=35))
         ])
-    tabla.update_layout(margin = dict(t=20, l=20, r=20, b=0))
+    tabla.update_layout(margin = dict(t=20, l=20, r=20, b=10))
     
     return tabla
 
