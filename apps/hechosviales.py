@@ -371,7 +371,7 @@ def hv_vasconcelos():
                     dbc.CardHeader('Datos Completos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=6, md=6),
+                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=8, md=8),
                             dbc.Col(
                                 html.Div([
                                     html.Button(
@@ -382,7 +382,7 @@ def hv_vasconcelos():
                                         style={'float':'right'}
                                     ),
                                     Download(id="download-dataframe-csv")
-                                ]), lg=6, md=6, style={'display':'inline-block'}
+                                ]), lg=4, md=4, style={'display':'inline-block'}, className='align-self-center',
                             )
                         ])
 
