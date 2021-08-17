@@ -89,6 +89,12 @@ mapa.update_traces(marker_color="#c6cc14",
     selected_marker_size=28,
     unselected_marker_opacity=.5)
 
+# Imágenes
+img1 = 'assets/down-arrow.png' # replace with your own image
+encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
+
+img2 = 'assets/info.png' # replace with your own image
+encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
 
 #----------
 
@@ -316,12 +322,17 @@ def hv_intersecciones():
 
                 dbc.Card([
                     dbc.CardHeader([
-                        dbc.Button(
+                        dbc.Button([
                             "Calendario",
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'3%','float':'right'},
+                                        className="pt-1")
+                            ],
                             id="collapse_button_cal",
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
+                            style={'font-size':'17px'},
                         ),
 
                     ], style={'text-align':'center'}, className='p-0'),
@@ -352,12 +363,17 @@ def hv_intersecciones():
 
                 dbc.Card([
                     dbc.CardHeader([
-                        dbc.Button(
+                        dbc.Button([
                             "Día de la Semana",
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'3%','float':'right'},
+                                        className="pt-1")
+                            ],
                             id="collapse_button_dsem",
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
+                            style={'font-size':'17px'},
                         ),
 
                     ], style={'text-align':'center'}, className='p-0'),
@@ -398,13 +414,20 @@ def hv_intersecciones():
 
                 dbc.Card([
                     dbc.CardHeader([
-                        dbc.Button(
+                        dbc.Button([
                             "Horario",
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'3%','float':'right'},
+                                        className="pt-1")
+                            ],
                             id="collapse_button_hora",
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
+                            style={'font-size':'17px'},
                         ),
+
+
 
                     ], style={'text-align':'center'}, className='p-0'),
 
@@ -460,7 +483,7 @@ def hv_intersecciones():
                     dbc.CardHeader([
                         
                         ],id='interseccion_nombre',
-                        style={'textAlign': 'center','color':'black'},
+                        style={'textAlign': 'center'},
                         ),
 
                     dbc.CardBody(
@@ -474,7 +497,7 @@ def hv_intersecciones():
                         ),
                     style={'padding':'0px'},
                     )
-                ]), 
+                ], className="text-white bg-dark"), 
 
                 html.Br(),
 
@@ -587,13 +610,18 @@ def hv_intersecciones():
 
                         html.Span(
                             dbc.Button(
-                                html.B('i'), 
+                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                        style={'float':'right'},
+                                        className="p-0 img-fluid"), 
                                 id="open1", 
                                 n_clicks=0, 
-                                className="btn btn-success rounded-pill", 
                                 style={'display':'inline-block',
-                                        'float':'right',
-                                        'background-color':'#636EFA','margin':'0px','width':'4%'}
+                                        'float':'right','padding':'0', 
+                                        'width':'3%','background-color':'transparent',
+                                        'border-color':'transparent',
+                                        'margin':'0'},
+                                className='rounded-circle'
+
                                 ),
 
                             id="tooltip-target",
@@ -662,7 +690,7 @@ def hv_intersecciones():
                     dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) y proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=8, md=8),
+                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) y proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
                             dbc.Col(
                                 html.Div([
                                     html.Button(
@@ -673,7 +701,7 @@ def hv_intersecciones():
                                         style={'float':'right'}
                                     ),
                                     Download(id="download-dataframe-csv")
-                                ]), lg=4, md=4, style={'display':'inline-block'}, className='align-self-center',
+                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
                             )
                         ])
 
@@ -1371,31 +1399,36 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         # Filtro por calendario
         hvi_cal = hvi.loc[start_date:end_date]
 
-        # Filtro por día de la semana
+        #Filtro por día de la semana
         hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
 
-        # Filtro por hora
+        #Filtro por hora
         hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+        
+        # Crear una tabla por tipo de hecho vial con las causas en las columnas y que tenga la suma del número de hechos viales 
+        causa_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum)
 
-        # Crear una tabla por tipo de accidente que tenga la suma del número de hechos viales, lesionados y fallecidos ordenados de mayor a menor por número de hechos viales
-        tipo_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", values=["hechos_viales","lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1).sort_values(by=['hechos_viales'], ascending=[0]) 
-        tipo_hv['hechos_viales'] = ['0']*tipo_hv['hechos_viales'].count()
-        tipo_hv['lesionados'] = ['0']*tipo_hv['hechos_viales'].count()
-        tipo_hv['fallecidos'] = ['0']*tipo_hv['hechos_viales'].count()
+        # Reemplazar NAs con ceros
+        causa_hv = causa_hv.fillna(0)
 
-        # Tabla
-        tabla = go.Figure(
-            [go.Table(
-                    header=dict(values=list(['Tipo','Hechos Viales','Lesionados','Fallecidos']),
-                        fill_color='#343332',
-                        font=dict(color='white'),
-                        align='center'),
-                    cells=dict(values=[tipo_hv.tipo_accidente, tipo_hv.hechos_viales, tipo_hv.lesionados, tipo_hv.fallecidos],
-                       fill_color='#F7F7F7',
-                       align='center',
-                       height=35))
-            ])
-        tabla.update_layout(margin = dict(t=20, l=20, r=20, b=10))
+        # Hacer una tabla con las causas apiladas
+        st_causas = causa_hv['hechos_viales'].stack()
+
+        # Repetir tipo de hecho vial y convertir a DataFrame
+        df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+        df_causas['hechos_viales'] = ['0']*df_causas['hechos_viales'].count()
+        df_causas['hechos_viales'] = df_causas['hechos_viales'].astype(int)
+
+
+        # Treemap
+        tabla = px.treemap(df_causas, 
+                        path=['tipo_accidente', 'causa_accidente'], 
+                        values='hechos_viales',
+                        color='causa_accidente',
+                        )
+        tabla.update_layout(margin = dict(t=0, l=0, r=0, b=0),
+            hovermode=False)
+
 
         return tabla
 
