@@ -19,7 +19,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa, render_down_data, toggle_modal, render_tabla,
+	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, render_tabla,
 	render_treemap
 	)
 
@@ -154,9 +154,9 @@ def get(clickData, start_date, end_date, hora, diasem):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_fal(clickData, start_date, end_date, hora, diasem)
 
-#-- Mapa
+#-- Mapa interactivo
 
-@app.callback(Output('mapa', 'figure'), 
+@app.callback(Output('mapa_interac', 'figure'), 
     [Input('calendario', 'start_date'),
     Input('calendario', 'end_date'),
     Input('slider_hora', 'value'),
@@ -164,7 +164,7 @@ def get(clickData, start_date, end_date, hora, diasem):
             prevent_initial_call=False)
 
 def get(start_date, end_date, slider_hora, checklist_dias):
-    return render_mapa(start_date, end_date, slider_hora, checklist_dias)
+    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias)
 
 #-- Intersección - Hechos Viales por Año
 
