@@ -315,19 +315,34 @@ def hv_intersecciones():
             dbc.Col([
 
                 dbc.Card([
-                    dbc.CardHeader('Calendario', style={'text-align':'center'}),
-                    dbc.CardBody([
-
-                        dcc.DatePickerRange(
-                            id = 'calendario',
-                            min_date_allowed = dt(2015, 1, 1),
-                            max_date_allowed = dt(2020, 12, 31),
-                            start_date = dt(2015, 1, 1),
-                            end_date = dt(2020, 12, 31),
-                            first_day_of_week = 1,
-                            className="d-flex justify-content-center"
+                    dbc.CardHeader([
+                        dbc.Button(
+                            "Calendario",
+                            id="collapse_button_cal",
+                            className='btn btn-light btn-lg btn-block',
+                            color="primary",
+                            n_clicks=0,
                         ),
-                    ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center')
+
+                    ], style={'text-align':'center'}, className='p-0'),
+
+                    dbc.Collapse(
+                        dbc.CardBody([
+
+                            dcc.DatePickerRange(
+                                id = 'calendario',
+                                min_date_allowed = dt(2015, 1, 1),
+                                max_date_allowed = dt(2020, 12, 31),
+                                start_date = dt(2015, 1, 1),
+                                end_date = dt(2020, 12, 31),
+                                first_day_of_week = 1,
+                                className="d-flex justify-content-center"
+                            ),
+                        ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center'),
+                        id="collapse_cal",
+                        is_open=False,
+                    ),
+
                 ])
 
             ], lg=4, md=4),
@@ -336,29 +351,44 @@ def hv_intersecciones():
             dbc.Col([
 
                 dbc.Card([
-                    dbc.CardHeader('Día de la Semana', style={'text-align':'center'}),
-                    dbc.CardBody([
-                    
-                        dcc.Checklist(
-                            id='checklist_dias',
-                            className="d-flex justify-content-center btn-group ",
-                            options=[
-                                {'label': 'LU', 'value': 'Lunes'},
-                                {'label': 'MA', 'value': 'Martes'},
-                                {'label': 'MI', 'value': 'Miércoles'},
-                                {'label': 'JU', 'value': 'Jueves'},
-                                {'label': 'VI', 'value': 'Viernes'},
-                                {'label': 'SA', 'value': 'Sábado'},
-                                {'label': 'DO', 'value': 'Domingo'},
-                            ],
-                            value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                            inputClassName='form-check-input ',
-                            labelClassName="btn btn-secondary ",
-                            inputStyle={'background-color:':'#767c85!important;'},
-                            style={'display':'inline-block'}
+                    dbc.CardHeader([
+                        dbc.Button(
+                            "Día de la Semana",
+                            id="collapse_button_dsem",
+                            className='btn btn-light btn-lg btn-block',
+                            color="primary",
+                            n_clicks=0,
                         ),
 
-                    ], style={'height':'90px'}, className='pt-4')
+                    ], style={'text-align':'center'}, className='p-0'),
+
+                    dbc.Collapse(
+                        dbc.CardBody([
+
+                            dcc.Checklist(
+                                id='checklist_dias',
+                                className="d-flex justify-content-center btn-group ",
+                                options=[
+                                    {'label': 'LU', 'value': 'Lunes'},
+                                    {'label': 'MA', 'value': 'Martes'},
+                                    {'label': 'MI', 'value': 'Miércoles'},
+                                    {'label': 'JU', 'value': 'Jueves'},
+                                    {'label': 'VI', 'value': 'Viernes'},
+                                    {'label': 'SA', 'value': 'Sábado'},
+                                    {'label': 'DO', 'value': 'Domingo'},
+                                ],
+                                value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                inputClassName='form-check-input ',
+                                labelClassName="btn btn-secondary ",
+                                inputStyle={'background-color:':'#767c85!important;'},
+                                style={'display':'inline-block'}
+                            ),
+
+                        ], style={'height':'90px'}),
+                        id="collapse_dsem",
+                        is_open=False,
+                    ),
+
                 ])
 
             ],lg=4, md=4),
@@ -367,33 +397,49 @@ def hv_intersecciones():
             dbc.Col([
 
                 dbc.Card([
-                dbc.CardHeader('Horario', style={'text-align':'center'}),
-                    dbc.CardBody([
-                       
-                        html.Div(
-                            dcc.RangeSlider(
-                                id='slider_hora',
-                                min=0,
-                                max=23,
-                                value=[0, 23],
-                                marks={
-                                    0: {'label': '0'},
-                                    3: {'label': '3'},
-                                    6: {'label': '6'},
-                                    9: {'label': '9'},
-                                    12: {'label': '12'},
-                                    15: {'label': '15'},
-                                    18: {'label': '18'},
-                                    21: {'label': '21'},
-                                    23: {'label': '23'}
-                                },
-                                allowCross=False,
-                                dots=True,
-                                tooltip={'always_visible': False , "placement":"bottom"},
-                                updatemode='drag'
-                            ),
+                    dbc.CardHeader([
+                        dbc.Button(
+                            "Horario",
+                            id="collapse_button_hora",
+                            className='btn btn-light btn-lg btn-block',
+                            color="primary",
+                            n_clicks=0,
                         ),
-                    ], style={'height':'90px'}, className='pt-4')
+
+                    ], style={'text-align':'center'}, className='p-0'),
+
+                    dbc.Collapse(
+                        dbc.CardBody([
+
+                            html.Div(
+                                dcc.RangeSlider(
+                                    id='slider_hora',
+                                    min=0,
+                                    max=23,
+                                    value=[0, 23],
+                                    marks={
+                                        0: {'label': '0'},
+                                        3: {'label': '3'},
+                                        6: {'label': '6'},
+                                        9: {'label': '9'},
+                                        12: {'label': '12'},
+                                        15: {'label': '15'},
+                                        18: {'label': '18'},
+                                        21: {'label': '21'},
+                                        23: {'label': '23'}
+                                    },
+                                    allowCross=False,
+                                    dots=True,
+                                    tooltip={'always_visible': False , "placement":"bottom"},
+                                    updatemode='drag'
+                                ), className='pt-2'
+                            ),
+
+                        ], style={'height':'90px'}),
+                        id="collapse_hora",
+                        is_open=False,
+                    ),
+
                 ])
                 
             ], lg=4, md=4),
@@ -613,10 +659,10 @@ def hv_intersecciones():
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader('Datos Completos'),
+                    dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=8, md=8),
+                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) y proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=8, md=8),
                             dbc.Col(
                                 html.Div([
                                     html.Button(
@@ -645,7 +691,7 @@ def hv_intersecciones():
 # Nombre
 def render_interseccion_nombre(clickData):
     if clickData is None:
-        return 'Da click en una intersección para saber más'
+        return 'Da click en una intersección para conocer más'
     else:
         return clickData['points'][0]['hovertext']
 
@@ -1340,7 +1386,7 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         # Tabla
         tabla = go.Figure(
             [go.Table(
-                    header=dict(values=list(['Tipo de accidente','Hechos viales','Fallecidos','Lesionados']),
+                    header=dict(values=list(['Tipo','Hechos Viales','Lesionados','Fallecidos']),
                         fill_color='#343332',
                         font=dict(color='white'),
                         align='center'),
@@ -1519,6 +1565,21 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
         treemap.data[0].hovertemplate = '%{label}<br>%{value}'
 
         return treemap
+
+def render_collapse_button_cal(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button
+
+def render_collapse_button_dsem(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button_dsem
+
+def render_collapse_button_hora(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button_hora
 
 #----------
 

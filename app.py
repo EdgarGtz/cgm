@@ -20,7 +20,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, render_tabla,
-	render_treemap
+	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora
 	)
 
 # Connect to config
@@ -218,6 +218,40 @@ def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
     
 def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
 	return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+
+
+
+@app.callback(
+    Output("collapse_cal", "is_open"),
+    [Input("collapse_button_cal", "n_clicks")],
+    [State("collapse_cal", "is_open")],
+)
+def render_collapse_button_cal(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse_dsem", "is_open"),
+    [Input("collapse_button_dsem", "n_clicks")],
+    [State("collapse_dsem", "is_open")],
+)
+def render_collapse_button_dsem(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse_hora", "is_open"),
+    [Input("collapse_button_hora", "n_clicks")],
+    [State("collapse_hora", "is_open")],
+)
+def render_collapse_button_hora(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
