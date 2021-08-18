@@ -105,3 +105,9 @@
 .DateInput_input {
   text-align: center !important;
 }
+
+#modal_filtros .modal-content {
+  background-color: transparent!important;
+  border: none;
+
+}

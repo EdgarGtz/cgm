@@ -19,7 +19,7 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, render_tabla,
+	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, toggle_modal_filtros, render_tabla,
 	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora
 	)
 
@@ -208,6 +208,17 @@ def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+@app.callback(
+    Output("modal_filtros", "is_open"),
+    [Input("open1", "n_clicks"), 
+    Input("close1", "n_clicks")],
+    [State("modal_filtros", "is_open")],)
+
+def toggle_modal_filtros(open1, close1, modal_filtros):
+    if open1 or close1:
+        return not modal_filtros
+    return modal_filtros
 
 #-- Tabla Tipos de Hechos Viales
 
