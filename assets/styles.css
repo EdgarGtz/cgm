@@ -100,3 +100,8 @@
 .rc-slider-handle-active:active {
   border-color: #767c85;
 }
+
+
+.DateInput_input {
+  text-align: center !important;
+}

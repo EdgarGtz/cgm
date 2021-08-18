@@ -70,7 +70,7 @@ mapa = go.Figure(
     px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
     size = 'hechos_viales',
     size_max=5, 
-    zoom=13, 
+    zoom=12.8, 
     hover_name='interseccion', 
     #custom_data=['lesionados', 'fallecidos'],
     hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -265,7 +265,7 @@ def hv_general():
 
                 html.Br(),
 
-                # Hechos viales por año
+                # Hechos viales por 
                 dbc.Row(
                     dbc.Col(
                         dbc.Card([
@@ -279,7 +279,7 @@ def hv_general():
                                         disabled = False),
                                 ],
                                 id='periodo_hv',
-                                active_tab="mes",
+                                active_tab="año",
                                 card=True
                                 )
                             ]),
@@ -332,7 +332,7 @@ def hv_intersecciones():
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
-                            style={'font-size':'17px'},
+                            style={'font-size':'16px'},
                         ),
 
                     ], style={'text-align':'center'}, className='p-0'),
@@ -373,7 +373,7 @@ def hv_intersecciones():
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
-                            style={'font-size':'17px'},
+                            style={'font-size':'16px'},
                         ),
 
                     ], style={'text-align':'center'}, className='p-0'),
@@ -424,7 +424,7 @@ def hv_intersecciones():
                             className='btn btn-light btn-lg btn-block',
                             color="primary",
                             n_clicks=0,
-                            style={'font-size':'17px'},
+                            style={'font-size':'16px'},
                         ),
 
 
@@ -553,19 +553,23 @@ def hv_intersecciones():
                                         disabled = False),
                                 ],
                                 id='periodo_hv',
-                                active_tab="mes",
+                                active_tab="año",
                                 card=True
                                 )
                             ]),
                             dbc.CardBody([
+
                                 dcc.Graph(
                                     id = 'interseccion_hv_tiempo',
                                     figure = {},
                                     config={
-                                    'modeBarButtonsToRemove': ['zoom2d', 'lasso2d', 'pan2d',
-                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d',
-                                   'hoverClosestCartesian', 'hoverCompareCartesian',
-                                    'toggleSpikelines', 'select2d'], 'displaylogo': False
+                                        'modeBarButtonsToRemove':
+                                        ['lasso2d', 'pan2d',
+                                        'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                        'resetScale2d', 'hoverClosestCartesian',
+                                        'hoverCompareCartesian', 'toggleSpikelines',
+                                        'select2d',],
+                                        'displaylogo': False
                                     },
                                 )
                             ],style={'padding':'0'}),
@@ -618,8 +622,7 @@ def hv_intersecciones():
                                 style={'display':'inline-block',
                                         'float':'right','padding':'0', 
                                         'width':'3%','background-color':'transparent',
-                                        'border-color':'transparent',
-                                        'margin':'0'},
+                                        'border-color':'transparent',},
                                 className='rounded-circle'
 
                                 ),
@@ -635,7 +638,7 @@ def hv_intersecciones():
                             
                         dbc.Modal([
 
-                            dbc.ModalHeader(html.H4("Tipos de Hechos Viales")),
+                            dbc.ModalHeader(html.B("Tipos de Hechos Viales")),
 
                             dbc.ModalBody([
                                 html.Ul([
@@ -650,7 +653,7 @@ def hv_intersecciones():
 
                                 ], style={'list-style-type':'none'}, className="p-1")
 
-                            ],style={"textAlign":"justify",'font-size':'120%'}),
+                            ],style={"textAlign":"justify",'font-size':'100%'}),
 
                             dbc.ModalFooter([
                                 
@@ -690,15 +693,15 @@ def hv_intersecciones():
                     dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('La información que aquí se muestra representa los datos de los hechos viales de los últimos 6 años (2015 - 2020) y proporcionados por la Secretaría de Seguridad Pública procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
+                            dbc.Col('Datos de hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública y procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
                             dbc.Col(
                                 html.Div([
                                     html.Button(
                                         html.B("Descarga la base de datos completa"), 
                                         id="btn_csv",
-                                        className="btn btn-success",
+                                        className="btn",
                                         n_clicks=None,
-                                        style={'float':'right'}
+                                        style={'float':'right','background-color':'#636EFA','color':'white'}
                                     ),
                                     Download(id="download-dataframe-csv")
                                 ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
@@ -867,43 +870,6 @@ def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checkl
 
         return interseccion_fal
 
-# Mapa
-def render_mapa(start_date, end_date, slider_hora, checklist_dias):
-    
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hvi_cal_dsm_hora.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-        coords['hechos_viales'] = ['1']*coords['interseccion'].count()
-        coords['hechos_viales'] = coords['hechos_viales'].astype(int)
-
-        # Cambiar nombre
-        mapa_data = coords
-
-        #-- Graph
-        mapa = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=5, 
-            zoom=13, 
-            hover_name='interseccion', 
-            #custom_data=['lesionados', 'fallecidos'],
-            hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
-            opacity=1))
-
-        mapa.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa.update_traces(marker_color="#c6cc14",
-            selected_marker_color="#636EFA",
-            selected_marker_size=28,
-            unselected_marker_opacity=.5)
-
-        return mapa
-
 # Mapa interactivo
 def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias):
     
@@ -1024,44 +990,50 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hvi["año"] = hvi["año"].astype(str)
         hvi["mes"] = hvi["mes"].astype(str)
         hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
 
         # Crear variable datetime
         hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
 
         # Duplicar columna de fecha y set index
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
-        hvi_ceros = hvi
 
-        hvi_ceros_res = hvi_ceros.resample("D").sum()
-        hvi_ceros_res["fecha_dos"] = hvi_ceros_res.index
-        hvi_ceros_res['ceros'] = ['0']*hvi_ceros_res['fecha_dos'].count()
-        hvi_ceros_res['ceros'] = hvi_ceros_res['ceros'].astype(int)
-        hvi_ceros_res_data = hvi_ceros_res
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
 
-        # Graph
-        interseccion_hv_tiempo = px.scatter(hvi_ceros_res_data, 
-            x='fecha_dos',
-            y='ceros',  
-            template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="lines", 
-            )
-        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', 
-            tick0 = 0, 
-            dtick = 1,
-            fixedrange = True,
-            range = [0,5],
-            showgrid = False)
-        interseccion_hv_tiempo.update_xaxes(title_text='', )
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
-            hovermode=False
-        )
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
 
-        return interseccion_hv_tiempo
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+        
+        # Crear una tabla por tipo de hecho vial con las causas en las columnas y que tenga la suma del número de hechos viales 
+        causa_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum)
+
+        # Reemplazar NAs con ceros
+        causa_hv = causa_hv.fillna(0)
+
+        # Hacer una tabla con las causas apiladas
+        st_causas = causa_hv['hechos_viales'].stack()
+
+        # Repetir tipo de hecho vial y convertir a DataFrame
+        df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+        df_causas['hechos_viales'] = ['0']*df_causas['hechos_viales'].count()
+        df_causas['hechos_viales'] = df_causas['hechos_viales'].astype(int)
+
+
+        # Treemap
+        tabla = px.treemap(df_causas, 
+                        path=['tipo_accidente', 'causa_accidente'], 
+                        values='hechos_viales',
+                        color='causa_accidente',
+                        )
+        tabla.update_layout(margin = dict(t=0, l=0, r=0, b=0),
+            hovermode=False)
+
+        return tabla
 
     elif periodo_hv == 'dia' and clickData is not None:
 
@@ -1114,12 +1086,8 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             fill='tozeroy', 
             hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales") #+lines
         interseccion_hv_tiempo.update_xaxes(showgrid = False, 
-            showline = True, 
-            type="date", 
-            spikemode="toaxis+across+marker", 
-            spikesnap="data", 
-            spikecolor="gray", 
-            spikethickness=2,
+            showline = False, 
+            title_text='', 
             tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', 
             tick0 = 0, 
@@ -1143,44 +1111,50 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         hvi["año"] = hvi["año"].astype(str)
         hvi["mes"] = hvi["mes"].astype(str)
         hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
 
         # Crear variable datetime
         hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
 
         # Duplicar columna de fecha y set index
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
-        hvi_ceros = hvi
 
-        hvi_ceros_res = hvi_ceros.resample("M").sum()
-        hvi_ceros_res["fecha_dos"] = hvi_ceros_res.index
-        hvi_ceros_res['ceros'] = ['0']*hvi_ceros_res['fecha_dos'].count()
-        hvi_ceros_res['ceros'] = hvi_ceros_res['ceros'].astype(int)
-        hvi_ceros_res_data = hvi_ceros_res
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
 
-        # Graph
-        interseccion_hv_tiempo = px.scatter(hvi_ceros_res_data, 
-            x='fecha_dos',
-            y='ceros',  
-            template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="lines", 
-            )
-        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', 
-            tick0 = 0, 
-            dtick = 1,
-            fixedrange = True,
-            range = [0,5],
-            showgrid = False)
-        interseccion_hv_tiempo.update_xaxes(title_text='', )
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
-            hovermode=False
-        )
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
 
-        return interseccion_hv_tiempo
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+        
+        # Crear una tabla por tipo de hecho vial con las causas en las columnas y que tenga la suma del número de hechos viales 
+        causa_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum)
+
+        # Reemplazar NAs con ceros
+        causa_hv = causa_hv.fillna(0)
+
+        # Hacer una tabla con las causas apiladas
+        st_causas = causa_hv['hechos_viales'].stack()
+
+        # Repetir tipo de hecho vial y convertir a DataFrame
+        df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+        df_causas['hechos_viales'] = ['0']*df_causas['hechos_viales'].count()
+        df_causas['hechos_viales'] = df_causas['hechos_viales'].astype(int)
+
+
+        # Treemap
+        tabla = px.treemap(df_causas, 
+                        path=['tipo_accidente', 'causa_accidente'], 
+                        values='hechos_viales',
+                        color='causa_accidente',
+                        )
+        tabla.update_layout(margin = dict(t=0, l=0, r=0, b=0),
+            hovermode=False)
+
+        return tabla
 
     elif periodo_hv == 'mes' and clickData is not None:
     
@@ -1233,13 +1207,8 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             fill='tozeroy', 
             hovertemplate="<b>%{x|%m/%Y}</b><br> %{y} hechos viales")
         interseccion_hv_tiempo.update_xaxes(showgrid = False, 
-            showline = True, 
+            showline = False, 
             title_text='', 
-            type="date", 
-            spikemode="toaxis+across+marker", 
-            spikesnap="data", 
-            spikecolor="gray", 
-            spikethickness=2,
             tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
@@ -1254,49 +1223,55 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         # Leer csv
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-       
+
         # Cambiar variables a string
         hvi["año"] = hvi["año"].astype(str)
         hvi["mes"] = hvi["mes"].astype(str)
         hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
 
         # Crear variable datetime
         hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
 
         # Duplicar columna de fecha y set index
         hvi["fecha2"] = hvi["fecha"]
         hvi = hvi.set_index("fecha")
         hvi = hvi.sort_index()
-        hvi_ceros = hvi
 
-        hvi_ceros_res = hvi_ceros.resample("Y").sum()
-        hvi_ceros_res["fecha_dos"] = hvi_ceros_res.index
-        hvi_ceros_res['ceros'] = ['0']*hvi_ceros_res['fecha_dos'].count()
-        hvi_ceros_res['ceros'] = hvi_ceros_res['ceros'].astype(int)
-        hvi_ceros_res_data = hvi_ceros_res
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
 
-        # Graph
-        interseccion_hv_tiempo = px.scatter(hvi_ceros_res_data, 
-            x='fecha_dos',
-            y='ceros',  
-            template = 'plotly_white')
-        interseccion_hv_tiempo.update_traces(mode="lines", 
-            )
-        interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales', 
-            tick0 = 0, 
-            dtick = 1,
-            fixedrange = True,
-            range = [0,5],
-            showgrid = False)
-        interseccion_hv_tiempo.update_xaxes(title_text='', )
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
-            hovermode=False
-        )
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
 
-        return interseccion_hv_tiempo
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+        
+        # Crear una tabla por tipo de hecho vial con las causas en las columnas y que tenga la suma del número de hechos viales 
+        causa_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum)
+
+        # Reemplazar NAs con ceros
+        causa_hv = causa_hv.fillna(0)
+
+        # Hacer una tabla con las causas apiladas
+        st_causas = causa_hv['hechos_viales'].stack()
+
+        # Repetir tipo de hecho vial y convertir a DataFrame
+        df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+        df_causas['hechos_viales'] = ['0']*df_causas['hechos_viales'].count()
+        df_causas['hechos_viales'] = df_causas['hechos_viales'].astype(int)
+
+
+        # Treemap
+        tabla = px.treemap(df_causas, 
+                        path=['tipo_accidente', 'causa_accidente'], 
+                        values='hechos_viales',
+                        color='causa_accidente',
+                        )
+        tabla.update_layout(margin = dict(t=0, l=0, r=0, b=0),
+            hovermode=False)
+
+        return tabla
 
     elif periodo_hv == 'año' and clickData is not None:
     
@@ -1348,12 +1323,8 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_traces(mode="markers+lines", 
             fill='tozeroy', hovertemplate="<b>%{x|%Y}</b><br> %{y} hechos viales")
         interseccion_hv_tiempo.update_xaxes(showgrid = False, 
-            showline = True, title_text='', 
-            type="date", 
-            spikemode="toaxis+across+marker", 
-            spikesnap="data", 
-            spikecolor="gray", 
-            spikethickness=2,
+            showline = False, 
+            title_text='', 
             tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(dragmode = False, 
@@ -1428,7 +1399,6 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
                         )
         tabla.update_layout(margin = dict(t=0, l=0, r=0, b=0),
             hovermode=False)
-
 
         return tabla
 
@@ -1599,16 +1569,19 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
 
         return treemap
 
+# Tarjeta colapsable calendario
 def render_collapse_button_cal(n, is_open):
     if n:
         return not is_open
     return collapse_button
 
+# Tarjeta colapsable días de la semana
 def render_collapse_button_dsem(n, is_open):
     if n:
         return not is_open
     return collapse_button_dsem
 
+# Tarjeta colapsable hora
 def render_collapse_button_hora(n, is_open):
     if n:
         return not is_open

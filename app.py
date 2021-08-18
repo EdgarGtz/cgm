@@ -99,21 +99,28 @@ def get_ayuda(tab):
     return render_alfonsoreyes(tab)
 
 
-@app.callback(Output('output-container-range-slider', 'children'),
-    [Input('slider_hora', 'value')])
-def update_hora_selec(value):   
-    return format(value)
-
 # Hechos Viales
 
-@app.callback(Output('hechosviales_content', 'children'), [Input('tabs', 'active_tab')])
+@app.callback(
+	Output('hechosviales_content', 'children'), 
+	[Input('tabs', 'active_tab')])
 
 def get_hechosviales(tab):
     return render_hechosviales(tab)
 
+# Filtro de hora
+
+@app.callback(Output('output-container-range-slider', 'children'),
+    [Input('slider_hora', 'value')])
+
+def update_hora_selec(value):   
+    return format(value)
+
 #-- Interseccion - Nombre
 
-@app.callback(Output('interseccion_nombre', 'children'), [Input('mapa', 'clickData')])
+@app.callback(
+	Output('interseccion_nombre', 'children'), 
+	[Input('mapa', 'clickData')])
 
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
@@ -179,25 +186,30 @@ def get(start_date, end_date, slider_hora, checklist_dias):
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
  	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
+#-- Descargar Excel
+
 @app.callback(
     Output("download-dataframe-csv", "data"),
     Input("btn_csv", "n_clicks"),
-    prevent_initial_call=True,
-)
+    prevent_initial_call=True,)
 
 def func(n_clicks):
     return render_down_data(n_clicks)
+
+#-- Modal Tipos de Hechos Viales
 
 @app.callback(
     Output("modal", "is_open"),
     [Input("open1", "n_clicks"), 
     Input("close1", "n_clicks")],
-    [State("modal", "is_open")],
-)
+    [State("modal", "is_open")],)
+
 def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+#-- Tabla Tipos de Hechos Viales
 
 @app.callback(Output('tabla', 'figure'), 
     [Input('mapa', 'clickData'),
@@ -209,6 +221,8 @@ def toggle_modal(open1, close1, modal):
 def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
 	return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
 
+#-- Tabla Tipos y Causas de Hechos Viales
+
 @app.callback(Output('treemap', 'figure'), 
     [Input('mapa', 'clickData'),
     Input('calendario', 'start_date'),
@@ -219,34 +233,38 @@ def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
 def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
 	return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
 
-
-
+#-- Tarjeta colapsable calendario
 
 @app.callback(
     Output("collapse_cal", "is_open"),
     [Input("collapse_button_cal", "n_clicks")],
-    [State("collapse_cal", "is_open")],
-)
+    [State("collapse_cal", "is_open")],)
+
 def render_collapse_button_cal(n, is_open):
     if n:
         return not is_open
     return is_open
 
+#-- Tarjeta colapsable dias de la semana
+
 @app.callback(
     Output("collapse_dsem", "is_open"),
     [Input("collapse_button_dsem", "n_clicks")],
-    [State("collapse_dsem", "is_open")],
-)
+    [State("collapse_dsem", "is_open")],)
+
 def render_collapse_button_dsem(n, is_open):
     if n:
         return not is_open
     return is_open
 
+
+#-- Tarjeta colapsable hora
+
 @app.callback(
     Output("collapse_hora", "is_open"),
     [Input("collapse_button_hora", "n_clicks")],
-    [State("collapse_hora", "is_open")],
-)
+    [State("collapse_hora", "is_open")],)
+
 def render_collapse_button_hora(n, is_open):
     if n:
         return not is_open
