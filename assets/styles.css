@@ -80,23 +80,23 @@
 
 
 .rc-slider-track {
-  background-color: #636EFA;
+  background-color: #767c85;
 }
 
 .rc-slider-dot-active {  
-  border-color: #636EFA;
-  border: solid 2px #636EFA;
+  border-color: #767c85;
+  border: solid 2px #767c85;
 }
 
 .rc-slider-handle {
-  background-color: #636EFA;
-  border-color: #636EFA;
+  background-color: #767c85;
+  border-color: #767c85;
 }
 
 .rc-slider-handle:hover {
-  border-color: #636EFA;
+  border-color: #767c85;
 }
 
 .rc-slider-handle-active:active {
-  border-color: #636EFA;
+  border-color: #767c85;
 }

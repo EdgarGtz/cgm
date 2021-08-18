@@ -19,7 +19,8 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 	render_opciones)
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa, render_down_data
+	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, render_tabla,
+	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora
 	)
 
 # Connect to config
@@ -153,9 +154,9 @@ def get(clickData, start_date, end_date, hora, diasem):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_fal(clickData, start_date, end_date, hora, diasem)
 
-#-- Mapa
+#-- Mapa interactivo
 
-@app.callback(Output('mapa', 'figure'), 
+@app.callback(Output('mapa_interac', 'figure'), 
     [Input('calendario', 'start_date'),
     Input('calendario', 'end_date'),
     Input('slider_hora', 'value'),
@@ -163,7 +164,7 @@ def get(clickData, start_date, end_date, hora, diasem):
             prevent_initial_call=False)
 
 def get(start_date, end_date, slider_hora, checklist_dias):
-    return render_mapa(start_date, end_date, slider_hora, checklist_dias)
+    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias)
 
 #-- Intersección - Hechos Viales por Año
 
@@ -186,6 +187,71 @@ def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
 
 def func(n_clicks):
     return render_down_data(n_clicks)
+
+@app.callback(
+    Output("modal", "is_open"),
+    [Input("open1", "n_clicks"), 
+    Input("close1", "n_clicks")],
+    [State("modal", "is_open")],
+)
+def toggle_modal(open1, close1, modal):
+    if open1 or close1:
+        return not modal
+    return modal
+
+@app.callback(Output('tabla', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+	return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+@app.callback(Output('treemap', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+	return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+
+
+
+@app.callback(
+    Output("collapse_cal", "is_open"),
+    [Input("collapse_button_cal", "n_clicks")],
+    [State("collapse_cal", "is_open")],
+)
+def render_collapse_button_cal(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse_dsem", "is_open"),
+    [Input("collapse_button_dsem", "n_clicks")],
+    [State("collapse_dsem", "is_open")],
+)
+def render_collapse_button_dsem(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse_hora", "is_open"),
+    [Input("collapse_button_hora", "n_clicks")],
+    [State("collapse_hora", "is_open")],
+)
+def render_collapse_button_hora(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
