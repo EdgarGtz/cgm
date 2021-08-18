@@ -27,7 +27,7 @@ def alfonsoreyes():
                 dbc.Card([
                     dbc.CardHeader(
                         dbc.Tabs([
-                            dbc.Tab(label='Alfonso Reyes', tab_id='alfonsoreyes_1',
+                            dbc.Tab(label='Conteo y Velocidad', tab_id='alfonsoreyes_1',
                                 disabled = False)
                         ],
                         id='tabs',
