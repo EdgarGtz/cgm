@@ -104,14 +104,14 @@ def alfonsoreyes_1():
                 # Calendario
                 dcc.DatePickerRange(
                     id = 'calendario',
-                    min_date_allowed = dt(2021, 6, 21),
-                    max_date_allowed = dt(2021, 7, 19),
-                    start_date = dt(2021, 6, 21),
-                    end_date = dt(2021, 7, 18),
+                    min_date_allowed = dt(2021, 7, 27),
+                    max_date_allowed = dt(2021, 8, 9),
+                    start_date = dt(2021, 7, 27),
+                    end_date = dt(2021, 8, 9),
                     first_day_of_week = 1,
                     minimum_nights = 0,
                     updatemode = 'bothdates',
-                    display_format = 'DD MMMM YYYY',
+                    display_format = 'DD MMM YYYY',
                     style = {'float': 'right'}         
                 )
             ], lg = 4)
@@ -203,7 +203,7 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
     if my_dropdown_0 == 'conteo' and periodo == 'hora':
 
         # Leer csv
-        conteo_hora = pd.read_csv('assets/camaras_viales_hora_correcto.csv')
+        conteo_hora = pd.read_csv('assets/camaras_viales_hora.csv')
 
         # Cambiar variables a string
         conteo_hora['hora'] = conteo_hora['hora'].astype(str)
@@ -228,8 +228,8 @@ def render_conteo(periodo, my_dropdown, my_dropdown_0, start_date, end_date):
         conteo2.update_traces(mode = 'markers+lines', fill='tozeroy',
             hovertemplate = '<b>%{y}</b><br>' +  conteo_hora['dia_semana'] + '<br>' + '%{x}')
         conteo2.update_xaxes(showgrid = False, showline = True,
-            title_text = ''),
-        conteo2.update_yaxes(title_text = ''),
+            title_text = '')
+        conteo2.update_yaxes(title_text = '')
         conteo2.update_layout(hoverlabel = dict(font_size = 16),
             hoverlabel_align = 'right')
 
