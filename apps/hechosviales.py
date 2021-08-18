@@ -219,7 +219,7 @@ def hv_general():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'80vh'}
+                            style={'height':'100%'}
                         ),
                     style={'padding':'0px'},
                     )
@@ -493,11 +493,11 @@ def hv_intersecciones():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'80vh'}
+                            style={'height':'100%'}
                         ),
                     style={'padding':'0px'},
                     )
-                ], className="text-white bg-dark"), 
+                ], style={'height':'96%'} ,className="text-white bg-dark"), 
 
                 html.Br(),
 
