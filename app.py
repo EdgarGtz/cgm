@@ -41,9 +41,11 @@ app.layout = html.Div([
 
 	dbc.NavbarSimple(
 		[
-			dbc.Button('Alfonso Reyes', href = '/apps/alfonsoreyes', color = 'light'),
+			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light'),
 
-			dbc.Button('Hechos Viales', href='/apps/hechosviales', color='light')
+			dbc.Button('Alfonso Reyes', href = '/apps/alfonsoreyes', color = 'light',
+				disabled = True)
+
 		],
 		brand='CGM',
 		brand_href='/apps/home'
