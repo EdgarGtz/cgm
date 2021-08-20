@@ -111,3 +111,23 @@
   border: none;
 
 }
+
+.custom-input-check {
+    position: relative;
+    margin-top: 0rem;
+    margin-left: 0rem;
+}
+
+
+.custom-control
+{
+  display: inline-block !important;
+}
+
+.custom-checkbox
+{
+  background-color: #F7F7F7 !important;
+  margin: 4px !important;
+  padding-top: 2px;
+  border-radius: 10px;
+}
