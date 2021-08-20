@@ -20,9 +20,10 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
-	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, toggle_modal, render_tabla,
+	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, render_tabla,
 	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora,
 	render_opciones_dos, render_opciones_dos_dos,
+	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv,
 	)
 
 # Connect to config
@@ -82,17 +83,18 @@ def get_opciones(tab):
 
 @app.callback(
 	Output('checklist_tipo_hv', 'options'),
- 	Input('hv_usvuln_opciones', 'value'))
+ 	Input('hv_usvuln_opciones', 'value'),
+ 	Input('hv_graves_opciones', 'value'))
 
-def get_opciones_dos(tab):
-    return render_opciones_dos(tab)
+def get_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
+    return render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones)
 
 @app.callback(
 	Output('checklist_tipo_hv', 'value'),
  	Input('hv_usvuln_opciones', 'value'))
 
-def get_opciones_dos_dos(tab):
-    return render_opciones_dos_dos(tab)
+def get_opciones_dos_dos(hv_usvuln_opciones):
+    return render_opciones_dos_dos(hv_usvuln_opciones)
 
 
 # Conteo y Velocidades
@@ -189,11 +191,15 @@ def get(clickData, start_date, end_date, hora, diasem):
     Input('checklist_dias', 'value'),
     Input('hv_graves_opciones', 'value'),
     Input('hv_usvuln_opciones', 'value'),
-    Input('checklist_tipo_hv', 'value')],
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')],
             prevent_initial_call=False)
 
-def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv):
-    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv)
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
+    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad)
 
 #-- Intersección - Hechos Viales por Año
 
@@ -230,6 +236,42 @@ def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+
+#-- Modal Severidad de Hechos Viales
+@app.callback(
+    Output("modal_sev", "is_open"),
+    [Input("open1_sev", "n_clicks"), 
+    Input("close1_sev", "n_clicks")],
+    [State("modal_sev", "is_open")],)
+
+def toggle_modal_sev(open1_sev, close1_sev, modal_sev):
+    if open1_sev or open1_sev:
+        return not modal_sev
+    return modal_sev
+
+#-- Modal Usuarios Afectados
+@app.callback(
+    Output("modal_usaf", "is_open"),
+    [Input("open1_usaf", "n_clicks"), 
+    Input("close1_usaf", "n_clicks")],
+    [State("modal_usaf", "is_open")],)
+
+def toggle_modal_usaf(open1_usaf, close1_usaf, modal_usaf):
+    if open1_usaf or close1_usaf:
+        return not modal_usaf
+    return modal_usaf
+
+@app.callback(
+    Output("modal_thv", "is_open"),
+    [Input("open1_thv", "n_clicks"), 
+    Input("close1_thv", "n_clicks")],
+    [State("modal_thv", "is_open")],)
+
+def toggle_modal_thv(open1_thv, close1_thv, modal_thv):
+    if open1_thv or close1_thv:
+        return not modal_thv
+    return modal_thv
 
 #-- Tabla Tipos de Hechos Viales
 
