@@ -114,7 +114,7 @@ def hv_general():
             dbc.Col([
 
                 dbc.Card([
-                   dbc.CardHeader(['Usa los filtros para hacer una búsqueda'])
+                   dbc.CardHeader(['Usa los filtros para hacer actualizar el mapa'])
                 ], className='bg-dark', style={'text-align':'center','color':'white'}),
 
                 html.Br(),
@@ -766,7 +766,7 @@ def hv_intersecciones():
                     dbc.Col([
 
                         dbc.Card([
-                           dbc.CardHeader(['Usa los filtros para hacer una búsqueda'])
+                           dbc.CardHeader(['Da click en una intersección y usa los filtros para hacer una búsqueda'])
                         ], className='bg-dark', style={'text-align':'center','color':'white'}),
 
                         html.Br(),
@@ -1190,7 +1190,7 @@ def hv_intersecciones():
 # Nombre
 def render_interseccion_nombre(clickData):
     if clickData is None:
-        return 'Da click en una intersección para conocer más'
+        return 'Haz click en una intersección para conocer más'
     else:
         return clickData['points'][0]['hovertext']
 
