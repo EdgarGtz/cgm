@@ -1651,7 +1651,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=12, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
