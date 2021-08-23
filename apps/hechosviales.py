@@ -753,167 +753,187 @@ def hv_intersecciones():
 
     return html.Div([
 
-        # Controles
-         dbc.Row([
+        html.Br(),
 
-            # Calendario
+        dbc.Row([
+
+            # Controles
             dbc.Col([
 
-                dbc.Card([
-                    dbc.CardHeader([
-                        dbc.Button([
-                            "Calendario",
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'3%','float':'right'},
-                                        className="pt-1")
-                            ],
-                            id="collapse_button_cal",
-                            className='btn btn-light btn-lg btn-block',
-                            color="primary",
-                            n_clicks=0,
-                            style={'font-size':'16px'},
-                        ),
+                # Calendario
+                dbc.Row([
 
-                    ], style={'text-align':'center'}, className='p-0'),
+                    dbc.Col([
 
-                    dbc.Collapse(
-                        dbc.CardBody([
+                        dbc.Card([
+                           dbc.CardHeader(['Usa los filtros para hacer una búsqueda'])
+                        ], className='bg-dark', style={'text-align':'center','color':'white'}),
 
-                            dcc.DatePickerRange(
-                                id = 'calendario',
-                                min_date_allowed = dt(2015, 1, 1),
-                                max_date_allowed = dt(2020, 12, 31),
-                                start_date = dt(2015, 1, 1),
-                                end_date = dt(2020, 12, 31),
-                                first_day_of_week = 1,
-                                className="d-flex justify-content-center"
-                            ),
-                        ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center'),
-                        id="collapse_cal",
-                        is_open=False,
-                    ),
+                        html.Br(),
 
-                ])
+                        dbc.Card([
+                            dbc.CardHeader([
+                                dbc.Button([
+                                    "Calendario",
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                                style={'width':'3%','float':'right'},
+                                                className="pt-1")
+                                    ],
+                                    id="collapse_button_cal",
+                                    className='btn btn-light btn-lg btn-block',
+                                    color="primary",
+                                    n_clicks=0,
+                                    style={'font-size':'16px'},
+                                ),
 
-            ], lg=4, md=4),
-            
-            # Día de la Semana
-            dbc.Col([
+                            ], style={'text-align':'center'}, className='p-0'),
 
-                dbc.Card([
-                    dbc.CardHeader([
-                        dbc.Button([
-                            "Día de la Semana",
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'3%','float':'right'},
-                                        className="pt-1")
-                            ],
-                            id="collapse_button_dsem",
-                            className='btn btn-light btn-lg btn-block',
-                            color="primary",
-                            n_clicks=0,
-                            style={'font-size':'16px'},
-                        ),
+                            dbc.Collapse(
+                                dbc.CardBody([
 
-                    ], style={'text-align':'center'}, className='p-0'),
-
-                    dbc.Collapse(
-                        dbc.CardBody([
-
-                            dcc.Checklist(
-                                id='checklist_dias',
-                                className="d-flex justify-content-center btn-group ",
-                                options=[
-                                    {'label': 'LU', 'value': 'Lunes'},
-                                    {'label': 'MA', 'value': 'Martes'},
-                                    {'label': 'MI', 'value': 'Miércoles'},
-                                    {'label': 'JU', 'value': 'Jueves'},
-                                    {'label': 'VI', 'value': 'Viernes'},
-                                    {'label': 'SA', 'value': 'Sábado'},
-                                    {'label': 'DO', 'value': 'Domingo'},
-                                ],
-                                value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                                inputClassName='form-check-input ',
-                                labelClassName="btn btn-secondary ",
-                                inputStyle={'background-color:':'#767c85!important;'},
-                                style={'display':'inline-block'}
+                                    dcc.DatePickerRange(
+                                        id = 'calendario',
+                                        min_date_allowed = dt(2015, 1, 1),
+                                        max_date_allowed = dt(2020, 12, 31),
+                                        start_date = dt(2015, 1, 1),
+                                        end_date = dt(2020, 12, 31),
+                                        first_day_of_week = 1,
+                                        className="d-flex justify-content-center"
+                                    ),
+                                ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center'),
+                                id="collapse_cal",
+                                is_open=True,
                             ),
 
-                        ], style={'height':'90px'}),
-                        id="collapse_dsem",
-                        is_open=False,
-                    ),
+                        ])
 
-                ])
+                    ]),
+
+                ]),
+                
+                html.Br(),
+
+                # Día de la Semana
+                dbc.Row([
+
+                    dbc.Col([
+
+                        dbc.Card([
+                            dbc.CardHeader([
+                                dbc.Button([
+                                    "Día de la Semana",
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                                style={'width':'3%','float':'right'},
+                                                className="pt-1")
+                                    ],
+                                    id="collapse_button_dsem",
+                                    className='btn btn-light btn-lg btn-block',
+                                    color="primary",
+                                    n_clicks=0,
+                                    style={'font-size':'16px'},
+                                ),
+
+                            ], style={'text-align':'center'}, className='p-0'),
+
+                            dbc.Collapse(
+                                dbc.CardBody([
+
+                                    dcc.Checklist(
+                                        id='checklist_dias',
+                                        className="d-flex justify-content-center btn-group ",
+                                        options=[
+                                            {'label': 'LU', 'value': 'Lunes'},
+                                            {'label': 'MA', 'value': 'Martes'},
+                                            {'label': 'MI', 'value': 'Miércoles'},
+                                            {'label': 'JU', 'value': 'Jueves'},
+                                            {'label': 'VI', 'value': 'Viernes'},
+                                            {'label': 'SA', 'value': 'Sábado'},
+                                            {'label': 'DO', 'value': 'Domingo'},
+                                        ],
+                                        value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                        inputClassName='form-check-input ',
+                                        labelClassName="btn btn-secondary ",
+                                        inputStyle={'background-color:':'#767c85!important;'},
+                                        style={'display':'inline-block'}
+                                    ),
+
+                                ], style={'height':'90px'}),
+                                id="collapse_dsem",
+                                is_open=True,
+                            ),
+
+                        ])
+
+                    ]),
+
+                ]),
+
+                html.Br(),
+
+                # Horario
+                dbc.Row([
+
+                    dbc.Col([
+
+                        dbc.Card([
+                            dbc.CardHeader([
+                                dbc.Button([
+                                    "Horario",
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                                style={'width':'3%','float':'right'},
+                                                className="pt-1")
+                                    ],
+                                    id="collapse_button_hora",
+                                    className='btn btn-light btn-lg btn-block',
+                                    color="primary",
+                                    n_clicks=0,
+                                    style={'font-size':'16px'},
+                                ),
+
+
+
+                            ], style={'text-align':'center'}, className='p-0'),
+
+                            dbc.Collapse(
+                                dbc.CardBody([
+
+                                    html.Div(
+                                        dcc.RangeSlider(
+                                            id='slider_hora',
+                                            min=0,
+                                            max=23,
+                                            value=[0, 23],
+                                            marks={
+                                                0: {'label': '0'},
+                                                3: {'label': '3'},
+                                                6: {'label': '6'},
+                                                9: {'label': '9'},
+                                                12: {'label': '12'},
+                                                15: {'label': '15'},
+                                                18: {'label': '18'},
+                                                21: {'label': '21'},
+                                                23: {'label': '23'}
+                                            },
+                                            allowCross=False,
+                                            dots=True,
+                                            tooltip={'always_visible': False , "placement":"bottom"},
+                                            updatemode='drag'
+                                        ), className='pt-2'
+                                    ),
+
+                                ], style={'height':'90px'}),
+                                id="collapse_hora",
+                                is_open=True,
+                            ),
+
+                        ])
+                        
+                    ]),
+
+                ]),
 
             ],lg=4, md=4),
 
-            # Horario
-            dbc.Col([
-
-                dbc.Card([
-                    dbc.CardHeader([
-                        dbc.Button([
-                            "Horario",
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'3%','float':'right'},
-                                        className="pt-1")
-                            ],
-                            id="collapse_button_hora",
-                            className='btn btn-light btn-lg btn-block',
-                            color="primary",
-                            n_clicks=0,
-                            style={'font-size':'16px'},
-                        ),
-
-
-
-                    ], style={'text-align':'center'}, className='p-0'),
-
-                    dbc.Collapse(
-                        dbc.CardBody([
-
-                            html.Div(
-                                dcc.RangeSlider(
-                                    id='slider_hora',
-                                    min=0,
-                                    max=23,
-                                    value=[0, 23],
-                                    marks={
-                                        0: {'label': '0'},
-                                        3: {'label': '3'},
-                                        6: {'label': '6'},
-                                        9: {'label': '9'},
-                                        12: {'label': '12'},
-                                        15: {'label': '15'},
-                                        18: {'label': '18'},
-                                        21: {'label': '21'},
-                                        23: {'label': '23'}
-                                    },
-                                    allowCross=False,
-                                    dots=True,
-                                    tooltip={'always_visible': False , "placement":"bottom"},
-                                    updatemode='drag'
-                                ), className='pt-2'
-                            ),
-
-                        ], style={'height':'90px'}),
-                        id="collapse_hora",
-                        is_open=False,
-                    ),
-
-                ])
-                
-            ], lg=4, md=4),
-
-
-        ], className="d-flex justify-content-between ",),
-
-        html.Br(),
-
-        # Mapa y principales indicadores
-        dbc.Row([
-            
             # Mapa
             dbc.Col([
 
@@ -937,13 +957,19 @@ def hv_intersecciones():
                         ),
                     style={'padding':'0px'},
                     )
-                ], style={'height':'96%'} ,className="text-white bg-dark"), 
+                ], style={'height':'100%'} ,className="text-white bg-dark"), 
 
-                html.Br(),
+            ],lg=8, md=8)
 
-            ],lg=6, md=6),
 
-            # Principales Indicadores
+        ], className="d-flex justify-content-between", style={'height':'60vh'}),
+
+        html.Br(),
+        html.Br(),
+
+        # Principales indicadores
+        dbc.Row([
+
             dbc.Col([
 
                 # Tarjetas Indicadores
@@ -1019,9 +1045,11 @@ def hv_intersecciones():
 
                 html.Br(),
 
-            ], lg=6, md=6),
+            ]),
 
         ]),
+
+        html.Br(),
 
         # Gráficas Tipos / Tipo y Causa
         dbc.Row([
