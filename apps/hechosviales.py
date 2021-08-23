@@ -483,7 +483,7 @@ def hv_general():
                                 is_open=True,
                             ),
 
-                        ])
+                        ]),
 
                     ],lg=12, md=12),
 
@@ -681,12 +681,22 @@ def hv_general():
                                         style={'display':'inline-block'}
                                     ),
 
+                                    html.Br(),
+                                    html.Br(),
+
+                                    html.P([
+                                        html.I([
+                                            html.B('Nota:'),
+                                            ' Los filtros de "sexo", "edad" y "tipo de vehículo" se activan al seleccionar "Afectados" o "Responsables".'
+                                            ])
+                                    ]),
+
                                 ]),
                                 id="collapse_hora",
                                 is_open=False,
                             ),
 
-                        ])
+                        ]),
                         
                     ], lg=12, md=12),
 
@@ -2703,7 +2713,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2783,7 +2793,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2871,7 +2881,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2960,7 +2970,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3048,7 +3058,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3137,7 +3147,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3219,7 +3229,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3299,7 +3309,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3390,7 +3400,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3482,7 +3492,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3574,7 +3584,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3666,7 +3676,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3750,7 +3760,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3830,7 +3840,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3918,7 +3928,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4007,7 +4017,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4095,7 +4105,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4184,7 +4194,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4266,7 +4276,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4346,7 +4356,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4437,7 +4447,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4529,7 +4539,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4620,7 +4630,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4712,7 +4722,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5a142",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
