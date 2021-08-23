@@ -1320,7 +1320,7 @@ def render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
         return [
             {'label': ' Alcance', 'value': 'Alcance'},
             {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caída de Persona'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
             {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
             {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
             {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
@@ -1365,7 +1365,7 @@ def render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
         return [
             {'label': ' Alcance', 'value': 'Alcance'},
             {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caída de Persona'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
             {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
             {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
             {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
@@ -1408,7 +1408,7 @@ def render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
         return [
             {'label': ' Alcance', 'value': 'Alcance'},
             {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caída de Persona'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
             {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
             {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
             {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
@@ -1484,7 +1484,7 @@ def render_opciones_dos_dos(hv_usvuln_opciones):
 
     if hv_usvuln_opciones == 'todos':
 
-       return ['Alcance','Atropello','Caída de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
 
     elif hv_usvuln_opciones == 'Peaton':
 
@@ -1502,7 +1502,7 @@ def render_opciones_dos_dos(hv_usvuln_opciones):
 
     elif hv_usvuln_opciones == 'todos' and hv_graves_opciones == 'graves':
 
-        return ['Alcance','Atropello','Caída de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
 
     elif hv_usvuln_opciones == 'Peaton' and hv_graves_opciones == 'graves':
 
@@ -1520,7 +1520,7 @@ def render_opciones_dos_dos(hv_usvuln_opciones):
 
     elif hv_usvuln_opciones == 'todos' and hv_graves_opciones == 'lesionados':
 
-        return ['Alcance','Atropello','Caída de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
 
     elif hv_usvuln_opciones == 'Peaton' and hv_graves_opciones == 'lesionados':
 
@@ -1538,7 +1538,7 @@ def render_opciones_dos_dos(hv_usvuln_opciones):
 
     elif hv_usvuln_opciones == 'todos' and hv_graves_opciones == 'fallecidos':
 
-        return ['Alcance','Atropello','Caída de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
 
     elif hv_usvuln_opciones == 'Peaton' and hv_graves_opciones == 'fallecidos':
 
@@ -1574,7 +1574,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=1, 
-            zoom=13,
+            zoom=12.5,
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
             opacity=0.9))
 
