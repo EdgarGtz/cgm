@@ -109,28 +109,6 @@ def hv_general():
 
         # Mapa y filtros
         dbc.Row([
-            
-            # Mapa
-            dbc.Col([
-
-                dbc.Card([
-
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'mapa_interac',
-                            figure = {},
-                            config={
-                            'displayModeBar': False
-                            },
-                            style={'height':'80vh'}
-                        ),
-                    style={'padding':'0px'},
-                    )
-                ]), 
-
-                html.Br(),
-
-            ],lg=8, md=8),
 
             # Controles
             dbc.Col([
@@ -513,7 +491,7 @@ def hv_general():
 
                 html.Br(),
                 
-                # Responsables y afectados
+                # Búsqueda avanzada
                 dbc.Row([
 
                     dbc.Col([
@@ -521,7 +499,7 @@ def hv_general():
                         dbc.Card([
                             dbc.CardHeader([
                                 dbc.Button([
-                                    "Responsables y Afectados",
+                                    "Búsqueda avanzada",
                                     html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
                                                 style={'width':'3%','float':'right'},
                                                 className="pt-1")
@@ -540,8 +518,69 @@ def hv_general():
                             dbc.Collapse(
                                 dbc.CardBody([
 
-                                    html.P(' Afectado o responsable:',
+                                    html.Div([
+                                        
+                                        html.Span(
+                                            dbc.Button(
+                                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                                        style={'float':'right'},
+                                                        className="p-0 img-fluid"), 
+                                                id="open1_sev", 
+                                                n_clicks=0, 
+                                                style={'display':'inline-block',
+                                                        'float':'left','padding':'0', 
+                                                        'width':'5%','background-color':'transparent',
+                                                        'border-color':'transparent',},
+                                                className='rounded-circle pt-1'
+
+                                                ),
+
+                                            id="tooltip-target-sev",
+                                        ),
+
+                                        dbc.Tooltip(
+                                            "Más información",
+                                            target="tooltip-target-sev",
+                                        ),
+                                            
+                                        dbc.Modal([
+
+                                            dbc.ModalHeader(html.B("Severidad de Hechos Viales")),
+
+                                            dbc.ModalBody([
+                                                html.Ul([
+                                                    html.Li([html.B('Afectado:'),' Sujeto perjudicado del siniestro vial.']),
+                                                    html.Li([html.B('Responsable:'),' Sujeto causante del siniestro vial.']),
+                                                    html.Br(),
+                                                    html.Li([
+                                                        html.P([html.B('Nota:'), 
+                                                            ' Es importante destacar que, para el caso de los atropellos al momento de registrar la información sólo se captura de manera digital la información sobre el contexto del hecho vial y de los vehículos, mientras que la información del perfil de las personas que no transitan en un vehículo (peatonas) sólo se registra de manera física en el parte vial y no digital, por lo que actualmente no es posible conocer el perfil demográfico (edad, sexo) de las personas atropelladas.',]),
+                                                            ])
+                                                ], style={'list-style-type':'none'}, className="p-1"),
+
+                                            ],style={"textAlign":"justify",'font-size':'100%'}),
+
+                                            dbc.ModalFooter([
+                                                
+                                                dbc.Button(
+                                                    "Cerrar", 
+                                                    id="close1_sev", 
+                                                    className="ml-auto btn btn-secondary", 
+                                                    n_clicks=0
+                                                )
+                                            ]),
+
+                                            ],
+                                            id="modal_sev",
+                                            centered=True,
+                                            size="lg",
+                                            is_open=False,
+                                        ),
+
+                                        html.P(' Afectado o responsable:',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
+
+                                    ]),
 
                                     dbc.RadioItems(
                                         id = 'hv_afres_opciones',
@@ -572,7 +611,7 @@ def hv_general():
                                             {'label': 'Todos', 'value': 'todos'},
                                             {'label': 'Masculino', 'value': 'Masculino'},
                                             {'label': 'Femenino', 'value': 'Femenino'},
-                                        ]
+                                        ],
                                     ),
 
                                     html.Br(),
@@ -587,7 +626,7 @@ def hv_general():
                                         id='slider_edad',
                                         min=0,
                                         max=85,
-                                        value=[0, 85],
+                                        value=[0,85],
                                         step=5,
                                         marks={
                                             1: {'label': '0'},
@@ -613,7 +652,7 @@ def hv_general():
                                         dots=True,
                                         tooltip={'always_visible': False , "placement":"bottom"},
                                         updatemode='drag',
-                                        className='px-2 pt-2'
+                                        className='px-2 pt-2',
                                     ),
 
                                     html.Br(),
@@ -654,7 +693,29 @@ def hv_general():
                 ])
 
 
-            ],lg=4, md=4)
+            ],lg=4, md=4),
+            
+            # Mapa
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'mapa_interac',
+                            figure = {},
+                            config={
+                            'displayModeBar': False
+                            },
+                            style={'height':'80vh'}
+                        ),
+                    style={'padding':'0px'},
+                    )
+                ]), 
+
+                html.Br(),
+
+            ],lg=8, md=8),
 
         ]),
 
@@ -845,31 +906,6 @@ def hv_intersecciones():
                 
             ], lg=4, md=4),
 
-            # Horario
-            dbc.Col([
-
-                dbc.Card([
-                    dbc.CardHeader([
-                        dbc.Button([
-                            "Hechos Viales Graves",
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                        style={'width':'3%','float':'right'},
-                                        className="pt-1")
-                            ],
-                            id="collapse_button_hv_graves",
-                            className='btn btn-light btn-lg btn-block',
-                            color="primary",
-                            n_clicks=0,
-                            style={'font-size':'16px'},
-                        ),
-
-
-
-                    ], style={'text-align':'center'}, className='p-0'),
-
-                ])
-                
-            ], lg=4, md=4),
 
         ], className="d-flex justify-content-between ",),
 
@@ -1615,7 +1651,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},

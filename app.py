@@ -23,7 +23,7 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, render_tabla,
 	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora,
 	render_opciones_dos, render_opciones_dos_dos,
-	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv,
+	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, 
 	)
 
 # Connect to config
