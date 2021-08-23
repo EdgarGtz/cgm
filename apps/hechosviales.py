@@ -1728,7 +1728,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -1813,7 +1813,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -1899,7 +1899,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -1984,7 +1984,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2070,7 +2070,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2149,7 +2149,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2226,7 +2226,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2314,7 +2314,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2403,7 +2403,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2490,7 +2490,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2579,7 +2579,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2661,7 +2661,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2675,7 +2675,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2741,7 +2741,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2755,7 +2755,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2829,7 +2829,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2843,7 +2843,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -2918,7 +2918,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -2932,7 +2932,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3006,7 +3006,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3020,7 +3020,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3095,7 +3095,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3109,7 +3109,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3177,7 +3177,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3191,7 +3191,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3257,7 +3257,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3271,7 +3271,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3348,7 +3348,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3362,7 +3362,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3440,7 +3440,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3454,7 +3454,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3532,7 +3532,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3546,7 +3546,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3624,7 +3624,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3638,7 +3638,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5dd42",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3708,7 +3708,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3722,7 +3722,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3788,7 +3788,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3802,7 +3802,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3876,7 +3876,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3890,7 +3890,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -3965,7 +3965,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -3979,7 +3979,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4053,7 +4053,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4067,7 +4067,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4142,7 +4142,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4156,7 +4156,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4224,7 +4224,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4238,7 +4238,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4304,7 +4304,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4318,7 +4318,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4395,7 +4395,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4409,7 +4409,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4487,7 +4487,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4501,7 +4501,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4578,7 +4578,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4592,7 +4592,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4670,7 +4670,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4684,7 +4684,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f5a142",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4752,7 +4752,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4766,7 +4766,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -4832,7 +4832,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4846,7 +4846,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
@@ -4920,7 +4920,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -4934,7 +4934,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -5009,7 +5009,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5023,7 +5023,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
@@ -5096,7 +5096,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5110,7 +5110,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -5185,7 +5185,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5199,7 +5199,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
@@ -5266,7 +5266,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5280,7 +5280,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -5346,7 +5346,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5360,7 +5360,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
@@ -5437,7 +5437,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5451,7 +5451,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -5529,7 +5529,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5543,15 +5543,13 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
 
     
     # HECHOS VIALES FALLECIDOS -- Responsables
-
-     # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
     elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_usvuln_opciones == 'todos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
 
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
@@ -5620,7 +5618,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5634,7 +5632,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac
@@ -5712,7 +5710,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
             size = 'hechos_viales',
             size_max=20, 
-            zoom=13, 
+            zoom=12.5, 
             hover_name='interseccion', 
             custom_data=['lesionados', 'fallecidos'],
             hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
@@ -5726,7 +5724,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#42f581",
+        mapa_interac.update_traces(marker_color="#f54242",
             unselected_marker_opacity=.5)
 
         return mapa_interac   
