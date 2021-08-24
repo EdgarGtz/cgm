@@ -22,8 +22,9 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, render_tabla,
 	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora,
-	render_opciones_dos, render_opciones_dos_dos,
-	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, 
+	#render_opciones_dos, render_opciones_dos_dos,
+	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, toggle_modal_afres,
+    render_hv_totales, render_hv_les_totales, render_hv_fall_totales
 	)
 
 # Connect to config
@@ -79,22 +80,6 @@ def display_page(pathname):
 
 def get_opciones(tab):
     return render_opciones(tab)
-
-
-@app.callback(
-	Output('checklist_tipo_hv', 'options'),
- 	Input('hv_usvuln_opciones', 'value'),
- 	Input('hv_graves_opciones', 'value'))
-
-def get_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
-    return render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones)
-
-@app.callback(
-	Output('checklist_tipo_hv', 'value'),
- 	Input('hv_usvuln_opciones', 'value'))
-
-def get_opciones_dos_dos(hv_usvuln_opciones):
-    return render_opciones_dos_dos(hv_usvuln_opciones)
 
 
 # Conteo y Velocidades
@@ -190,7 +175,7 @@ def get(clickData, start_date, end_date, hora, diasem):
     Input('slider_hora', 'value'),
     Input('checklist_dias', 'value'),
     Input('hv_graves_opciones', 'value'),
-    Input('hv_usvuln_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
     Input('checklist_tipo_hv', 'value'),
     Input('hv_afres_opciones', 'value'),
     Input('hv_sexo_opciones', 'value'),
@@ -198,8 +183,60 @@ def get(clickData, start_date, end_date, hora, diasem):
     Input('slider_edad', 'value')],
             prevent_initial_call=False)
 
-def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
-    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+#-- Hechos viales totales
+
+@app.callback(Output('hv_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+#-- Lesionados totales
+
+@app.callback(Output('hv_les_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_les_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+#-- Fallecidos totales
+
+@app.callback(Output('hv_fall_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_fall_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
 
 #-- Intersección - Hechos Viales por Año
 
@@ -272,6 +309,19 @@ def toggle_modal_thv(open1_thv, close1_thv, modal_thv):
     if open1_thv or close1_thv:
         return not modal_thv
     return modal_thv
+
+
+#-- Afectado o responsable
+@app.callback(
+    Output("modal_afres", "is_open"),
+    [Input("open1_afres", "n_clicks"), 
+    Input("close1_afres", "n_clicks")],
+    [State("modal_afres", "is_open")],)
+
+def toggle_modal_afres(open1_afres, close1_afres, modal_afres):
+    if open1_afres or close1_afres:
+        return not modal_afres
+    return modal_afres
 
 #-- Tabla Tipos de Hechos Viales
 
