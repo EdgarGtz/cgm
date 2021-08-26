@@ -70,6 +70,9 @@ encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
 img2 = 'assets/info.png' # replace with your own image
 encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
 
+img3 = 'assets/download.png' # replace with your own image
+encoded_img3 = base64.b64encode(open(img3, 'rb').read()).decode('ascii')
+
 #----------
 
 # Layout - General
@@ -319,7 +322,7 @@ def hv_general():
 
                                             dbc.ModalBody([
                                                 html.Ul([
-                                                    html.Li([html.B('Auto:'),' Incluye a personas que conducen auto, camión de pasajeros, camioneta, carga pesada, mini van, pickup, trailer, tren.']),
+                                                    html.Li([html.B('Auto:'),' Acumulado de personas que conducen auto, camión de pasajeros, camioneta, carga pesada, mini van, pickup, trailer y tren.']),
                                                     html.Li([html.B('Peatón:'),' Personas que caminan.']),
                                                     html.Li([html.B('Ciclista:'),' Personas que utilizan la bicicleta como modo de transporte.']),
                                                     html.Li([html.B('Motociclista:'),' Personas que utilizan la motocicleta como modo de transporte.']),
@@ -751,18 +754,25 @@ def hv_general():
                     dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('Datos de hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública y procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
+                            dbc.Col(['Datos de hechos viales desde el 2015 proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
+                                html.Br(),
+                                html.I('(Última actualización Julio 2021.)')
+                                ], style={'display':'inline-block'},lg=10, md=10),
                             dbc.Col(
                                 html.Div([
-                                    html.Button(
-                                        html.B("Descarga la base de datos completa"), 
+                                    html.Button([
+                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                style={'width':'6%','float':'left'},
+                                                className="pt-1"),
+                                        html.B("Descargar"),
+                                        ], 
                                         id="btn_csv",
                                         className="btn",
                                         n_clicks=None,
                                         style={'float':'right','background-color':'#545B62','color':'white'}
                                     ),
                                     Download(id="download-dataframe-csv")
-                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
+                                ], className='d-flex justify-content-center'), lg=2, md=2, style={'display':'inline-block'}, className='align-self-center',
                             )
                         ])
 
@@ -6230,7 +6240,8 @@ def hv_intersecciones():
                             figure = {},
                             style={'padding':'0px'},
                             config={'displaylogo': False}
-                            )
+                            ),
+                    style={'padding':'0px'}
                     )
                 ], style={'height':'550px'}),
             ])
