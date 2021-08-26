@@ -221,8 +221,8 @@ def hv_general():
                                                 id="open1_sev", 
                                                 n_clicks=0, 
                                                 style={'display':'inline-block',
-                                                        'float':'left','padding':'0', 
-                                                        'width':'3%','background-color':'transparent',
+                                                        'float':'left','padding':'5px 0 0 0', 
+                                                        'width':'15px','background-color':'transparent',
                                                         'border-color':'transparent','padding-top':'2px'},
                                                 className='rounded-circle'
 
@@ -297,8 +297,8 @@ def hv_general():
                                                 id="open1_usaf", 
                                                 n_clicks=0, 
                                                 style={'display':'inline-block',
-                                                        'float':'left','padding':'0', 
-                                                        'width':'3%','background-color':'transparent',
+                                                        'float':'left','padding':'5px 0 0 0', 
+                                                        'width':'15px','background-color':'transparent',
                                                         'border-color':'transparent','padding-top':'2px'},
                                                 className='rounded-circle'
 
@@ -375,8 +375,8 @@ def hv_general():
                                                 id="open1_thv", 
                                                 n_clicks=0, 
                                                 style={'display':'inline-block',
-                                                        'float':'left','padding':'0', 
-                                                        'width':'3%','background-color':'transparent',
+                                                        'float':'left','padding':'5px 0 0 0', 
+                                                        'width':'15px','background-color':'transparent',
                                                         'border-color':'transparent','padding-top':'2px'},
                                                 className='rounded-circle'
 
@@ -494,8 +494,8 @@ def hv_general():
                                                 id="open1_afres", 
                                                 n_clicks=0, 
                                                 style={'display':'inline-block',
-                                                        'float':'left','padding':'0', 
-                                                        'width':'3%','background-color':'transparent',
+                                                        'float':'left','padding':'5px 0 0 0', 
+                                                        'width':'15px','background-color':'transparent',
                                                         'border-color':'transparent','padding-top':'2px'},
                                                 className='rounded-circle'
 
