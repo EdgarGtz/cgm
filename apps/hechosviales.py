@@ -5132,6 +5132,710 @@ def render_hv_fall_totales(start_date, end_date, slider_hora, checklist_dias, hv
 
     # -------------------------------------------
 
+# Checklist de tipos de hechos viales dependiendo de los usuarios afectados opciones
+def render_opciones_dos(hv_usu_opciones, hv_graves_opciones):
+
+    # Todos
+    
+    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]    
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+    # Lesionados
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]        
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]  
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+    # Fallecidos
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]  
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+# Checklist de tipos de hechos viales dependiendo de los usuarios afectados valores
+def render_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
+    
+    # Todos
+
+    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Atropello']
+
+    # Lesionados
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',] 
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente','Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Atropello']
+
+    # Fallecidos
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Atropello', 'Choque Diverso']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Atropello', 'Choque Diverso']
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Choque Diverso']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Atropello']
 
 #----------
 
@@ -6305,716 +7009,5 @@ def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
-
-
-
-
-
-
-# Checklist de tipos de hechos viales dependiendo de los usuarios afectados opciones
-def render_opciones_dos(hv_usu_opciones, hv_graves_opciones):
-
-    # Todos
-    
-    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ] 
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]    
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return [
-            {'label': ' Atropello', 'value': 'Atropello'},
-        ]
-
-    # Lesionados
-
-    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ] 
-    
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-
-    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]        
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]  
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-
-    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return [
-            {'label': ' Atropello', 'value': 'Atropello'},
-        ]
-
-    # Fallecidos
-
-    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ] 
-    
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-        ]
-
-    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-        ]  
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-
-    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-        ]
-    
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return [
-            {'label': ' Atropello', 'value': 'Atropello'},
-        ]
-
-# Checklist de tipos de hechos viales dependiendo de los usuarios afectados valores
-def render_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
-    
-    # Todos
-
-    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
-
-       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-       return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
-
-        return ['Atropello']
-
-    # Lesionados
-
-    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-    
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
-
-    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Caida de Persona','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',] 
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',]
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-        
-    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente','Choque Diverso', 'Choque Lateral', 'Estrellamiento']
-        
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
-
-        return ['Atropello']
-
-    # Fallecidos
-
-    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-    
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-
-    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
-        
-    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance', 'Atropello', 'Choque Diverso']
-    
-    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
- 
-    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance', 'Atropello', 'Choque Diverso']
-
-    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
-    
-    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance', 'Choque Diverso']
-    
-    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
-    
-    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
-
-    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
-    
-    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
-
-        return ['Atropello']
-
 
 #----------
