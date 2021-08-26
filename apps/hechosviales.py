@@ -50,44 +50,18 @@ def hechosviales():
 
     ])
 
-# Intersecciones
+# Display tabs
+def render_hechosviales(tab):
+    if tab == 'hv_intersecciones':
+        return hv_intersecciones()
 
-# Map
+    elif tab == 'hv_general':
+        return hv_general()
 
-# Mapbox Access Token
-mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
-px.set_mapbox_access_token(mapbox_access_token)
-
-# Tabla de intersecciones con coordenadas mapeadas
-hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-coords = hvi.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-coords['hechos_viales'] = ['1']*coords['interseccion'].count()
-coords['hechos_viales'] = coords['hechos_viales'].astype(int)
-mapa_data = coords
-
-# Graph
-mapa = go.Figure(
-    px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-    size = 'hechos_viales',
-    size_max=5, 
-    zoom=12.8, 
-    hover_name='interseccion', 
-    #custom_data=['lesionados', 'fallecidos'],
-    hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
-    opacity=1))
-
-mapa.update_layout(clickmode='event+select', 
-     mapbox=dict(
-        accesstoken=mapbox_access_token,
-        center=dict(lat=25.6572, lon=-100.3689),
-        style="dark"
-    ),
-    margin = dict(t=0, l=0, r=0, b=0)
-)
-mapa.update_traces(marker_color="#c6cc14",
-    selected_marker_color="#636EFA",
-    selected_marker_size=28,
-    unselected_marker_opacity=.5)
+# Descargar Excel
+def render_down_data(n_clicks):
+    down_data = send_file("assets/hechosviales_sp.xlsx")
+    return down_data
 
 # Imágenes
 img1 = 'assets/down-arrow.png' # replace with your own image
@@ -121,12 +95,12 @@ def hv_general():
                         dbc.Card([
                             dbc.CardHeader([
                                 dbc.Button([
-                                    "Fechas",
+                                    "Fecha",
                                     html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
                                                 style={'width':'3%','float':'right'},
                                                 className="pt-1")
                                     ],
-                                    id="collapse_button_cal",
+                                    id="collapse_button_fecha",
                                     className='btn btn-light btn-lg btn-block',
                                     color="primary",
                                     n_clicks=0,
@@ -155,19 +129,21 @@ def hv_general():
 
                                     html.Br(),
 
-                                    dcc.Checklist(
-                                        id='checklist_dias',
-                                        className="d-flex justify-content-center btn-group ",
-                                        inputClassName='form-check-input custom-input-check',
-                                        labelClassName="btn btn-secondary ",
+                                    
+
+                                    dbc.Checklist(
+                                        id = 'checklist_dias',
+                                        className = 'radio-group btn-group d-flex justify-content-center',
+                                        labelClassName = 'btn btn-secondary',
+                                        labelCheckedClassName = 'active',
                                         options=[
-                                            {'label': ' LU', 'value': 'Lunes'},
-                                            {'label': ' MA', 'value': 'Martes'},
-                                            {'label': ' MI', 'value': 'Miércoles'},
-                                            {'label': ' JU', 'value': 'Jueves'},
-                                            {'label': ' VI', 'value': 'Viernes'},
-                                            {'label': ' SA', 'value': 'Sábado'},
-                                            {'label': ' DO', 'value': 'Domingo'},
+                                            {'label': ' LUN', 'value': 'Lunes'},
+                                            {'label': ' MAR', 'value': 'Martes'},
+                                            {'label': ' MIE', 'value': 'Miércoles'},
+                                            {'label': ' JUE', 'value': 'Jueves'},
+                                            {'label': ' VIE', 'value': 'Viernes'},
+                                            {'label': ' SAB', 'value': 'Sábado'},
+                                            {'label': ' DOM', 'value': 'Domingo'},
                                         ],
                                         value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                                         style={'display':'inline-block'}
@@ -223,7 +199,7 @@ def hv_general():
                                                 style={'width':'3%','float':'right'},
                                                 className="pt-1")
                                     ],
-                                    id="collapse_button_dsem",
+                                    id="collapse_button_hv",
                                     className='btn btn-light btn-lg btn-block',
                                     color="primary",
                                     n_clicks=0,
@@ -248,7 +224,7 @@ def hv_general():
                                                         'float':'left','padding':'0', 
                                                         'width':'5%','background-color':'transparent',
                                                         'border-color':'transparent',},
-                                                className='rounded-circle pt-1'
+                                                className='rounded-circle pt-0'
 
                                                 ),
 
@@ -262,20 +238,13 @@ def hv_general():
                                             
                                         dbc.Modal([
 
-                                            dbc.ModalHeader(html.B("Severidad de Hechos Viales")),
+                                            dbc.ModalHeader(html.B("Gravedad de Hechos Viales")),
 
                                             dbc.ModalBody([
                                                 html.Ul([
-                                                    html.Li([html.B('Todos:'),' Hechos viales graves y no graves.']),
-                                                    html.Li([html.B('Graves:'),' Hechos viales en los que resultaron personas lesionadas o fallecidas.']),
+                                                    html.Li([html.B('Todos:'),' Hechos viales con lesionados y fallecidos y sin lesionados y fallecidos.']),
                                                     html.Li([html.B('Lesionados:'),' Hechos viales en los que resultaron personas lesionadas.']),
                                                     html.Li([html.B('Fallecidos:'),' Hechos viales en los que resultaron personas fallecidas.']),
-                                                    html.Br(),
-                                                    html.Li([
-                                                        html.P([html.B('Nota:'), 
-                                                            ' Es importante destacar que, de acuerdo con la información proporcionada por la Secretaría de Seguridad Pública, es posible identificar la cantidad de personas lesionadas o fallecidas para cada hecho vial, pero no se puede reconocer si esta cantidad corresponde al responsable o al afectado.',
-                                                            html.Br(),html.Br(), 'De la misma manera, en el caso de que en un hecho vial resulte más de una persona lesionada y que además también ocurran decesos, no es posible identificar de manera digital a cada involucrado.']),
-                                                            ])
                                                 ], style={'list-style-type':'none'}, className="p-1"),
 
                                             ],style={"textAlign":"justify",'font-size':'100%'}),
@@ -297,7 +266,7 @@ def hv_general():
                                             is_open=False,
                                         ),
 
-                                        html.P(' Severidad de hecho vial:',
+                                        html.P(' Gravedad',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     ]),
@@ -310,7 +279,6 @@ def hv_general():
                                         value = 'todos',
                                         options = [
                                             {'label': 'Todos', 'value': 'todos'},
-                                            {'label': 'Graves', 'value': 'graves'},
                                             {'label': 'Lesionados', 'value': 'lesionados'},
                                             {'label': 'Fallecidos', 'value': 'fallecidos'},
                                         ]
@@ -332,7 +300,7 @@ def hv_general():
                                                         'float':'left','padding':'0', 
                                                         'width':'5%','background-color':'transparent',
                                                         'border-color':'transparent',},
-                                                className='rounded-circle pt-1'
+                                                className='rounded-circle pt-0'
 
                                                 ),
 
@@ -347,11 +315,11 @@ def hv_general():
                                     
                                         dbc.Modal([
 
-                                            dbc.ModalHeader(html.B("Usuarios involucrados")),
+                                            dbc.ModalHeader(html.B("Usuario")),
 
                                             dbc.ModalBody([
                                                 html.Ul([
-                                                    html.Li([html.B('Motorizados:'),' Auto, camión de pasajeros, camioneta, carga pesada, mini van, pickup, trailer, tren.']),
+                                                    html.Li([html.B('Autos:'),' Auto, camión de pasajeros, camioneta, carga pesada, mini van, pickup, trailer, tren.']),
                                                     html.Li([html.B('Peatón:'),' Personas que caminan.']),
                                                     html.Li([html.B('Ciclista:'),' Personas que utilizan la bicicleta como modo de transporte.']),
                                                     html.Li([html.B('Motociclista:'),' Personas que utilizan la motocicleta como modo de transporte.']),
@@ -376,7 +344,7 @@ def hv_general():
                                             is_open=False,
                                         ),
 
-                                        html.P('Usuarios involucrados:', style={'width':'90%','float':'left'}, className='pl-1'),
+                                        html.P(' Usuario', style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     ]),   
 
@@ -387,7 +355,7 @@ def hv_general():
                                         labelCheckedClassName = 'active',
                                         value = ['Motorizado','Peaton','Bicicleta','Motocicleta'],
                                         options = [
-                                            {'label': 'Motorizado', 'value': 'Motorizado'},
+                                            {'label': 'Autos', 'value': 'Motorizado'},
                                             {'label': 'Peatón', 'value': 'Peaton'},
                                             {'label': 'Ciclista', 'value': 'Bicicleta'},
                                             {'label': 'Motociclista', 'value': 'Motocicleta'}
@@ -410,7 +378,7 @@ def hv_general():
                                                         'float':'left','padding':'0', 
                                                         'width':'5%','background-color':'transparent',
                                                         'border-color':'transparent',},
-                                                className='rounded-circle pt-1'
+                                                className='rounded-circle pt-0'
 
                                                 ),
 
@@ -430,7 +398,7 @@ def hv_general():
                                             dbc.ModalBody([
                                                 html.Ul([
                                                     html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
-                                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad.']),
+                                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad. Es imporante destacar que este tipo de hevho vial se asocia únicamente con peatones.']),
                                                     html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
                                                     html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
                                                     html.Li([html.B('Choque de Reversa:'),' Ocurre cuando un vehículo choca con otro al ir de reversa.']),
@@ -462,7 +430,7 @@ def hv_general():
                                             is_open=False,
                                         ),
 
-                                        html.P('Tipo de hecho vial:', style={'width':'90%','float':'left'}, className='pl-1'),
+                                        html.P(' Tipo', style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     ]),
 
@@ -472,20 +440,8 @@ def hv_general():
                                         labelClassName = 'btn btn-secondary',
                                         labelCheckedClassName = 'active',
                                         style={'display':'inline-block'},
-                                        value = ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura'],
-                                        options = [
-                                                    {'label': ' Alcance', 'value': 'Alcance'},
-                                                    {'label': ' Atropello', 'value': 'Atropello'},
-                                                    {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-                                                    {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-                                                    {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-                                                    {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-                                                    {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-                                                    {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-                                                    {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-                                                    {'label': ' Incendio', 'value': 'Incendio'},
-                                                    {'label': ' Volcadura', 'value': 'Volcadura'},
-                                                ],
+                                        value = [],
+                                        options = [],
                                     ),
 
                                 ]),
@@ -514,7 +470,7 @@ def hv_general():
                                                 style={'width':'3%','float':'right'},
                                                 className="pt-1")
                                     ],
-                                    id="collapse_button_hora",
+                                    id="collapse_button_bavan",
                                     className='btn btn-light btn-lg btn-block',
                                     color="primary",
                                     n_clicks=0,
@@ -541,7 +497,7 @@ def hv_general():
                                                         'float':'left','padding':'0', 
                                                         'width':'5%','background-color':'transparent',
                                                         'border-color':'transparent',},
-                                                className='rounded-circle pt-1'
+                                                className='rounded-circle pt-0'
 
                                                 ),
 
@@ -587,7 +543,7 @@ def hv_general():
                                             is_open=False,
                                         ),
 
-                                        html.P(' Afectado o responsable:',
+                                        html.P(' Afectado o responsable',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     ]),
@@ -608,7 +564,7 @@ def hv_general():
                                     html.Br(),
                                     html.Br(),
 
-                                    html.P(' Sexo:',
+                                    html.P(' Sexo',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     dbc.RadioItems(
@@ -627,7 +583,7 @@ def hv_general():
                                     html.Br(),
                                     html.Br(),
 
-                                    html.P(' Edad:',
+                                    html.P(' Edad',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     html.Br(),
@@ -667,7 +623,7 @@ def hv_general():
 
                                     html.Br(),
 
-                                    html.P(' Tipo de vehículo:',
+                                    html.P(' Tipo de vehículo',
                                             style={'width':'90%','float':'left'}, className='pl-1'),
 
                                     dbc.Checklist(
@@ -729,7 +685,7 @@ def hv_general():
                                 html.Table([
 
                                     html.Tr([
-                                        html.Th('Hechos Viales: ', style={'font-weight':'normal'}),
+                                        html.Th('Hechos viales ', style={'font-weight':'normal'}),
                                         html.Th(id = 'hv_totales', style={'font-weight':'normal'}),
                                     ]),
 
@@ -765,7 +721,7 @@ def hv_general():
                         ])
 
                     ], style={'padding':'8px'})
-                ], style={'textAlign':'center','color':'white'}, className='bg-dark'),
+                ], style={'textAlign':'center','color':'white'}, className='bg-dark tarjeta_arriba_map'),
 
                 dbc.Card([
 
@@ -776,11 +732,11 @@ def hv_general():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'80vh'}
+                            style={'height':'85vh'}
                         ),
                     style={'padding':'0px'},
                     )
-                ]), 
+                ], className='tarjeta_map'), 
 
                 html.Br(),
 
@@ -803,7 +759,7 @@ def hv_general():
                                         id="btn_csv",
                                         className="btn",
                                         n_clicks=None,
-                                        style={'float':'right','background-color':'#636EFA','color':'white'}
+                                        style={'float':'right','background-color':'#545B62','color':'white'}
                                     ),
                                     Download(id="download-dataframe-csv")
                                 ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
@@ -817,591 +773,19 @@ def hv_general():
 
     ])
 
-# Layout - Intersecciones
-def hv_intersecciones():
 
-    return html.Div([
+# Filtro colapsable hechos viales
+def render_collapse_button_hv(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button_hv
+
+# Filtro colapsable busqueda avanzada
+def render_collapse_button_bavan(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button_bavan
 
-        html.Br(),
-
-        dbc.Row([
-
-            # Controles
-            dbc.Col([
-
-                # Calendario
-                dbc.Row([
-
-                    dbc.Col([
-
-                        dbc.Card([
-                           dbc.CardHeader(['Da click en una intersección y usa los filtros para hacer una búsqueda'])
-                        ], className='bg-dark', style={'text-align':'center','color':'white'}),
-
-                        html.Br(),
-
-                        dbc.Card([
-                            dbc.CardHeader([
-                                dbc.Button([
-                                    "Calendario",
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                                style={'width':'3%','float':'right'},
-                                                className="pt-1")
-                                    ],
-                                    id="collapse_button_cal",
-                                    className='btn btn-light btn-lg btn-block',
-                                    color="primary",
-                                    n_clicks=0,
-                                    style={'font-size':'16px'},
-                                ),
-
-                            ], style={'text-align':'center'}, className='p-0'),
-
-                            dbc.Collapse(
-                                dbc.CardBody([
-
-                                    dcc.DatePickerRange(
-                                        id = 'calendario',
-                                        min_date_allowed = dt(2015, 1, 1),
-                                        max_date_allowed = dt(2020, 12, 31),
-                                        start_date = dt(2015, 1, 1),
-                                        end_date = dt(2020, 12, 31),
-                                        first_day_of_week = 1,
-                                        className="d-flex justify-content-center"
-                                    ),
-                                ], style={'height':'90px'}, className='d-flex align-items-center justify-content-center'),
-                                id="collapse_cal",
-                                is_open=True,
-                            ),
-
-                        ])
-
-                    ]),
-
-                ]),
-                
-                html.Br(),
-
-                # Día de la Semana
-                dbc.Row([
-
-                    dbc.Col([
-
-                        dbc.Card([
-                            dbc.CardHeader([
-                                dbc.Button([
-                                    "Día de la Semana",
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                                style={'width':'3%','float':'right'},
-                                                className="pt-1")
-                                    ],
-                                    id="collapse_button_dsem",
-                                    className='btn btn-light btn-lg btn-block',
-                                    color="primary",
-                                    n_clicks=0,
-                                    style={'font-size':'16px'},
-                                ),
-
-                            ], style={'text-align':'center'}, className='p-0'),
-
-                            dbc.Collapse(
-                                dbc.CardBody([
-
-                                    dcc.Checklist(
-                                        id='checklist_dias',
-                                        className="d-flex justify-content-center btn-group ",
-                                        options=[
-                                            {'label': 'LU', 'value': 'Lunes'},
-                                            {'label': 'MA', 'value': 'Martes'},
-                                            {'label': 'MI', 'value': 'Miércoles'},
-                                            {'label': 'JU', 'value': 'Jueves'},
-                                            {'label': 'VI', 'value': 'Viernes'},
-                                            {'label': 'SA', 'value': 'Sábado'},
-                                            {'label': 'DO', 'value': 'Domingo'},
-                                        ],
-                                        value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
-                                        inputClassName='form-check-input ',
-                                        labelClassName="btn btn-secondary ",
-                                        inputStyle={'background-color:':'#767c85!important;'},
-                                        style={'display':'inline-block'}
-                                    ),
-
-                                ], style={'height':'90px'}),
-                                id="collapse_dsem",
-                                is_open=True,
-                            ),
-
-                        ])
-
-                    ]),
-
-                ]),
-
-                html.Br(),
-
-                # Horario
-                dbc.Row([
-
-                    dbc.Col([
-
-                        dbc.Card([
-                            dbc.CardHeader([
-                                dbc.Button([
-                                    "Horario",
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
-                                                style={'width':'3%','float':'right'},
-                                                className="pt-1")
-                                    ],
-                                    id="collapse_button_hora",
-                                    className='btn btn-light btn-lg btn-block',
-                                    color="primary",
-                                    n_clicks=0,
-                                    style={'font-size':'16px'},
-                                ),
-
-
-
-                            ], style={'text-align':'center'}, className='p-0'),
-
-                            dbc.Collapse(
-                                dbc.CardBody([
-
-                                    html.Div(
-                                        dcc.RangeSlider(
-                                            id='slider_hora',
-                                            min=0,
-                                            max=23,
-                                            value=[0, 23],
-                                            marks={
-                                                0: {'label': '0'},
-                                                3: {'label': '3'},
-                                                6: {'label': '6'},
-                                                9: {'label': '9'},
-                                                12: {'label': '12'},
-                                                15: {'label': '15'},
-                                                18: {'label': '18'},
-                                                21: {'label': '21'},
-                                                23: {'label': '23'}
-                                            },
-                                            allowCross=False,
-                                            dots=True,
-                                            tooltip={'always_visible': False , "placement":"bottom"},
-                                            updatemode='drag'
-                                        ), className='pt-2'
-                                    ),
-
-                                ], style={'height':'90px'}),
-                                id="collapse_hora",
-                                is_open=True,
-                            ),
-
-                        ])
-                        
-                    ]),
-
-                ]),
-
-            ],lg=4, md=4),
-
-            # Mapa
-            dbc.Col([
-
-                dbc.Card([
-
-                    # Nombre Intersección
-                    dbc.CardHeader([
-                        
-                        ],id='interseccion_nombre',
-                        style={'textAlign': 'center'},
-                        ),
-
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'mapa',
-                            figure = mapa,
-                            config={
-                            'displayModeBar': False
-                            },
-                            style={'height':'100%'}
-                        ),
-                    style={'padding':'0px'},
-                    )
-                ], style={'height':'100%'} ,className="text-white bg-dark"), 
-
-            ],lg=8, md=8)
-
-
-        ], className="d-flex justify-content-between", style={'height':'60vh'}),
-
-        html.Br(),
-        html.Br(),
-
-        # Principales indicadores
-        dbc.Row([
-
-            dbc.Col([
-
-                # Tarjetas Indicadores
-                dbc.Row([
-                        
-                        dbc.Col(
-                            dbc.Card([
-                                #dbc.CardHeader('Fallecidos'),
-                                dbc.CardBody(
-
-                                    html.Table([
-
-                                        html.Tr([
-                                            html.Th('Hechos Viales:'),
-                                            html.Th(id = 'interseccion_hv'),
-                                            html.Th(),
-                                            html.Th('Lesionados:'),
-                                            html.Th(id = 'interseccion_les'),
-                                            html.Th(),
-                                            html.Th('Fallecidos:'),
-                                            html.Th(id = 'interseccion_fal'),
-                                        ]),
-
-                                    ]),
-                                )
-                            ], style={'textAlign':'center'})
-                        )
-                ]),
-
-                html.Br(),
-
-                # Hechos viales por año
-                dbc.Row(
-                    dbc.Col(
-                        dbc.Card([
-                            dbc.CardHeader([
-                                dbc.Tabs([
-                                    dbc.Tab(label='Día', tab_id='dia',
-                                        disabled = False),
-                                    dbc.Tab(label = 'Mes', tab_id = 'mes',
-                                        disabled = False),
-                                    dbc.Tab(label = 'Año', tab_id = 'año',
-                                        disabled = False),
-                                ],
-                                id='periodo_hv',
-                                active_tab="año",
-                                card=True
-                                )
-                            ]),
-                            dbc.CardBody([
-
-                                dcc.Graph(
-                                    id = 'interseccion_hv_tiempo',
-                                    figure = {},
-                                    config={
-                                        'modeBarButtonsToRemove':
-                                        ['lasso2d', 'pan2d',
-                                        'zoomIn2d', 'zoomOut2d', 'autoScale2d',
-                                        'resetScale2d', 'hoverClosestCartesian',
-                                        'hoverCompareCartesian', 'toggleSpikelines',
-                                        'select2d',],
-                                        'displaylogo': False
-                                    },
-                                )
-                            ],style={'padding':'0'}),
-                        ])
-                    )
-                ),
-
-                html.Br(),
-
-            ]),
-
-        ]),
-
-        html.Br(),
-
-        # Gráficas Tipos / Tipo y Causa
-        dbc.Row([
-            
-            # Tipos de Hechos Viales
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader('Tipos de Hechos Viales'),
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'tabla',
-                            figure = {},
-                            config={'displaylogo': False}
-                            ),
-                    style={'padding':'0px'}
-                    )
-                ], style={'height':'550px'})
-            ]),
-            
-            # Hechos viales por Tipo y Causa
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader([
-
-                        html.Div([
-                            'Hechos Viales por Tipo y Causa',
-                            ],
-                            className="mt-1", 
-                            style={'width':'90%','display':'inline-block'}),
-
-                        html.Span(
-                            dbc.Button(
-                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
-                                        style={'float':'right'},
-                                        className="p-0 img-fluid"), 
-                                id="open1", 
-                                n_clicks=0, 
-                                style={'display':'inline-block',
-                                        'float':'right','padding':'0', 
-                                        'width':'3%','background-color':'transparent',
-                                        'border-color':'transparent',},
-                                className='rounded-circle'
-
-                                ),
-
-                            id="tooltip-target",
-                            style={"textDecoration": "underline", "cursor": "pointer"},
-                        ),
-
-                        dbc.Tooltip(
-                            "Más información",
-                            target="tooltip-target",
-                        ),
-                            
-                        dbc.Modal([
-
-                            dbc.ModalHeader(html.B("Tipos de Hechos Viales")),
-
-                            dbc.ModalBody([
-                                html.Ul([
-                                    html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
-                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad.']),
-                                    html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
-                                    html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
-                                    html.Li([html.B('Choque de Frente:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación opuestos, los cuales chocan cuando uno de ellos invade parcial o totalmente el carril, arroyo de circulación o trayectoria contraria. ']),
-                                    html.Li([html.B('Choque Diverso:'),' En esta clasificación queda cualquier hecho de tránsito no especificado en los puntos anteriores. ']),
-                                    html.Li([html.B('Choque Lateral:'),' Ocurre entre dos o más vehículos cuyos conductores circulan en carriles o con trayectorias paralelas, en el mismo sentido chocando los vehículos entre sí, cuando uno de ellos invada parcial o totalmente el carril o trayectoria donde circula el otro.']),
-                                    html.Li([html.B('Estrellamiento:'),' Ocurre cuando un vehículo en movimiento en cualquier sentido choca con algo que se encuentra provisional o permanentemente estático.'])
-
-                                ], style={'list-style-type':'none'}, className="p-1")
-
-                            ],style={"textAlign":"justify",'font-size':'100%'}),
-
-                            dbc.ModalFooter([
-                                
-                                dbc.Button(
-                                    "Cerrar", 
-                                    id="close1", 
-                                    className="ml-auto btn btn-secondary", 
-                                    n_clicks=0
-                                )
-                            ]),
-
-                            ],
-                            id="modal",
-                            centered=True,
-                            size="lg",
-                            is_open=False,
-                        ),
-
-                    ]),
-
-                    dbc.CardBody(
-                        dcc.Graph(
-                            id = 'treemap',
-                            figure = {},
-                            style={'padding':'0px'},
-                            config={'displaylogo': False}
-                            )
-                    )
-                ], style={'height':'550px'}),
-            ])
-        ]),
-
-        # Inner Footer info extra
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader('Datos'),
-                    dbc.CardBody(
-                        dbc.Row([
-                            dbc.Col('Datos de hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública y procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
-                            dbc.Col(
-                                html.Div([
-                                    html.Button(
-                                        html.B("Descarga la base de datos completa"), 
-                                        id="btn_csv",
-                                        className="btn",
-                                        n_clicks=None,
-                                        style={'float':'right','background-color':'#636EFA','color':'white'}
-                                    ),
-                                    Download(id="download-dataframe-csv")
-                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
-                            )
-                        ])
-
-                    )
-                ])
-            ])
-        ], className="pt-4")
-
-    ])
-
-#----------
-
-# Datos de Intersecciones
-
-# Nombre
-def render_interseccion_nombre(clickData):
-    if clickData is None:
-        return 'Haz click en una intersección para conocer más'
-    else:
-        return clickData['points'][0]['hovertext']
-
-# Hechos Viales
-def render_interseccion_hv(clickData, start_date, end_date, slider_hora, checklist_dias):
-
-    # Si no se ha hecho click a una intersección en el mapa pon un cero
-    if clickData is None:
-        
-        return '0'
-
-    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
-    elif clickData is not None:
-
-        # Leer csv
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-
-        # Filter interseccion
-        hvi = hvi[hvi['interseccion'] == 
-        clickData['points'][0]['hovertext']]
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-
-        #Filtro por día de la semana
-        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
-
-        #Filtro por hora
-        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
-        
-        #Sumo los hechos viales
-        interseccion_hv = hv_tiempo_data_cal_dsm_hora["hechos_viales"].sum()
-
-        return interseccion_hv
-
-# Lesionados
-def render_interseccion_les(clickData, start_date, end_date, slider_hora, checklist_dias):
-
-    # Si no se ha hecho click a una intersección en el mapa pon un cero
-    if clickData is None:
-        
-        return '0'
-
-    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
-    elif clickData is not None:
-
-        # Leer csv
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-
-        # Filter interseccion
-        hvi = hvi[hvi['interseccion'] == 
-        clickData['points'][0]['hovertext']]
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-
-        #Filtro por día de la semana
-        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
-
-        #Filtro por hora
-        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
-
-        #Sumo los lesionados
-        interseccion_les = hv_tiempo_data_cal_dsm_hora["lesionados"].sum()
-
-        return interseccion_les
-
-# Fallecidos
-def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checklist_dias):
-
-    # Si no se ha hecho click a una intersección en el mapa pon un cero
-    if clickData is None:
-        
-        return '0'
-
-    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
-    elif clickData is not None:
-    
-        # Leer csv
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-
-        # Filter interseccion
-        hvi = hvi[hvi['interseccion'] == 
-        clickData['points'][0]['hovertext']]
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-        #hvi["hora"] = hvi["hora"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        # +" - "+ hvi["hora"]                # - %H
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
-        
-        #Filtro por día de la semana
-        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
-
-        #Filtro por hora
-        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
-
-        #Sumo los fallecidos
-        interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
-
-        return interseccion_fal
 
 # Mapa interactivo
 def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
@@ -1438,7 +822,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#c6cc14",
-            unselected_marker_opacity=.5)
+            unselected_marker_opacity=1)
     
         return mapa_interac
 
@@ -1519,7 +903,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
@@ -1606,7 +990,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
@@ -1693,7 +1077,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
@@ -1775,7 +1159,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
@@ -1865,7 +1249,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
@@ -1955,549 +1339,12 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#42f581",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales totales: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
 
         return mapa_interac
 
 
-
-    # -------------------------------------------
-
-
-    # HECHOS VIALES GRAVES -- Todos -- Todos (M/F)
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_edad = hv_graves_usu_thv_afect[(hv_graves_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_edad_tveh = hv_graves_usu_thv_afect_edad[hv_graves_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por responsable
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_edad = hv_graves_usu_thv_resp[(hv_graves_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
-
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_edad_tveh = hv_graves_usu_thv_resp_edad[hv_graves_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-
-    
-    # ----------------
-
-    
-    # HECHOS VIALES GRAVES -- Todos -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_afect_sexo = hv_graves_usu_thv_afect[hv_graves_usu_thv_afect.sexo_afect == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_sexo_edad = hv_graves_usu_thv_afect_sexo[(hv_graves_usu_thv_afect_sexo['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect_sexo['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_sexo_edad_tveh = hv_graves_usu_thv_afect_sexo_edad[hv_graves_usu_thv_afect_sexo_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv_afect_sexo_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv_afect_sexo_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv_afect_sexo_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_resp_sexo = hv_graves_usu_thv_resp[hv_graves_usu_thv_resp.sexo_resp == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_sexo_edad = hv_graves_usu_thv_resp_sexo[(hv_graves_usu_thv_resp_sexo['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp_sexo['edad_resp_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_sexo_edad_tveh = hv_graves_usu_thv_resp_sexo_edad[hv_graves_usu_thv_resp_sexo_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_graves_usu_thv_resp_sexo_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_graves_usu_thv_resp_sexo_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-        
-        # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_graves_usu_thv_resp_sexo_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
-
-        # Tabla de intersecciones con coordenadas y hechos viales
-        join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
-
-        # Tabla de intersecciones con coordenadas, hechos viales y lesionados y fallecidos
-        join_hv_lf = pd.merge(join_hv, les_fall, on ='interseccion', how ='left')
-
-        # Cambiar nombre
-        mapa_data = join_hv_lf
-
-        #-- Graph
-        mapa_interac = go.Figure(
-            px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
-            size = 'hechos_viales',
-            size_max=20, 
-            zoom=12.5, 
-            custom_data=['lesionados', 'fallecidos','interseccion'],
-            hover_data={'Lat':False, 'Lon':False, 'interseccion':True, 'hechos_viales':True, 'lesionados':True, 'fallecidos':True, },
-            opacity=1))
-
-        mapa_interac.update_layout(clickmode='event+select', 
-             mapbox=dict(
-                accesstoken=mapbox_access_token,
-                center=dict(lat=25.6572, lon=-100.3689),
-                style="dark"
-            ),
-            margin = dict(t=0, l=0, r=0, b=0)
-        )
-        mapa_interac.update_traces(marker_color="#f5a142",
-            unselected_marker_opacity=.5,
-            hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales graves: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
-        
-        return mapa_interac
-
-    
 
     # -------------------------------------------
 
@@ -2579,7 +1426,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -2669,7 +1516,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -2759,7 +1606,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -2841,7 +1688,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -2931,7 +1778,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3021,7 +1868,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f5dd42",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3065,17 +1912,20 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
     
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_fall_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_fall_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_fall_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3105,7 +1955,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3143,26 +1993,29 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
 
         # Filtro por afectado
-        hv_fall_thv_afect = hv_fall_thv[hv_fall_thv.tipo_v_afec != 0]
+        hv_fall_usu_thv_afect = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_afec != 0]
     
         #Filtro por edad
-        hv_fall_thv_afect_edad = hv_fall_thv_afect[(hv_fall_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_thv_afect['edad_afect_mid']<=slider_edad[1])]
+        hv_fall_usu_thv_afect_edad = hv_fall_usu_thv_afect[(hv_fall_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
 
         # Filtro por tipo de vehículo
-        hv_fall_thv_afect_edad_tveh = hv_fall_thv_afect_edad[hv_fall_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
+        hv_fall_usu_thv_afect_edad_tveh = hv_fall_usu_thv_afect_edad[hv_fall_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
 
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_fall_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_fall_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_fall_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv_afect_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3192,7 +2045,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3230,26 +2083,29 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
 
         # Filtro por responsable
-        hv_fall_thv_resp = hv_fall_thv[hv_fall_thv.tipo_v_resp != 0]
+        hv_fall_usu_thv_resp = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_resp != 0]
     
         #Filtro por edad
-        hv_fall_thv_resp_edad = hv_fall_thv_resp[(hv_fall_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_thv_resp['edad_resp_mid']<=slider_edad[1])]
+        hv_fall_usu_thv_resp_edad = hv_fall_usu_thv_resp[(hv_fall_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
 
         # Filtro por tipo de vehículo
-        hv_fall_thv_resp_edad_tveh = hv_fall_thv_resp_edad[hv_fall_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
+        hv_fall_usu_thv_resp_edad_tveh = hv_fall_usu_thv_resp_edad[hv_fall_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
 
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_fall_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_fall_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_fall_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv_resp_edad_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3279,7 +2135,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3321,17 +2177,20 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
     
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_fall_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_fall_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_fall_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3361,7 +2220,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3399,29 +2258,32 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
 
         # Filtro por afectado
-        hv_fall_thv_afect = hv_fall_thv[hv_fall_thv.tipo_v_afec != 0]
+        hv_fall_usu_thv_afect = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_afec != 0]
     
         #Filtro por edad
-        hv_fall_thv_afect_edad = hv_fall_thv_afect[(hv_fall_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_thv_afect['edad_afect_mid']<=slider_edad[1])]
+        hv_fall_usu_thv_afect_edad = hv_fall_usu_thv_afect[(hv_fall_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
 
         # Filtro por sexo
-        hvi_cal_dsm_hora_afect_sexo = hv_fall_thv_afect_edad[hv_fall_thv_afect_edad.sexo_afect == hv_sexo_opciones]
+        hv_fall_usu_thv_afect_edad_sexo = hv_fall_usu_thv_afect_edad[hv_fall_usu_thv_afect_edad.sexo_afect == hv_sexo_opciones]
 
         # Filtro por tipo de vehículo
-        hvi_cal_dsm_hora_afect_sexo_tveh = hvi_cal_dsm_hora_afect_sexo[hvi_cal_dsm_hora_afect_sexo["tipo_v_afec"].isin(checklist_tipo_veh)]
+        hv_fall_usu_thv_afect_edad_sexo_tveh = hv_fall_usu_thv_afect_edad_sexo[hv_fall_usu_thv_afect_edad_sexo["tipo_v_afec"].isin(checklist_tipo_veh)]
 
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hvi_cal_dsm_hora_afect_sexo_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv_afect_edad_sexo_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hvi_cal_dsm_hora_afect_sexo_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv_afect_edad_sexo_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hvi_cal_dsm_hora_afect_sexo_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv_afect_edad_sexo_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3451,12 +2313,14 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
     
     # HECHOS VIALES FALLECIDOS -- Responsables
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
     elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
 
         hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
@@ -3487,29 +2351,32 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         # Filtro por hechos viales con fallecidos
         hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
 
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
         # Filtro por tipo de hecho vial
-        hv_fall_thv = hv_fall[(hv_fall['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
 
         # Filtro por responsable
-        hv_fall_thv_resp = hv_fall_thv[hv_fall_thv.tipo_v_resp != 0]
+        hv_fall_usu_thv_resp = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_resp != 0]
     
         #Filtro por edad
-        hv_fall_thv_resp_edad = hv_fall_thv_resp[(hv_fall_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_thv_resp['edad_resp_mid']<=slider_edad[1])]
+        hv_fall_usu_thv_resp_edad = hv_fall_usu_thv_resp[(hv_fall_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
 
         # Filtro por sexo
-        hv_fall_thv_resp_edad_sexo = hv_fall_thv_resp_edad[hv_fall_thv_resp_edad.sexo_resp == hv_sexo_opciones]
+        hv_fall_usu_thv_resp_edad_sexo = hv_fall_usu_thv_resp_edad[hv_fall_usu_thv_resp_edad.sexo_resp == hv_sexo_opciones]
 
         # Filtro por tipo de vehículo
-        hv_fall_thv_resp_edad_sexo_tveh = hv_fall_thv_resp_edad_sexo[hv_fall_thv_resp_edad_sexo["tipo_v_resp"].isin(checklist_tipo_veh)]
+        hv_fall_usu_thv_resp_edad_sexo_tveh = hv_fall_usu_thv_resp_edad_sexo[hv_fall_usu_thv_resp_edad_sexo["tipo_v_resp"].isin(checklist_tipo_veh)]
 
         # Tabla de intersecciones con coordenadas mapeadas
-        coords = hv_fall_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+        coords = hv_fall_usu_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con suma de hechos viales
-        hechosviales = hv_fall_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        hechosviales = hv_fall_usu_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["hechos_viales"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
         
         # Tabla de intersecciones con suma de lesionados y fallecidos
-        les_fall = hv_fall_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
+        les_fall = hv_fall_usu_thv_resp_edad_sexo_tveh.pivot_table(index="interseccion", values=["lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1)
 
         # Tabla de intersecciones con coordenadas y hechos viales
         join_hv = pd.merge(coords, hechosviales, on ='interseccion', how ='left')
@@ -3539,7 +2406,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             margin = dict(t=0, l=0, r=0, b=0)
         )
         mapa_interac.update_traces(marker_color="#f54242",
-            unselected_marker_opacity=.5,
+            unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos viales con fallecidos: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
         return mapa_interac
@@ -3598,7 +2465,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_thv_usu.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
     
     # HECHOS VIALES TODOS -- Afectados -- Todos (M/F)
 
@@ -3648,7 +2515,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_usu_thv_afect_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
 
     # HECHOS VIALES TODOS -- Responsables -- Todos (M/F)
 
@@ -3698,7 +2565,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_usu_thv_resp_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
 
     
     # ----------------
@@ -3743,7 +2610,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_usu_thv.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
 
     # HECHOS VIALES TODOS -- Afectados -- Masculino o Femenino
 
@@ -3796,7 +2663,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_usu_thv_afect_sexo_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
 
     # HECHOS VIALES TODOS -- Responsables -- Masculino o Femenino
 
@@ -3849,325 +2716,12 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_usu_thv_resp_sexo_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'totales: {:,.0f}'.format(hv_totales)
 
 
 
     # -------------------------------------------
 
-
-    # HECHOS VIALES GRAVES -- Todos -- Todos (M/F)
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_edad = hv_graves_usu_thv_afect[(hv_graves_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_edad_tveh = hv_graves_usu_thv_afect_edad[hv_graves_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv_afect_edad_tveh.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por responsable
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_edad = hv_graves_usu_thv_resp[(hv_graves_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
-
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_edad_tveh = hv_graves_usu_thv_resp_edad[hv_graves_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv_resp_edad_tveh.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-
-    
-    # ----------------
-
-    
-    # HECHOS VIALES GRAVES -- Todos -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_afect_sexo = hv_graves_usu_thv_afect[hv_graves_usu_thv_afect.sexo_afect == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_sexo_edad = hv_graves_usu_thv_afect_sexo[(hv_graves_usu_thv_afect_sexo['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect_sexo['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_sexo_edad_tveh = hv_graves_usu_thv_afect_sexo_edad[hv_graves_usu_thv_afect_sexo_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv_afect_sexo_edad_tveh.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_resp_sexo = hv_graves_usu_thv_resp[hv_graves_usu_thv_resp.sexo_resp == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_sexo_edad = hv_graves_usu_thv_resp_sexo[(hv_graves_usu_thv_resp_sexo['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp_sexo['edad_resp_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_sexo_edad_tveh = hv_graves_usu_thv_resp_sexo_edad[hv_graves_usu_thv_resp_sexo_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de hechos viales
-        hv_totales = hv_graves_usu_thv_resp_sexo_edad_tveh.tipo_accidente.count()
-
-        return '{:,.0f}'.format(hv_totales)
-
-    
-    # -------------------------------------------
 
     # HECHOS VIALES LESIONADOS -- Todos -- Todos (M/F)
 
@@ -4211,7 +2765,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_usu_thv.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
        
     # HECHOS VIALES LESIONADOS -- Afectados -- Todos (M/F)
 
@@ -4264,7 +2818,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_usu_thv_afect_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
     
     # HECHOS VIALES LESIONADOS -- Responsables -- Todos (M/F)
 
@@ -4317,7 +2871,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_usu_thv_resp_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
 
 
     # ----------------
@@ -4362,7 +2916,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_thv.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
     
     # HECHOS VIALES LESIONADOS -- Afectados -- Masculino o Femenino
 
@@ -4415,7 +2969,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_thv_afect_edad_sexo_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
     
     # HECHOS VIALES LESIONADOS -- Responsables -- Masculino o Femenino
 
@@ -4468,7 +3022,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_les_thv_resp_edad_sexo_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con lesionados: {:,.0f}'.format(hv_totales)
 
 
 
@@ -4513,7 +3067,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_fall_thv.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
    
     # HECHOS VIALES FALLECIDOS -- Afectados -- Todos (M/F)
 
@@ -4563,7 +3117,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_fall_thv_afect_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
 
     # HECHOS VIALES FALLECIDOS -- Responsables
 
@@ -4613,7 +3167,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_fall_thv_resp_edad_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
 
 
     # ----------------
@@ -4658,7 +3212,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_fall_thv.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
 
     # HECHOS VIALES FALLECIDOS -- Afectados -- Todos (M/F)
 
@@ -4711,7 +3265,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hvi_cal_dsm_hora_afect_sexo_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
     
     # HECHOS VIALES FALLECIDOS -- Responsables
     elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
@@ -4762,7 +3316,7 @@ def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_grav
         # Total de hechos viales
         hv_totales = hv_fall_thv_resp_edad_sexo_tveh.tipo_accidente.count()
 
-        return '{:,.0f}'.format(hv_totales)
+        return 'con fallecidos: {:,.0f}'.format(hv_totales)
 
     # -------------------------------------------
 
@@ -5071,319 +3625,6 @@ def render_hv_les_totales(start_date, end_date, slider_hora, checklist_dias, hv_
         return '{:,.0f}'.format(hv_les_totales)
 
 
-
-    # -------------------------------------------
-
-
-    # HECHOS VIALES GRAVES -- Todos -- Todos (M/F)
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_edad = hv_graves_usu_thv_afect[(hv_graves_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_edad_tveh = hv_graves_usu_thv_afect_edad[hv_graves_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv_afect_edad_tveh.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por responsable
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_edad = hv_graves_usu_thv_resp[(hv_graves_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
-
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_edad_tveh = hv_graves_usu_thv_resp_edad[hv_graves_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv_resp_edad_tveh.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
-
-    
-    # ----------------
-
-    
-    # HECHOS VIALES GRAVES -- Todos -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_afect_sexo = hv_graves_usu_thv_afect[hv_graves_usu_thv_afect.sexo_afect == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_sexo_edad = hv_graves_usu_thv_afect_sexo[(hv_graves_usu_thv_afect_sexo['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect_sexo['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_sexo_edad_tveh = hv_graves_usu_thv_afect_sexo_edad[hv_graves_usu_thv_afect_sexo_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv_afect_sexo_edad_tveh.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_resp_sexo = hv_graves_usu_thv_resp[hv_graves_usu_thv_resp.sexo_resp == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_sexo_edad = hv_graves_usu_thv_resp_sexo[(hv_graves_usu_thv_resp_sexo['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp_sexo['edad_resp_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_sexo_edad_tveh = hv_graves_usu_thv_resp_sexo_edad[hv_graves_usu_thv_resp_sexo_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de lesionados
-        hv_les_totales = hv_graves_usu_thv_resp_sexo_edad_tveh.lesionados.sum()
-
-        return '{:,.0f}'.format(hv_les_totales)
 
     
     # -------------------------------------------
@@ -6294,319 +4535,6 @@ def render_hv_fall_totales(start_date, end_date, slider_hora, checklist_dias, hv
     # -------------------------------------------
 
 
-    # HECHOS VIALES GRAVES -- Todos -- Todos (M/F)
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_edad = hv_graves_usu_thv_afect[(hv_graves_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_edad_tveh = hv_graves_usu_thv_afect_edad[hv_graves_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv_afect_edad_tveh.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Todos (M/F)
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por responsable
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_edad = hv_graves_usu_thv_resp[(hv_graves_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
-
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_edad_tveh = hv_graves_usu_thv_resp_edad[hv_graves_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv_resp_edad_tveh.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-
-    
-    # ----------------
-
-    
-    # HECHOS VIALES GRAVES -- Todos -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, los hechos viales graves seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-       
-    # HECHOS VIALES GRAVES -- Afectados -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_afect = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_afec != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_afect_sexo = hv_graves_usu_thv_afect[hv_graves_usu_thv_afect.sexo_afect == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_afect_sexo_edad = hv_graves_usu_thv_afect_sexo[(hv_graves_usu_thv_afect_sexo['edad_afect_mid']>=slider_edad[0])&(hv_graves_usu_thv_afect_sexo['edad_afect_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_afect_sexo_edad_tveh = hv_graves_usu_thv_afect_sexo_edad[hv_graves_usu_thv_afect_sexo_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv_afect_sexo_edad_tveh.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-    
-    # HECHOS VIALES GRAVES -- Responsables -- Masculino o Femenino
-
-    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
-    elif checklist_dias != [] and hv_graves_opciones == 'graves' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
-
-        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-        
-        # Cambiar variables a string
-        hvi["año"] = hvi["año"].astype(str)
-        hvi["mes"] = hvi["mes"].astype(str)
-        hvi["dia"] = hvi["dia"].astype(str)
-
-        # Crear variable datetime
-        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
-
-        # Duplicar columna de fecha y set index
-        hvi["fecha2"] = hvi["fecha"]
-        hvi = hvi.set_index("fecha")
-        hvi = hvi.sort_index()
-
-        # Filtro por calendario
-        hvi_cal = hvi.loc[start_date:end_date]
-
-        # Filtro por día de la semana
-        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
-
-        # Filtro por hora
-        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
-
-        # Filtro por hechos viales graves
-        hv_graves = hvi_cal_dsm_hora[hvi_cal_dsm_hora.les_fall != 0]
-
-        # Filtro por usuario
-        hv_graves_usu = hv_graves[(hv_graves['tipo_usu'].isin(hv_usu_opciones))]
-
-        # Filtro por tipo de hecho vial
-        hv_graves_usu_thv = hv_graves_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
-
-        # Filtro por afectado
-        hv_graves_usu_thv_resp = hv_graves_usu_thv[hv_graves_usu_thv.tipo_v_resp != 0]
-
-        # Filtro por sexo
-        hv_graves_usu_thv_resp_sexo = hv_graves_usu_thv_resp[hv_graves_usu_thv_resp.sexo_resp == hv_sexo_opciones]
-
-        #Filtro por edad
-        hv_graves_usu_thv_resp_sexo_edad = hv_graves_usu_thv_resp_sexo[(hv_graves_usu_thv_resp_sexo['edad_resp_mid']>=slider_edad[0])&(hv_graves_usu_thv_resp_sexo['edad_resp_mid']<=slider_edad[1])]
-    
-        # Filtro por tipo de vehículo
-        hv_graves_usu_thv_resp_sexo_edad_tveh = hv_graves_usu_thv_resp_sexo_edad[hv_graves_usu_thv_resp_sexo_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
-
-        # Total de fallecidos
-        hv_fall_totales = hv_graves_usu_thv_resp_sexo_edad_tveh.fallecidos.sum()
-
-        return '{:,.0f}'.format(hv_fall_totales)
-
-    
-    # -------------------------------------------
-
     # HECHOS VIALES LESIONADOS -- Todos -- Todos (M/F)
 
     # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
@@ -7204,6 +5132,593 @@ def render_hv_fall_totales(start_date, end_date, slider_hora, checklist_dias, hv
 
     # -------------------------------------------
 
+
+#----------
+
+# Layout - Intersecciones
+def hv_intersecciones():
+
+    return html.Div([
+
+        html.Br(),
+
+        dbc.Row([
+
+            # Controles
+            dbc.Col([
+
+                dbc.Card([
+                    dbc.CardHeader([
+                        dbc.Button([
+                            "Fecha",
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img1), 
+                                        style={'width':'3%','float':'right'},
+                                        className="pt-1")
+                            ],
+                            id="collapse_button_fecha",
+                            className='btn btn-light btn-lg btn-block',
+                            color="primary",
+                            n_clicks=0,
+                            style={'font-size':'16px'},
+                        ),
+
+                    ], style={'text-align':'center'}, className='p-0'),
+
+                    dbc.Collapse([
+
+                        dbc.CardBody([
+                            html.Div([
+
+                                dcc.DatePickerRange(
+                                    id = 'calendario',
+                                    min_date_allowed = dt(2015, 1, 1),
+                                    max_date_allowed = dt(2020, 12, 31),
+                                    start_date = dt(2015, 1, 1),
+                                    end_date = dt(2020, 12, 31),
+                                    first_day_of_week = 1,
+                                    className="d-flex justify-content-center"
+                                ),
+
+                            ], className='d-flex align-items-center justify-content-center'),
+
+                            html.Br(),
+
+                            
+
+                            dbc.Checklist(
+                                id = 'checklist_dias',
+                                className = 'radio-group btn-group d-flex justify-content-center',
+                                labelClassName = 'btn btn-secondary',
+                                labelCheckedClassName = 'active',
+                                options=[
+                                    {'label': ' LUN', 'value': 'Lunes'},
+                                    {'label': ' MAR', 'value': 'Martes'},
+                                    {'label': ' MIE', 'value': 'Miércoles'},
+                                    {'label': ' JUE', 'value': 'Jueves'},
+                                    {'label': ' VIE', 'value': 'Viernes'},
+                                    {'label': ' SAB', 'value': 'Sábado'},
+                                    {'label': ' DOM', 'value': 'Domingo'},
+                                ],
+                                value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                                style={'display':'inline-block'}
+                            ),
+
+                            html.Br(),
+
+                            dcc.RangeSlider(
+                                id='slider_hora',
+                                min=0,
+                                max=23,
+                                value=[0, 23],
+                                marks={
+                                    0: {'label': '0'},
+                                    3: {'label': '3'},
+                                    6: {'label': '6'},
+                                    9: {'label': '9'},
+                                    12: {'label': '12'},
+                                    15: {'label': '15'},
+                                    18: {'label': '18'},
+                                    21: {'label': '21'},
+                                    23: {'label': '23'}
+                                },
+                                allowCross=False,
+                                dots=True,
+                                tooltip={'always_visible': False , "placement":"bottom"},
+                                updatemode='drag'
+                            ),
+                        ])
+
+                    ], id="collapse_cal",
+                        is_open=True,),
+
+                ]),
+
+            ],lg=4, md=4),
+
+            # Mapa
+            dbc.Col([
+
+                dbc.Card([
+
+                    # Nombre Intersección
+                    dbc.CardHeader([
+                        
+                        ],id='interseccion_nombre',
+                        style={'textAlign': 'center'},
+                        ),
+
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'mapa',
+                            figure = mapa,
+                            config={
+                            'displayModeBar': False
+                            },
+                            style={'height':'50vh'}
+                        ),
+                    style={'padding':'0px'},
+                    ),
+
+                    # Tarjetas Indicadores
+                    dbc.CardBody([
+
+                        dbc.Row([
+
+                            dbc.Col([
+
+                                html.Table([
+
+                                    html.Tr([
+                                        html.Th('Hechos Viales:'),
+                                        html.Th(id = 'interseccion_hv'),
+                                    ]),
+
+                                ])
+                            ], className='d-flex justify-content-center'),
+
+                            dbc.Col([
+
+                                html.Table([
+
+                                    html.Tr([
+                                        html.Th('Lesionados:'),
+                                        html.Th(id = 'interseccion_les'),
+                                    ]),
+
+                                ])
+
+                            ], className='d-flex justify-content-center'),
+
+                            dbc.Col([
+
+                                html.Table([
+
+                                    html.Tr([
+                                        html.Th('Fallecidos:'),
+                                        html.Th(id = 'interseccion_fal'),
+                                    ]),
+
+                                ])
+
+                            ], className='d-flex justify-content-center'),
+                        ], className='tabla_int_row')
+
+                    ],style={'padding':'8px'}),
+
+
+                ], className="text-white bg-dark"), 
+
+            ],lg=8, md=8)
+
+
+        ], className="d-flex justify-content-between", style={'height':'60vh'}),
+
+        html.Br(),
+
+        # Principales indicadores
+        dbc.Row([
+
+            dbc.Col([
+
+                # Hechos viales por año
+                dbc.Row(
+                    dbc.Col(
+                        dbc.Card([
+                            dbc.CardHeader([
+                                dbc.Tabs([
+                                    dbc.Tab(label='Día', tab_id='dia',
+                                        disabled = False),
+                                    dbc.Tab(label = 'Mes', tab_id = 'mes',
+                                        disabled = False),
+                                    dbc.Tab(label = 'Año', tab_id = 'año',
+                                        disabled = False),
+                                ],
+                                id='periodo_hv',
+                                active_tab="año",
+                                card=True
+                                )
+                            ]),
+                            dbc.CardBody([
+
+                                dcc.Graph(
+                                    id = 'interseccion_hv_tiempo',
+                                    figure = {},
+                                    config={
+                                        'modeBarButtonsToRemove':
+                                        ['lasso2d', 'pan2d',
+                                        'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                        'resetScale2d', 'hoverClosestCartesian',
+                                        'hoverCompareCartesian', 'toggleSpikelines',
+                                        'select2d',],
+                                        'displaylogo': False
+                                    },
+                                )
+                            ],style={'padding':'0'}),
+                        ])
+                    )
+                ),
+
+                html.Br(),
+
+            ]),
+
+        ]),
+
+        html.Br(),
+
+        # Gráficas Tipos / Tipo y Causa
+        dbc.Row([
+            
+            # Tipos de Hechos Viales
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader('Tipos de Hechos Viales'),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'tabla',
+                            figure = {},
+                            config={'displaylogo': False}
+                            ),
+                    style={'padding':'0px'}
+                    )
+                ], style={'height':'550px'})
+            ]),
+            
+            # Hechos viales por Tipo y Causa
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+
+                        html.Div([
+                            'Hechos Viales por Tipo y Causa',
+                            ],
+                            className="mt-1", 
+                            style={'width':'90%','display':'inline-block'}),
+
+                        html.Span(
+                            dbc.Button(
+                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                        style={'float':'right'},
+                                        className="p-0 img-fluid"), 
+                                id="open1", 
+                                n_clicks=0, 
+                                style={'display':'inline-block',
+                                        'float':'right','padding':'0', 
+                                        'width':'3%','background-color':'transparent',
+                                        'border-color':'transparent',},
+                                className='rounded-circle'
+
+                                ),
+
+                            id="tooltip-target",
+                            style={"textDecoration": "underline", "cursor": "pointer"},
+                        ),
+
+                        dbc.Tooltip(
+                            "Más información",
+                            target="tooltip-target",
+                        ),
+                            
+                        dbc.Modal([
+
+                            dbc.ModalHeader(html.B("Tipos de Hechos Viales")),
+
+                            dbc.ModalBody([
+                                html.Ul([
+                                    html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
+                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad.']),
+                                    html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
+                                    html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
+                                    html.Li([html.B('Choque de Frente:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación opuestos, los cuales chocan cuando uno de ellos invade parcial o totalmente el carril, arroyo de circulación o trayectoria contraria. ']),
+                                    html.Li([html.B('Choque Diverso:'),' En esta clasificación queda cualquier hecho de tránsito no especificado en los puntos anteriores. ']),
+                                    html.Li([html.B('Choque Lateral:'),' Ocurre entre dos o más vehículos cuyos conductores circulan en carriles o con trayectorias paralelas, en el mismo sentido chocando los vehículos entre sí, cuando uno de ellos invada parcial o totalmente el carril o trayectoria donde circula el otro.']),
+                                    html.Li([html.B('Estrellamiento:'),' Ocurre cuando un vehículo en movimiento en cualquier sentido choca con algo que se encuentra provisional o permanentemente estático.'])
+
+                                ], style={'list-style-type':'none'}, className="p-1")
+
+                            ],style={"textAlign":"justify",'font-size':'100%'}),
+
+                            dbc.ModalFooter([
+                                
+                                dbc.Button(
+                                    "Cerrar", 
+                                    id="close1", 
+                                    className="ml-auto btn btn-secondary", 
+                                    n_clicks=0
+                                )
+                            ]),
+
+                            ],
+                            id="modal",
+                            centered=True,
+                            size="lg",
+                            is_open=False,
+                        ),
+
+                    ]),
+
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'treemap',
+                            figure = {},
+                            style={'padding':'0px'},
+                            config={'displaylogo': False}
+                            )
+                    )
+                ], style={'height':'550px'}),
+            ])
+        ]),
+
+        # Inner Footer info extra
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader('Datos'),
+                    dbc.CardBody(
+                        dbc.Row([
+                            dbc.Col('Datos de hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública y procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
+                            dbc.Col(
+                                html.Div([
+                                    html.Button(
+                                        html.B("Descarga la base de datos completa"), 
+                                        id="btn_csv",
+                                        className="btn",
+                                        n_clicks=None,
+                                        style={'float':'right','background-color':'#636EFA','color':'white'}
+                                    ),
+                                    Download(id="download-dataframe-csv")
+                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
+                            )
+                        ])
+
+                    )
+                ])
+            ])
+        ], className="pt-4")
+
+    ])
+
+# Cerrar la ventana de información de la severidad de hechos viales
+def toggle_modal_sev(open1_sev, close1_sev, modal_sev):
+    if open1_sev or close1_sev:
+        return not modal_sev
+    return modal_sev
+
+# Cerrar la ventana de información de los usuarios afectados
+def toggle_modal_usaf(open1_usaf, close1_usaf, modal_usaf):
+    if open1_usaf or close1_usaf:
+        return not modal_usaf
+    return modal_usaf
+
+# Cerrar la ventana de información de los tipos de hechos viales
+def toggle_modal_thv(open1_thv, close1_thv, modal_thv):
+    if open1_thv or close1_thv:
+        return not modal_thv
+    return modal_thv
+
+# Cerrar la ventana de información de los tipos de hechos viales
+def toggle_modal_afres(open1_afres, close1_afres, modal_afres):
+    if open1_afres or close1_afres:
+        return not modal_afres
+    return modal_afres
+
+# Filtro colapsable fechas 
+def render_collapse_button_fecha(n, is_open):
+    if n:
+        return not is_open
+    return collapse_button_fecha
+
+# Map
+
+# Mapbox Access Token
+mapbox_access_token = 'pk.eyJ1IjoiZWRnYXJndHpnenoiLCJhIjoiY2s4aHRoZTBjMDE4azNoanlxbmhqNjB3aiJ9.PI_g5CMTCSYw0UM016lKPw'
+px.set_mapbox_access_token(mapbox_access_token)
+
+# Tabla de intersecciones con coordenadas mapeadas
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+coords = hvi.pivot_table(index="interseccion", values=["Lat","Lon"]).reset_index().rename_axis(None, axis=1)
+coords['hechos_viales'] = ['1']*coords['interseccion'].count()
+coords['hechos_viales'] = coords['hechos_viales'].astype(int)
+mapa_data = coords
+
+# Graph
+mapa = go.Figure(
+    px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
+    size = 'hechos_viales',
+    size_max=5, 
+    zoom=12.8, 
+    hover_name='interseccion', 
+    #custom_data=['lesionados', 'fallecidos'],
+    hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
+    opacity=1))
+
+mapa.update_layout(clickmode='event+select', 
+     mapbox=dict(
+        accesstoken=mapbox_access_token,
+        center=dict(lat=25.6572, lon=-100.3689),
+        style="dark"
+    ),
+    margin = dict(t=0, l=0, r=0, b=0)
+)
+mapa.update_traces(marker_color="#c6cc14",
+    selected_marker_color="#636EFA",
+    selected_marker_size=28,
+    unselected_marker_opacity=.5)
+
+# Datos de Intersecciones
+
+# Nombre
+def render_interseccion_nombre(clickData):
+    if clickData is None:
+        return 'Haz click en una intersección para conocer más'
+    else:
+        return clickData['points'][0]['hovertext']
+
+# Hechos Viales
+def render_interseccion_hv(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Si no se ha hecho click a una intersección en el mapa pon un cero
+    if clickData is None:
+        
+        return '0'
+
+    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
+    elif clickData is not None:
+
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+        
+        #Sumo los hechos viales
+        interseccion_hv = hv_tiempo_data_cal_dsm_hora["hechos_viales"].sum()
+
+        return interseccion_hv
+
+# Lesionados
+def render_interseccion_les(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Si no se ha hecho click a una intersección en el mapa pon un cero
+    if clickData is None:
+        
+        return '0'
+
+    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
+    elif clickData is not None:
+
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+        #Sumo los lesionados
+        interseccion_les = hv_tiempo_data_cal_dsm_hora["lesionados"].sum()
+
+        return interseccion_les
+
+# Fallecidos
+def render_interseccion_fal(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Si no se ha hecho click a una intersección en el mapa pon un cero
+    if clickData is None:
+        
+        return '0'
+
+    # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
+    elif clickData is not None:
+    
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+        #hvi["hora"] = hvi["hora"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        # +" - "+ hvi["hora"]                # - %H
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hv_tiempo_data_cal = hvi.loc[start_date:end_date]
+        
+        #Filtro por día de la semana
+        hv_tiempo_data_cal_dsm = hv_tiempo_data_cal[hv_tiempo_data_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hv_tiempo_data_cal_dsm_hora = hv_tiempo_data_cal_dsm[(hv_tiempo_data_cal_dsm['hora']>=slider_hora[0])&(hv_tiempo_data_cal_dsm['hora']<=slider_hora[1])]
+
+        #Sumo los fallecidos
+        interseccion_fal = hv_tiempo_data_cal_dsm_hora["fallecidos"].sum()
+
+        return interseccion_fal
+
+
 # Hechos Viales por 
 def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, slider_hora, checklist_dias):
 
@@ -7560,41 +6075,6 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         return interseccion_hv_tiempo
 
-# Descargar Excel
-def render_down_data(n_clicks):
-    down_data = send_file("assets/hechosviales_sp.xlsx")
-    return down_data
-
-# Cerrar la ventana de información de los tipos de hechos viales
-def toggle_modal(open1, close1, modal):
-    if open1 or close1:
-        return not modal
-    return modal
-
-# Cerrar la ventana de información de la severidad de hechos viales
-def toggle_modal_sev(open1_sev, close1_sev, modal_sev):
-    if open1_sev or close1_sev:
-        return not modal_sev
-    return modal_sev
-
-# Cerrar la ventana de información de los usuarios afectados
-def toggle_modal_usaf(open1_usaf, close1_usaf, modal_usaf):
-    if open1_usaf or close1_usaf:
-        return not modal_usaf
-    return modal_usaf
-
-# Cerrar la ventana de información de los tipos de hechos viales
-def toggle_modal_thv(open1_thv, close1_thv, modal_thv):
-    if open1_thv or close1_thv:
-        return not modal_thv
-    return modal_thv
-
-# Cerrar la ventana de información de los tipos de hechos viales
-def toggle_modal_afres(open1_afres, close1_afres, modal_afres):
-    if open1_afres or close1_afres:
-        return not modal_afres
-    return modal_afres
-
 # Tabla de Tipos de hechos viales
 def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
     
@@ -7820,30 +6300,721 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
 
         return treemap
 
-# Tarjeta colapsable calendario
-def render_collapse_button_cal(n, is_open):
-    if n:
-        return not is_open
-    return collapse_button
+# Cerrar la ventana de información de los tipos de hechos viales
+def toggle_modal(open1, close1, modal):
+    if open1 or close1:
+        return not modal
+    return modal
 
-# Tarjeta colapsable días de la semana
-def render_collapse_button_dsem(n, is_open):
-    if n:
-        return not is_open
-    return collapse_button_dsem
 
-# Tarjeta colapsable hora
-def render_collapse_button_hora(n, is_open):
-    if n:
-        return not is_open
-    return collapse_button_hora
+
+
+
+
+# Checklist de tipos de hechos viales dependiendo de los usuarios afectados opciones
+def render_opciones_dos(hv_usu_opciones, hv_graves_opciones):
+
+    # Todos
+    
+    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Incendio', 'value': 'Incendio'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]    
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+    # Lesionados
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]        
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]  
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},            
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+    # Fallecidos
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ] 
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+            {'label': ' Volcadura', 'value': 'Volcadura'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+        ]  
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Atropello', 'value': 'Atropello'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Alcance', 'value': 'Alcance'},
+            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
+            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
+            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
+        ]
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return [
+            {'label': ' Atropello', 'value': 'Atropello'},
+        ]
+
+# Checklist de tipos de hechos viales dependiendo de los usuarios afectados valores
+def render_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
+    
+    # Todos
+
+    if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento','Incendio', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+       return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'todos':
+
+        return ['Atropello']
+
+    # Lesionados
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque de Reversa', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+       return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',] 
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque Lateral', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento',]
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Alcance','Caida de Persona', 'Choque de Crucero', 'Choque de Frente','Choque Diverso', 'Choque Lateral', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'lesionados':
+
+        return ['Atropello']
+
+    # Fallecidos
+
+    elif hv_usu_opciones == [] and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+
+    elif 'Motorizado' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque de Frente', 'Choque Diverso', 'Choque Lateral', 'Estrellamiento', 'Volcadura']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+        
+    elif 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Atropello', 'Choque Diverso']
+    
+    elif 'Peaton' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+ 
+    elif 'Bicicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Atropello', 'Choque Diverso']
+
+    elif 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance', 'Choque Diverso']
+    
+    elif 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Motocicleta' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Atropello','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+
+    elif 'Motocicleta' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Alcance','Choque de Crucero', 'Choque Diverso', 'Estrellamiento']
+    
+    elif 'Peaton' in hv_usu_opciones and hv_graves_opciones == 'fallecidos':
+
+        return ['Atropello']
+
 
 #----------
-
-# Display tabs
-def render_hechosviales(tab):
-    if tab == 'hv_intersecciones':
-        return hv_intersecciones()
-
-    elif tab == 'hv_general':
-        return hv_general()

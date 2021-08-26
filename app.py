@@ -21,10 +21,10 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, render_tabla,
-	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora,
-	#render_opciones_dos, render_opciones_dos_dos,
+	render_treemap, render_collapse_button_fecha, render_collapse_button_hv, render_collapse_button_bavan,
 	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, toggle_modal_afres,
-    render_hv_totales, render_hv_les_totales, render_hv_fall_totales
+    render_hv_totales, render_hv_les_totales, render_hv_fall_totales,
+    render_opciones_dos, render_opciones_dos_dos
 	)
 
 # Connect to config
@@ -113,14 +113,6 @@ def get_ayuda(tab):
 
 def get_hechosviales(tab):
     return render_hechosviales(tab)
-
-# Filtro de hora
-
-@app.callback(Output('output-container-range-slider', 'children'),
-    [Input('slider_hora', 'value')])
-
-def update_hora_selec(value):   
-    return format(value)
 
 #-- Interseccion - Nombre
 
@@ -351,10 +343,10 @@ def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
 
 @app.callback(
     Output("collapse_cal", "is_open"),
-    [Input("collapse_button_cal", "n_clicks")],
+    [Input("collapse_button_fecha", "n_clicks")],
     [State("collapse_cal", "is_open")],)
 
-def render_collapse_button_cal(n, is_open):
+def render_collapse_button_fecha(n, is_open):
     if n:
         return not is_open
     return is_open
@@ -363,10 +355,10 @@ def render_collapse_button_cal(n, is_open):
 
 @app.callback(
     Output("collapse_dsem", "is_open"),
-    [Input("collapse_button_dsem", "n_clicks")],
+    [Input("collapse_button_hv", "n_clicks")],
     [State("collapse_dsem", "is_open")],)
 
-def render_collapse_button_dsem(n, is_open):
+def render_collapse_button_hv(n, is_open):
     if n:
         return not is_open
     return is_open
@@ -376,14 +368,34 @@ def render_collapse_button_dsem(n, is_open):
 
 @app.callback(
     Output("collapse_hora", "is_open"),
-    [Input("collapse_button_hora", "n_clicks")],
+    [Input("collapse_button_bavan", "n_clicks")],
     [State("collapse_hora", "is_open")],)
 
-def render_collapse_button_hora(n, is_open):
+def render_collapse_button_bavan(n, is_open):
     if n:
         return not is_open
     return is_open
 
+
+
+
+@app.callback(
+    Output('checklist_tipo_hv', 'options'),
+    Input('hv_usu_opciones', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    prevent_initial_call=False)
+
+def get_opciones_dos(hv_usu_opciones, hv_graves_opciones):
+    return render_opciones_dos(hv_usu_opciones, hv_graves_opciones)
+
+@app.callback(
+    Output('checklist_tipo_hv', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    prevent_initial_call=False)
+
+def get_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
+    return render_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

@@ -80,25 +80,25 @@
 
 
 .rc-slider-track {
-  background-color: #767c85;
+  background-color: #545B62;
 }
 
 .rc-slider-dot-active {  
-  border-color: #767c85;
-  border: solid 2px #767c85;
+  border-color: #545B62;
+  border: solid 2px #545B62;
 }
 
 .rc-slider-handle {
-  background-color: #767c85;
-  border-color: #767c85;
+  background-color: #545B62;
+  border-color: #545B62;
 }
 
 .rc-slider-handle:hover {
-  border-color: #767c85;
+  border-color: #545B62;
 }
 
 .rc-slider-handle-active:active {
-  border-color: #767c85;
+  border-color: #545B62;
 }
 
 
@@ -134,4 +134,26 @@
 
 .custom-control-label::after {
   content: none !important;
+}
+
+.tarjeta_map
+{
+  border:#000000 !important;
+}
+
+.tarjeta_arriba_map
+{
+  border-radius: .25rem .25rem 0 0 !important;
+}
+
+
+
+.DateRangePickerInput__withBorder
+{
+  border:1px solid #545B62 !important;
+}
+
+.tabla_int_row th
+{
+    font-weight: normal !important;
 }
