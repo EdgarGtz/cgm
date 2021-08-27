@@ -67,10 +67,10 @@ def render_down_data(n_clicks):
 img1 = 'assets/down-arrow.png' # replace with your own image
 encoded_img1 = base64.b64encode(open(img1, 'rb').read()).decode('ascii')
 
-img2 = 'assets/info.png' # replace with your own image
+img2 = 'assets/informacion.png' # replace with your own image
 encoded_img2 = base64.b64encode(open(img2, 'rb').read()).decode('ascii')
 
-img3 = 'assets/download.png' # replace with your own image
+img3 = 'assets/descargar.png' # replace with your own image
 encoded_img3 = base64.b64encode(open(img3, 'rb').read()).decode('ascii')
 
 #----------
@@ -754,15 +754,15 @@ def hv_general():
                     dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col(['Datos de hechos viales desde el 2015 proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
+                            dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
                                 html.Br(),
-                                html.I('(Última actualización Julio 2021.)')
-                                ], style={'display':'inline-block'},lg=10, md=10),
+                                html.I('(Última actualización: Julio 2021)')
+                                ], style={'display':'inline-block'},lg=9, md=9),
                             dbc.Col(
                                 html.Div([
                                     html.Button([
                                         html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                                style={'width':'6%','float':'left'},
+                                                style={'width':'8%','float':'left'},
                                                 className="pt-1"),
                                         html.B("Descargar"),
                                         ], 
@@ -772,7 +772,7 @@ def hv_general():
                                         style={'float':'right','background-color':'#545B62','color':'white'}
                                     ),
                                     Download(id="download-dataframe-csv")
-                                ], className='d-flex justify-content-center'), lg=2, md=2, style={'display':'inline-block'}, className='align-self-center',
+                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
                             )
                         ])
 
@@ -1435,7 +1435,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -1525,7 +1525,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -1615,7 +1615,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -1697,7 +1697,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -1787,7 +1787,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -1877,7 +1877,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
             ),
             margin = dict(t=0, l=0, r=0, b=0)
         )
-        mapa_interac.update_traces(marker_color="#f5dd42",
+        mapa_interac.update_traces(marker_color="#c6cc14",
             unselected_marker_opacity=1,
             hovertemplate = "<br><b>%{customdata[2]}</b> <br>Hechos Viales con Lesionados: %{marker.size}<br>Lesionados: %{customdata[0]} <br>Fallecidos:%{customdata[1]}")
         
@@ -5227,19 +5227,7 @@ def render_opciones_dos(hv_usu_opciones, hv_graves_opciones):
     
     if hv_usu_opciones == [] and hv_graves_opciones == 'todos':
 
-        return [
-            {'label': ' Alcance', 'value': 'Alcance'},
-            {'label': ' Atropello', 'value': 'Atropello'},
-            {'label': ' Caída de Persona', 'value': 'Caida de Persona'},
-            {'label': ' Choque de Crucero', 'value': 'Choque de Crucero'},
-            {'label': ' Choque de Frente', 'value': 'Choque de Frente'},
-            {'label': ' Choque de Reversa', 'value': 'Choque de Reversa'},
-            {'label': ' Choque Diverso', 'value': 'Choque Diverso'},
-            {'label': ' Choque Lateral', 'value': 'Choque Lateral'},
-            {'label': ' Estrellamiento', 'value': 'Estrellamiento'},
-            {'label': ' Incendio', 'value': 'Incendio'},
-            {'label': ' Volcadura', 'value': 'Volcadura'},
-        ] 
+        return [] 
 
     elif 'Motorizado' in hv_usu_opciones and 'Peaton' in hv_usu_opciones and 'Bicicleta' in hv_usu_opciones and 'Motocicleta' in hv_usu_opciones and hv_graves_opciones == 'todos':
 
@@ -6135,8 +6123,6 @@ def hv_intersecciones():
 
                 ]),
 
-                html.Br(),
-
             ]),
 
         ]),
@@ -6154,7 +6140,15 @@ def hv_intersecciones():
                         dcc.Graph(
                             id = 'tabla',
                             figure = {},
-                            config={'displaylogo': False}
+                            config={
+                                    'modeBarButtonsToRemove':
+                                    ['lasso2d', 'pan2d',
+                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                    'resetScale2d', 'hoverClosestCartesian',
+                                    'hoverCompareCartesian', 'toggleSpikelines',
+                                    'select2d',],
+                                    'displaylogo': False
+                                },
                             ),
                     style={'padding':'0px'}
                     )
@@ -6172,65 +6166,71 @@ def hv_intersecciones():
                             className="mt-1", 
                             style={'width':'90%','display':'inline-block'}),
 
-                        html.Span(
-                            dbc.Button(
-                                html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
-                                        style={'float':'right'},
-                                        className="p-0 img-fluid"), 
-                                id="open1", 
-                                n_clicks=0, 
-                                style={'display':'inline-block',
-                                        'float':'right','padding':'0', 
-                                        'width':'5%','background-color':'transparent',
-                                        'border-color':'transparent','padding-top':'2px'},
-                                className='rounded-circle'
+                       html.Div([
 
-                                ),
-
-                            id="tooltip-target",
-                            style={"textDecoration": "underline", "cursor": "pointer"},
-                        ),
-
-                        dbc.Tooltip(
-                            "Más información",
-                            target="tooltip-target",
-                        ),
-                            
-                        dbc.Modal([
-
-                            dbc.ModalHeader(html.B("Tipos de Hechos Viales")),
-
-                            dbc.ModalBody([
-                                html.Ul([
-                                    html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
-                                    html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad.']),
-                                    html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
-                                    html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
-                                    html.Li([html.B('Choque de Frente:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación opuestos, los cuales chocan cuando uno de ellos invade parcial o totalmente el carril, arroyo de circulación o trayectoria contraria. ']),
-                                    html.Li([html.B('Choque Diverso:'),' En esta clasificación queda cualquier hecho de tránsito no especificado en los puntos anteriores. ']),
-                                    html.Li([html.B('Choque Lateral:'),' Ocurre entre dos o más vehículos cuyos conductores circulan en carriles o con trayectorias paralelas, en el mismo sentido chocando los vehículos entre sí, cuando uno de ellos invada parcial o totalmente el carril o trayectoria donde circula el otro.']),
-                                    html.Li([html.B('Estrellamiento:'),' Ocurre cuando un vehículo en movimiento en cualquier sentido choca con algo que se encuentra provisional o permanentemente estático.'])
-
-                                ], style={'list-style-type':'none'}, className="p-1")
-
-                            ],style={"textAlign":"justify",'font-size':'100%'}),
-
-                            dbc.ModalFooter([
-                                
+                            html.Span(
                                 dbc.Button(
-                                    "Cerrar", 
-                                    id="close1", 
-                                    className="ml-auto btn btn-secondary", 
-                                    n_clicks=0
-                                )
-                            ]),
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img2), 
+                                            style={'float':'right'},
+                                            className="p-0 img-fluid"), 
+                                    id="open1", 
+                                    n_clicks=0, 
+                                    style={'display':'inline-block',
+                                            'float':'right','padding':'0', 
+                                            'width':'5%','background-color':'transparent',
+                                            'border-color':'transparent','padding-top':'2px'},
+                                    className='rounded-circle'
 
-                            ],
-                            id="modal",
-                            centered=True,
-                            size="lg",
-                            is_open=False,
-                        ),
+                                    ),
+
+                                id="tooltip-target",
+                                style={"textDecoration": "underline", "cursor": "pointer"},
+                            ),
+
+                            dbc.Tooltip(
+                                "Más información",
+                                target="tooltip-target",
+                            ),
+                                
+                            dbc.Modal([
+
+                                dbc.ModalHeader(html.B("Tipos de Hechos Viales")),
+
+                                dbc.ModalBody([
+                                    html.Ul([
+                                        html.Li([html.B('Alcance:'),' Sucede cuando un conductor impacta con su vehículo en la parte trasera de otro.']),
+                                        html.Li([html.B('Atropello:'),' Ocurre cuando un vehículo en movimiento impacta con una persona. La persona puede estar estática o en movimiento ya sea caminando, corriendo o montando en patines, patinetas, o cualquier juguete similar, o trasladándose asistiéndose de aparatos o de vehículos no regulados por este reglamento, esto en el caso de las personas con discapacidad. Es imporante destacar que este tipo de hevho vial se asocia únicamente con peatones.']),
+                                        html.Li([html.B('Caída de persona:'),' Ocurre cuando una persona cae hacia fuera o dentro de un vehículo en movimiento, comúnmente dentro de un autobús de transporte público. ']),
+                                        html.Li([html.B('Choque de crucero:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación que convergen o se cruzan, invadiendo un vehículo parcial o totalmente el arroyo de circulación de otro. ']),
+                                        html.Li([html.B('Choque de Reversa:'),' Ocurre cuando un vehículo choca con otro al ir de reversa.']),
+                                        html.Li([html.B('Choque de Frente:'),' Ocurre entre dos o más vehículos provenientes de arroyos de circulación opuestos, los cuales chocan cuando uno de ellos invade parcial o totalmente el carril, arroyo de circulación o trayectoria contraria. ']),
+                                        html.Li([html.B('Choque Diverso:'),' En esta clasificación queda cualquier hecho de tránsito no especificado en los puntos anteriores. ']),
+                                        html.Li([html.B('Choque Lateral:'),' Ocurre entre dos o más vehículos cuyos conductores circulan en carriles o con trayectorias paralelas, en el mismo sentido chocando los vehículos entre sí, cuando uno de ellos invada parcial o totalmente el carril o trayectoria donde circula el otro.']),
+                                        html.Li([html.B('Estrellamiento:'),' Ocurre cuando un vehículo en movimiento en cualquier sentido choca con algo que se encuentra provisional o permanentemente estático.']),
+                                        html.Li([html.B('Incendio:'),' Ocurre cuando existe un incendio por un percance vial.']),
+                                        html.Li([html.B('Volcadura:'),' Ocurre cuando un vehículo pierde completamente el contacto entre llantas y superficie de rodamiento originándose giros verticales o transversales']),
+
+                                    ], style={'list-style-type':'none'}, className="p-1")
+
+                                ],style={"textAlign":"justify",'font-size':'100%'}),
+
+                                dbc.ModalFooter([
+                                    
+                                    dbc.Button(
+                                        "Cerrar", 
+                                        id="close1", 
+                                        className="ml-auto btn btn-secondary", 
+                                        n_clicks=0
+                                    )
+                                ]),
+
+                                ],
+                                id="modal",
+                                centered=True,
+                                size="lg",
+                                is_open=False,
+                            ),
+                        ])
 
                     ], className='d-flex align-items-center'),
 
@@ -6239,7 +6239,15 @@ def hv_intersecciones():
                             id = 'treemap',
                             figure = {},
                             style={'padding':'0px'},
-                            config={'displaylogo': False}
+                            config={
+                                    'modeBarButtonsToRemove':
+                                    ['lasso2d', 'pan2d',
+                                    'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                    'resetScale2d', 'hoverClosestCartesian',
+                                    'hoverCompareCartesian', 'toggleSpikelines',
+                                    'select2d',],
+                                    'displaylogo': False
+                                },
                             ),
                     style={'padding':'0px'}
                     )
@@ -6254,11 +6262,18 @@ def hv_intersecciones():
                     dbc.CardHeader('Datos'),
                     dbc.CardBody(
                         dbc.Row([
-                            dbc.Col('Datos de hechos viales de los últimos 6 años (2015 - 2020) proporcionados por la Secretaría de Seguridad Pública y procesados por el IMPLANG.', style={'display':'inline-block'},lg=9, md=9),
+                            dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
+                                html.Br(),
+                                html.I('(Última actualización: Julio 2021)')
+                                ], style={'display':'inline-block'},lg=9, md=9),
                             dbc.Col(
                                 html.Div([
-                                    html.Button(
-                                        html.B("Descarga la base de datos completa"), 
+                                    html.Button([
+                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                style={'width':'8%','float':'left'},
+                                                className="pt-1"),
+                                        html.B("Descargar"),
+                                        ], 
                                         id="btn_csv",
                                         className="btn",
                                         n_clicks=None,
@@ -6850,7 +6865,7 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         # Tabla
         tabla = go.Figure(
             [go.Table(
-                    header=dict(values=list(['Tipo de accidente','Hechos viales','Fallecidos','Lesionados']),
+                    header=dict(values=['Tipo de accidente','Hechos viales','Lesionados','Fallecidos'],
                         fill_color='#343332',
                         font=dict(color='white'),
                         align='center'),
@@ -6940,6 +6955,7 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
 
         # Repetir tipo de hecho vial y convertir a DataFrame
         df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
+        df_causas['Total'] = df_causas['hechos_viales'].count()*['Total']
 
         # Treemap
         treemap = px.treemap(df_causas, 
@@ -6947,7 +6963,7 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
                         values='hechos_viales',
                         color='causa_accidente',
                         )
-        treemap.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+        treemap.update_layout(margin = dict(t=20, l=20, r=20, b=10))
         treemap.data[0].hovertemplate = '%{label}<br>%{value}'
 
         return treemap

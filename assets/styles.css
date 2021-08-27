@@ -122,6 +122,7 @@
 .custom-control
 {
   display: inline-block !important;
+  z-index: 0 !important;
 }
 
 .custom-checkbox
