@@ -6865,7 +6865,7 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         # Tabla
         tabla = go.Figure(
             [go.Table(
-                    header=dict(values=['Tipo de accidente','Hechos viales','Lesionados','Fallecidos'],
+                    header=dict(values=['Tipo','Hechos viales','Lesionados','Fallecidos'],
                         fill_color='#343332',
                         font=dict(color='white'),
                         align='center'),
