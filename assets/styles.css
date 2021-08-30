@@ -140,6 +140,7 @@
 .tarjeta_map
 {
   border:#000000 !important;
+  background-color: #343332;
 }
 
 .tarjeta_arriba_map
@@ -158,3 +159,4 @@
 {
     font-weight: normal !important;
 }
+

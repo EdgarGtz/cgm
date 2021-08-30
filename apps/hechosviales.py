@@ -729,14 +729,20 @@ def hv_general():
                 dbc.Card([
 
                     dbc.CardBody(
-                        dcc.Graph(
-                            id = 'mapa_interac',
-                            figure = {},
-                            config={
-                            'displayModeBar': False
-                            },
-                            style={'height':'85vh'}
-                        ),
+
+                        dcc.Loading(
+
+                            dcc.Graph(
+                                id = 'mapa_interac',
+                                figure = {},
+                                config={
+                                'displayModeBar': False
+                                },
+                                style={'height':'85vh'}
+                            ),
+
+                        color="#42f581", type="cube"),
+
                     style={'padding':'0px'},
                     )
                 ], className='tarjeta_map'), 
@@ -795,7 +801,6 @@ def render_collapse_button_bavan(n, is_open):
     if n:
         return not is_open
     return collapse_button_bavan
-
 
 # Mapa interactivo
 def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
@@ -2421,6 +2426,34 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         
         return mapa_interac
 
+    mapa_data = {
+       "Lat": pd.Series(25.6572),
+       "Lon": pd.Series(-100.3689),
+        "hechos_viales" : pd.Series(0),
+       }
+    mapa_data = pd.DataFrame(mapa_data)
+
+    #-- Graph
+    mapa_interac = go.Figure(
+        px.scatter_mapbox(mapa_data, lat="Lat", lon="Lon",
+        size = 'hechos_viales',
+        size_max=1, 
+        zoom=12.5,
+        hover_data={'Lat':False, 'Lon':False, 'hechos_viales':False},
+        opacity=0.9))
+
+    mapa_interac.update_layout(clickmode='event+select', 
+         mapbox=dict(
+            accesstoken=mapbox_access_token,
+            center=dict(lat=25.6572, lon=-100.3689),
+            style="dark"
+        ),
+    margin = dict(t=0, l=0, r=0, b=0)
+    )
+    mapa_interac.update_traces(marker_color="#c6cc14",
+        unselected_marker_opacity=1)
+
+    return mapa_interac
 
     # -------------------------------------------
 
