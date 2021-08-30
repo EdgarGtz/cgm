@@ -775,7 +775,7 @@ def hv_general():
                                                 html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
                                                         style={'width':'8%','float':'left'},
                                                         className="pt-1"),
-                                                html.B("Descargar CSV"),
+                                                html.B("Descargar Excel"),
                                                 ], 
                                                 id="btn_csv",
                                                 className="btn",
