@@ -763,23 +763,51 @@ def hv_general():
                             dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
                                 html.Br(),
                                 html.I('(Última actualización: Julio 2021)')
-                                ], style={'display':'inline-block'},lg=9, md=9),
-                            dbc.Col(
-                                html.Div([
-                                    html.Button([
-                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                                style={'width':'8%','float':'left'},
-                                                className="pt-1"),
-                                        html.B("Descargar"),
-                                        ], 
-                                        id="btn_csv",
-                                        className="btn",
-                                        n_clicks=None,
-                                        style={'float':'right','background-color':'#545B62','color':'white'}
-                                    ),
-                                    Download(id="download-dataframe-csv")
-                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
-                            )
+                                ], style={'display':'inline-block'},lg=8, md=8),
+                            dbc.Col([
+
+                                dbc.Row([
+
+                                    dbc.Col([
+                                    
+                                        html.Div([
+                                            html.Button([
+                                                html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                        style={'width':'8%','float':'left'},
+                                                        className="pt-1"),
+                                                html.B("Descargar CSV"),
+                                                ], 
+                                                id="btn_csv",
+                                                className="btn",
+                                                n_clicks=None,
+                                                style={'float':'right','background-color':'#016E38','color':'white'}
+                                            ),
+                                            Download(id="download-dataframe-csv")
+                                        ], className='d-flex justify-content-center'),
+
+                                    ]),
+
+                                    dbc.Col([
+
+                                        html.Div([
+                                            html.Button([
+                                                html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                        style={'width':'8%','float':'left'},
+                                                        className="pt-1"),
+                                                html.B("Descargar SHP"),
+                                                ], 
+                                                id="btn_csv",
+                                                className="btn",
+                                                n_clicks=None,
+                                                style={'float':'right','background-color':'#636EFA','color':'white'}
+                                            ),
+                                            Download(id="download-dataframe-csv")
+                                        ], className='d-flex justify-content-center')
+
+                                    ])
+                                ])
+
+                            ], lg=4, md=4, style={'display':'inline-block'}, className='align-self-center',)
                         ])
 
                     )
