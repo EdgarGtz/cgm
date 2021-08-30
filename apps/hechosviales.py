@@ -173,7 +173,7 @@ def hv_general():
                                         allowCross=False,
                                         dots=True,
                                         tooltip={'always_visible': False , "placement":"bottom"},
-                                        updatemode='drag'
+                                        updatemode='mouseup'
                                     ),
 
                                 ]),
@@ -620,7 +620,7 @@ def hv_general():
                                         allowCross=False,
                                         dots=True,
                                         tooltip={'always_visible': False , "placement":"bottom"},
-                                        updatemode='drag',
+                                        updatemode='mouseup',
                                         className='px-2 pt-2',
                                     ),
 
@@ -6065,7 +6065,7 @@ def hv_intersecciones():
                                 allowCross=False,
                                 dots=True,
                                 tooltip={'always_visible': False , "placement":"bottom"},
-                                updatemode='drag'
+                                updatemode='mouseup'
                             ),
                         ])
 
