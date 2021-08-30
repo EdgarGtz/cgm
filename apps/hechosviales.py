@@ -1511,7 +1511,7 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
         hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
 
         # Filtro por tipo de hecho vial
-        hv_les_usu_thv = hv_les_usu[(hv_graves_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+        hv_les_usu_thv = hv_les_usu[(hv_les_usu['tipo_accidente'].isin(checklist_tipo_hv))]
 
         # Filtro por afectado
         hv_les_usu_thv_afect = hv_les_usu_thv[hv_les_usu_thv.tipo_v_afec != 0]
