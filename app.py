@@ -21,9 +21,10 @@ from apps.alfonsoreyes import (alfonsoreyes, render_alfonsoreyes, render_conteo,
 from apps.hechosviales import (hechosviales, render_hechosviales, render_interseccion_nombre,
 	render_interseccion_hv, render_interseccion_les, render_interseccion_fal,
 	render_interseccion_hv_tiempo, render_mapa_interac, render_down_data, render_tabla,
-	render_treemap, render_collapse_button_cal, render_collapse_button_dsem, render_collapse_button_hora,
-	render_opciones_dos, render_opciones_dos_dos,
-	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, 
+	render_treemap, render_collapse_button_fecha, render_collapse_button_hv, render_collapse_button_bavan,
+	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, toggle_modal_afres,
+    render_hv_totales, render_hv_les_totales, render_hv_fall_totales,
+    render_opciones_dos, render_opciones_dos_dos
 	)
 
 # Connect to config
@@ -81,22 +82,6 @@ def get_opciones(tab):
     return render_opciones(tab)
 
 
-@app.callback(
-	Output('checklist_tipo_hv', 'options'),
- 	Input('hv_usvuln_opciones', 'value'),
- 	Input('hv_graves_opciones', 'value'))
-
-def get_opciones_dos(hv_usvuln_opciones, hv_graves_opciones):
-    return render_opciones_dos(hv_usvuln_opciones, hv_graves_opciones)
-
-@app.callback(
-	Output('checklist_tipo_hv', 'value'),
- 	Input('hv_usvuln_opciones', 'value'))
-
-def get_opciones_dos_dos(hv_usvuln_opciones):
-    return render_opciones_dos_dos(hv_usvuln_opciones)
-
-
 # Conteo y Velocidades
 
 @app.callback(
@@ -120,6 +105,8 @@ def get_ayuda(tab):
     return render_alfonsoreyes(tab)
 
 
+#----------
+
 # Hechos Viales
 
 @app.callback(
@@ -129,15 +116,8 @@ def get_ayuda(tab):
 def get_hechosviales(tab):
     return render_hechosviales(tab)
 
-# Filtro de hora
 
-@app.callback(Output('output-container-range-slider', 'children'),
-    [Input('slider_hora', 'value')])
-
-def update_hora_selec(value):   
-    return format(value)
-
-#-- Interseccion - Nombre
+#-- Intersecciones - Nombre
 
 @app.callback(
 	Output('interseccion_nombre', 'children'), 
@@ -146,7 +126,8 @@ def update_hora_selec(value):
 def get_interseccion_nombre(clickData):
 	return render_interseccion_nombre(clickData)
 
-#-- Interseccion - Hechos Viales
+
+#-- Intersecciones - Hechos Viales
 
 @app.callback(Output('interseccion_hv', 'children'), 
 	[Input('mapa', 'clickData'),
@@ -158,7 +139,8 @@ def get_interseccion_nombre(clickData):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_hv(clickData, start_date, end_date, hora, diasem)
 
-#-- Interseccion - Lesionados
+
+#-- Intersecciones - Lesionados
 
 @app.callback(Output('interseccion_les', 'children'), 
 	[Input('mapa', 'clickData'),
@@ -170,7 +152,8 @@ def get(clickData, start_date, end_date, hora, diasem):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_les(clickData, start_date, end_date, hora, diasem)
 
-#-- Interseccion - Fallecidos
+
+#-- Intersecciones - Fallecidos
 
 @app.callback(Output('interseccion_fal', 'children'), 
 	[Input('mapa', 'clickData'),
@@ -182,49 +165,22 @@ def get(clickData, start_date, end_date, hora, diasem):
 def get(clickData, start_date, end_date, hora, diasem):
  	return render_interseccion_fal(clickData, start_date, end_date, hora, diasem)
 
-#-- Mapa interactivo
 
-@app.callback(Output('mapa_interac', 'figure'), 
-    [Input('calendario', 'start_date'),
-    Input('calendario', 'end_date'),
-    Input('slider_hora', 'value'),
-    Input('checklist_dias', 'value'),
-    Input('hv_graves_opciones', 'value'),
-    Input('hv_usvuln_opciones', 'value'),
-    Input('checklist_tipo_hv', 'value'),
-    Input('hv_afres_opciones', 'value'),
-    Input('hv_sexo_opciones', 'value'),
-    Input('checklist_tipo_veh', 'value'),
-    Input('slider_edad', 'value')],
-            prevent_initial_call=False)
-
-def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
-    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usvuln_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
-
-#-- Intersección - Hechos Viales por Año
+#-- Intersecciones - Hechos Viales por Año
 
 @app.callback(Output('interseccion_hv_tiempo', 'figure'),
-	[Input('mapa', 'clickData'),
-	Input('periodo_hv', 'active_tab'),
-	Input('calendario', 'start_date'),
-	Input('calendario', 'end_date'),
-	Input('slider_hora', 'value'),
-	Input('checklist_dias', 'value')])
+    [Input('mapa', 'clickData'),
+    Input('periodo_hv', 'active_tab'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
 
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
- 	return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
+    return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
-#-- Descargar Excel
 
-@app.callback(
-    Output("download-dataframe-csv", "data"),
-    Input("btn_csv", "n_clicks"),
-    prevent_initial_call=True,)
-
-def func(n_clicks):
-    return render_down_data(n_clicks)
-
-#-- Modal Tipos de Hechos Viales
+#-- Intersecciones - Modal Tipos de Hechos Viales
 
 @app.callback(
     Output("modal", "is_open"),
@@ -238,7 +194,147 @@ def toggle_modal(open1, close1, modal):
     return modal
 
 
-#-- Modal Severidad de Hechos Viales
+#-- Intersecciones - Tabla Tipos de Hechos Viales
+
+@app.callback(Output('tabla', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+    return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+
+#-- Intersecciones - Tabla Tipos y Causas de Hechos Viales
+
+@app.callback(Output('treemap', 'figure'), 
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+    
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+    return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+
+#-- Datos Generales - Tarjeta colapsable calendario
+
+@app.callback(
+    Output("collapse_cal", "is_open"),
+    [Input("collapse_button_fecha", "n_clicks")],
+    [State("collapse_cal", "is_open")],)
+
+def render_collapse_button_fecha(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+#-- Datos Generales - Tarjeta colapsable dias de la semana
+
+@app.callback(
+    Output("collapse_dsem", "is_open"),
+    [Input("collapse_button_hv", "n_clicks")],
+    [State("collapse_dsem", "is_open")],)
+
+def render_collapse_button_hv(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+#-- Datos Generales - Tarjeta colapsable hora
+
+@app.callback(
+    Output("collapse_hora", "is_open"),
+    [Input("collapse_button_bavan", "n_clicks")],
+    [State("collapse_hora", "is_open")],)
+
+def render_collapse_button_bavan(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+#-- Datos Generales - Mapa interactivo
+
+@app.callback(Output('mapa_interac', 'figure'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')],
+            prevent_initial_call=False)
+
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+#-- Datos Generales Hechos viales totales
+
+@app.callback(Output('hv_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+#-- Datos Generales Lesionados totales
+
+@app.callback(Output('hv_les_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_les_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+#-- Datos Generales Fallecidos totales
+
+@app.callback(Output('hv_fall_totales', 'children'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_hv_fall_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+#-- Datos Generales - Modal Gravedad
+
 @app.callback(
     Output("modal_sev", "is_open"),
     [Input("open1_sev", "n_clicks"), 
@@ -250,7 +346,9 @@ def toggle_modal_sev(open1_sev, close1_sev, modal_sev):
         return not modal_sev
     return modal_sev
 
-#-- Modal Usuarios Afectados
+
+#-- Datos Generales - Modal Usuario
+
 @app.callback(
     Output("modal_usaf", "is_open"),
     [Input("open1_usaf", "n_clicks"), 
@@ -261,6 +359,9 @@ def toggle_modal_usaf(open1_usaf, close1_usaf, modal_usaf):
     if open1_usaf or close1_usaf:
         return not modal_usaf
     return modal_usaf
+
+
+#-- Datos Generales - Modal Tipo de hecho vial
 
 @app.callback(
     Output("modal_thv", "is_open"),
@@ -273,67 +374,55 @@ def toggle_modal_thv(open1_thv, close1_thv, modal_thv):
         return not modal_thv
     return modal_thv
 
-#-- Tabla Tipos de Hechos Viales
 
-@app.callback(Output('tabla', 'figure'), 
-    [Input('mapa', 'clickData'),
-    Input('calendario', 'start_date'),
-    Input('calendario', 'end_date'),
-    Input('slider_hora', 'value'),
-    Input('checklist_dias', 'value')])
-    
-def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
-	return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
-
-#-- Tabla Tipos y Causas de Hechos Viales
-
-@app.callback(Output('treemap', 'figure'), 
-    [Input('mapa', 'clickData'),
-    Input('calendario', 'start_date'),
-    Input('calendario', 'end_date'),
-    Input('slider_hora', 'value'),
-    Input('checklist_dias', 'value')])
-    
-def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
-	return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
-
-#-- Tarjeta colapsable calendario
+#-- Datos Generales - Modal Afectado o responsable
 
 @app.callback(
-    Output("collapse_cal", "is_open"),
-    [Input("collapse_button_cal", "n_clicks")],
-    [State("collapse_cal", "is_open")],)
+    Output("modal_afres", "is_open"),
+    [Input("open1_afres", "n_clicks"), 
+    Input("close1_afres", "n_clicks")],
+    [State("modal_afres", "is_open")],)
 
-def render_collapse_button_cal(n, is_open):
-    if n:
-        return not is_open
-    return is_open
-
-#-- Tarjeta colapsable dias de la semana
-
-@app.callback(
-    Output("collapse_dsem", "is_open"),
-    [Input("collapse_button_dsem", "n_clicks")],
-    [State("collapse_dsem", "is_open")],)
-
-def render_collapse_button_dsem(n, is_open):
-    if n:
-        return not is_open
-    return is_open
+def toggle_modal_afres(open1_afres, close1_afres, modal_afres):
+    if open1_afres or close1_afres:
+        return not modal_afres
+    return modal_afres
 
 
-#-- Tarjeta colapsable hora
+#-- Datos Generales - Cargar opciones por usuario
 
 @app.callback(
-    Output("collapse_hora", "is_open"),
-    [Input("collapse_button_hora", "n_clicks")],
-    [State("collapse_hora", "is_open")],)
+    Output('checklist_tipo_hv', 'options'),
+    Input('hv_usu_opciones', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    prevent_initial_call=False)
 
-def render_collapse_button_hora(n, is_open):
-    if n:
-        return not is_open
-    return is_open
+def get_opciones_dos(hv_usu_opciones, hv_graves_opciones):
+    return render_opciones_dos(hv_usu_opciones, hv_graves_opciones)
 
+
+#-- Datos Generales - Cargar valores por usuario
+
+@app.callback(
+    Output('checklist_tipo_hv', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    prevent_initial_call=False)
+
+
+def get_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
+    return render_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones)
+
+#-- Descargar Excel
+
+@app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn_csv", "n_clicks"),
+    prevent_initial_call=True,)
+
+
+def func(n_clicks):
+    return render_down_data(n_clicks)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

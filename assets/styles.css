@@ -80,25 +80,25 @@
 
 
 .rc-slider-track {
-  background-color: #767c85;
+  background-color: #545B62;
 }
 
 .rc-slider-dot-active {  
-  border-color: #767c85;
-  border: solid 2px #767c85;
+  border-color: #545B62;
+  border: solid 2px #545B62;
 }
 
 .rc-slider-handle {
-  background-color: #767c85;
-  border-color: #767c85;
+  background-color: #545B62;
+  border-color: #545B62;
 }
 
 .rc-slider-handle:hover {
-  border-color: #767c85;
+  border-color: #545B62;
 }
 
 .rc-slider-handle-active:active {
-  border-color: #767c85;
+  border-color: #545B62;
 }
 
 
@@ -122,13 +122,41 @@
 .custom-control
 {
   display: inline-block !important;
+  z-index: 0 !important;
 }
 
 .custom-checkbox
 {
-  background-color: #F7F7F7 !important;
   margin: 4px !important;
   padding-top: 4px;
-  border-radius: 10px;
+}
+
+
+
+.custom-control-label::after {
+  content: none !important;
+}
+
+.tarjeta_map
+{
+  border:#000000 !important;
+  background-color: #343332;
+}
+
+.tarjeta_arriba_map
+{
+  border-radius: .25rem .25rem 0 0 !important;
+}
+
+
+
+.DateRangePickerInput__withBorder
+{
+  border:1px solid #545B62 !important;
+}
+
+.tabla_int_row th
+{
+    font-weight: normal !important;
 }
 
