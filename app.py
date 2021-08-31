@@ -11,6 +11,37 @@ app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
 				meta_tags=[{'name': 'viewport',
                              'content': 'width=device-width, initial-scale=1.0'},])
 
+
+
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FB009N3XV"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-2FB009N3XV');
+        </script>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
+
 server = app.server
 
 # Connect to app pages
