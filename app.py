@@ -24,7 +24,8 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	render_treemap, render_collapse_button_fecha, render_collapse_button_hv, render_collapse_button_bavan,
 	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, toggle_modal_afres,
     render_hv_totales, render_hv_les_totales, render_hv_fall_totales,
-    render_opciones_dos, render_opciones_dos_dos
+    render_opciones_dos, render_opciones_dos_dos, render_mapa_data,  render_down_data_csv,
+    render_down_data_tabla, render_down_data_treemap, render_interseccion_hv_tiempo_data, render_down_data_inter
 	)
 
 # Connect to config
@@ -117,6 +118,7 @@ def get_hechosviales(tab):
     return render_hechosviales(tab)
 
 
+
 #-- Intersecciones - Nombre
 
 @app.callback(
@@ -179,6 +181,28 @@ def get(clickData, start_date, end_date, hora, diasem):
 def update_output(clickData, active_tab, start_date, end_date, hora, diasem):
     return render_interseccion_hv_tiempo(clickData, active_tab, start_date, end_date, hora, diasem)
 
+#-- Intersecciones - Hechos Viales por Año Data
+
+@app.callback(Output('datos_interseccion', 'data'),
+    [Input('mapa', 'clickData'),
+    Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value')])
+
+def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
+    return render_interseccion_hv_tiempo_data(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+#-- Descargar CSV Datos Interseccion
+
+@app.callback(
+    Output("download_data_int", "data"),
+    Input("btn_perso_csv_inter", "n_clicks"),
+    State('datos_interseccion', 'data'),
+    prevent_initial_call=True,)
+
+def func(n_clicks, datos_interseccion):
+    return render_down_data_inter(n_clicks, datos_interseccion)
 
 #-- Intersecciones - Modal Tipos de Hechos Viales
 
@@ -196,7 +220,7 @@ def toggle_modal(open1, close1, modal):
 
 #-- Intersecciones - Tabla Tipos de Hechos Viales
 
-@app.callback(Output('tabla', 'figure'), 
+@app.callback([Output('tabla', 'figure'),Output('tabla_data', 'data')], 
     [Input('mapa', 'clickData'),
     Input('calendario', 'start_date'),
     Input('calendario', 'end_date'),
@@ -207,9 +231,22 @@ def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
     return render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias)
 
 
+#-- Descargar CSV Tipos de Hechos viales
+
+@app.callback(
+    Output("download-tipos-csv", "data"),
+    Input("btn_tipos_csv", "n_clicks"),
+    State('tabla_data', 'data'),
+    prevent_initial_call=True,)
+
+
+def func(n_clicks, data):
+    return render_down_data_tabla(n_clicks, data)
+
+
 #-- Intersecciones - Tabla Tipos y Causas de Hechos Viales
 
-@app.callback(Output('treemap', 'figure'), 
+@app.callback([Output('treemap', 'figure'),Output('treemap_data', 'data')], 
     [Input('mapa', 'clickData'),
     Input('calendario', 'start_date'),
     Input('calendario', 'end_date'),
@@ -218,6 +255,18 @@ def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
     
 def update_output(clickData, start_date, end_date, slider_hora, checklist_dias):
     return render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
+
+#-- Descargar CSV Tipos y Causas de Hechos viales
+
+@app.callback(
+    Output("download-tiposyc-csv", "data"),
+    Input("btn_tiposyc_csv", "n_clicks"),
+    State('treemap_data', 'data'),
+    prevent_initial_call=True,)
+
+
+def func(n_clicks, data):
+    return render_down_data_treemap(n_clicks, data)
 
 
 #-- Datos Generales - Tarjeta colapsable calendario
@@ -277,6 +326,41 @@ def render_collapse_button_bavan(n, is_open):
 
 def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
     return render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+#-- Datos Generales - Mapa data
+
+@app.callback(Output('mapa_data', 'data'), 
+    [Input('calendario', 'start_date'),
+    Input('calendario', 'end_date'),
+    Input('slider_hora', 'value'),
+    Input('checklist_dias', 'value'),
+    Input('hv_graves_opciones', 'value'),
+    Input('hv_usu_opciones', 'value'),
+    Input('checklist_tipo_hv', 'value'),
+    Input('hv_afres_opciones', 'value'),
+    Input('hv_sexo_opciones', 'value'),
+    Input('checklist_tipo_veh', 'value'),
+    Input('slider_edad', 'value')])
+
+def get(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones):
+    return render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, checklist_tipo_veh, slider_edad, hv_sexo_opciones)
+
+
+
+#-- Descargar CSV
+
+@app.callback(
+    Output("download-personal-csv", "data"),
+    Input("btn_perso_csv", "n_clicks"),
+    State('mapa_data', 'data'),
+    prevent_initial_call=True,)
+
+
+def func(n_clicks, data):
+    return render_down_data_csv(n_clicks, data)
+
+
+
 
 
 #-- Datos Generales Hechos viales totales
@@ -423,6 +507,8 @@ def get_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
 
 def func(n_clicks):
     return render_down_data(n_clicks)
+
+
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

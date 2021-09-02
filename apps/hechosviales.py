@@ -8,9 +8,12 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import numpy as np
+import json as json
 from datetime import datetime as dt
 from dash_extensions import Download
 from dash_extensions.snippets import send_file
+from dash_extensions.snippets import send_data_frame
+
 import base64
 
 #----------
@@ -28,6 +31,7 @@ def hechosviales():
                         dbc.Tabs([
                             dbc.Tab(label='Inicio', tab_id='hv_general'), #, disabled=True
                             dbc.Tab(label='Intersecciones', tab_id='hv_intersecciones'),
+                            dbc.Tab(label='Datos', tab_id='hv_datos'),
                         ],
                         id='tabs',
                         active_tab="hv_general",
@@ -57,6 +61,9 @@ def render_hechosviales(tab):
 
     elif tab == 'hv_general':
         return hv_general()
+
+    elif tab == 'hv_datos':
+        return hv_datos()
 
 # Descargar Excel
 def render_down_data(n_clicks):
@@ -743,77 +750,29 @@ def hv_general():
 
                         color="#42f581", type="cube"),
 
-                    style={'padding':'0px'},
-                    )
-                ], className='tarjeta_map'), 
+                    style={'padding':'0px'},),
 
-                html.Br(),
+                    dbc.CardBody([
+                        dcc.Store(id='mapa_data'),
+                        Download(id="download-personal-csv"),
+                        html.Button([
+                            #html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                            #        style={'width':'8%','float':'left'},
+                            #        className="pt-1"),
+                            html.B("Descargar datos en CSV"),
+                            ], 
+                            id="btn_perso_csv",
+                            className="btn btn-block",
+                            n_clicks=None,
+                            style={'float':'right','background-color':'#00b55b','color':'white'}
+                        ),
+                    ], className='p-0', style={'background-color':'transparent'}),
+
+                ], className='tarjeta_map'), 
 
             ],lg=8, md=8),
 
         ]),
-
-        # Inner Footer info extra
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader('Datos'),
-                    dbc.CardBody(
-                        dbc.Row([
-                            dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
-                                html.Br(),
-                                html.I('(Última actualización: Julio 2021)')
-                                ], style={'display':'inline-block'},lg=8, md=8),
-                            dbc.Col([
-
-                                dbc.Row([
-
-                                    dbc.Col([
-                                    
-                                        html.Div([
-                                            html.Button([
-                                                html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                                        style={'width':'8%','float':'left'},
-                                                        className="pt-1"),
-                                                html.B("Descargar Excel"),
-                                                ], 
-                                                id="btn_csv",
-                                                className="btn",
-                                                n_clicks=None,
-                                                style={'float':'right','background-color':'#016E38','color':'white'}
-                                            ),
-                                            Download(id="download-dataframe-csv")
-                                        ], className='d-flex justify-content-center'),
-
-                                    ]),
-
-                                    dbc.Col([
-
-                                        html.Div([
-                                            html.Button([
-                                                html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                                        style={'width':'8%','float':'left'},
-                                                        className="pt-1"),
-                                                html.B("Descargar SHP"),
-                                                ], 
-                                                id="btn_csv",
-                                                className="btn",
-                                                n_clicks=None,
-                                                style={'float':'right','background-color':'#636EFA','color':'white'}
-                                            ),
-                                            Download(id="download-dataframe-csv")
-                                        ], className='d-flex justify-content-center')
-
-                                    ])
-                                ])
-
-                            ], lg=4, md=4, style={'display':'inline-block'}, className='align-self-center',)
-                        ])
-
-                    )
-                ])
-            ])
-        ], className="pt-4")
 
     ])
 
@@ -2484,6 +2443,1264 @@ def render_mapa_interac(start_date, end_date, slider_hora, checklist_dias, hv_gr
     return mapa_interac
 
     # -------------------------------------------
+
+# Descargar CSV
+def render_down_data_csv(n_clicks, data):
+    
+    a_json = json.loads(data)
+    df = pd.DataFrame.from_dict(a_json, orient="columns")
+
+    csv = send_data_frame(df.to_csv, "hechos_viales_query.csv", index=False, encoding='ISO-8859-1')
+
+    return csv
+
+
+# Mapa interactivo
+def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
+    
+    # -------------------------------------------
+
+    # NADA
+
+    # Si no hay ningún día seleccionado ponme un mapa sin puntos
+    if checklist_dias == [] or checklist_tipo_hv == [] or checklist_tipo_veh == [] or hv_usu_opciones == []:
+    
+        mapa_data = {
+           "Lat": pd.Series(25.6572),
+           "Lon": pd.Series(-100.3689),
+            "hechos_viales" : pd.Series(0),
+           }
+        mapa_data = pd.DataFrame(mapa_data)
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.reset_index()
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    
+    # -------------------------------------------
+
+
+    # HECHOS VIALES TODOS -- Todos (A/R) -- Todos (M/F)
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_thv = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_thv_usu = hvi_cal_dsm_hora_thv[(hvi_cal_dsm_hora_thv['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_thv_usu
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+    
+    # HECHOS VIALES TODOS -- Afectados -- Todos (M/F)
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_usu = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_usu'].isin(hv_usu_opciones))]      
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_usu_thv = hvi_cal_dsm_hora_usu[(hvi_cal_dsm_hora_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hvi_cal_dsm_hora_usu_thv_afect = hvi_cal_dsm_hora_usu_thv[hvi_cal_dsm_hora_usu_thv.tipo_v_afec != 0]
+
+        #Filtro por edad
+        hvi_cal_dsm_hora_usu_thv_afect_edad = hvi_cal_dsm_hora_usu_thv_afect[(hvi_cal_dsm_hora_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hvi_cal_dsm_hora_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hvi_cal_dsm_hora_usu_thv_afect_edad_tveh = hvi_cal_dsm_hora_usu_thv_afect_edad[hvi_cal_dsm_hora_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_usu_thv_afect_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # HECHOS VIALES TODOS -- Responsables -- Todos (M/F)
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_usu = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_usu_thv = hvi_cal_dsm_hora_usu[(hvi_cal_dsm_hora_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hvi_cal_dsm_hora_usu_thv_resp = hvi_cal_dsm_hora_usu_thv[hvi_cal_dsm_hora_usu_thv.tipo_v_resp != 0]
+
+        #Filtro por edad
+        hvi_cal_dsm_hora_usu_thv_resp_edad = hvi_cal_dsm_hora_usu_thv_resp[(hvi_cal_dsm_hora_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hvi_cal_dsm_hora_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hvi_cal_dsm_hora_usu_thv_resp_edad_tveh = hvi_cal_dsm_hora_usu_thv_resp_edad[hvi_cal_dsm_hora_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_usu_thv_resp_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    
+    # ----------------
+
+
+    # HECHOS VIALES TODOS -- Todos (A/R) -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_usu = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_usu_thv = hvi_cal_dsm_hora_usu[(hvi_cal_dsm_hora_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_usu_thv
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # HECHOS VIALES TODOS -- Afectados -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_usu = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_usu_thv = hvi_cal_dsm_hora_usu[(hvi_cal_dsm_hora_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hvi_cal_dsm_hora_usu_thv_afect = hvi_cal_dsm_hora_usu_thv[hvi_cal_dsm_hora_usu_thv.tipo_v_afec != 0]
+
+        # Filtro por sexo
+        hvi_cal_dsm_hora_usu_thv_afect_sexo = hvi_cal_dsm_hora_usu_thv_afect[hvi_cal_dsm_hora_usu_thv_afect.sexo_afect == hv_sexo_opciones]
+
+        #Filtro por edad
+        hvi_cal_dsm_hora_usu_thv_afect_sexo_edad = hvi_cal_dsm_hora_usu_thv_afect_sexo[(hvi_cal_dsm_hora_usu_thv_afect_sexo['edad_afect_mid']>=slider_edad[0])&(hvi_cal_dsm_hora_usu_thv_afect_sexo['edad_afect_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hvi_cal_dsm_hora_usu_thv_afect_sexo_edad_tveh = hvi_cal_dsm_hora_usu_thv_afect_sexo_edad[hvi_cal_dsm_hora_usu_thv_afect_sexo_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_usu_thv_afect_sexo_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # HECHOS VIALES TODOS -- Responsables -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, todos los hechos viales seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'todos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por usuario
+        hvi_cal_dsm_hora_usu = hvi_cal_dsm_hora[(hvi_cal_dsm_hora['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hvi_cal_dsm_hora_usu_thv = hvi_cal_dsm_hora_usu[(hvi_cal_dsm_hora_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hvi_cal_dsm_hora_usu_thv_resp = hvi_cal_dsm_hora_usu_thv[hvi_cal_dsm_hora_usu_thv.tipo_v_resp != 0]
+
+        # Filtro por sexo
+        hvi_cal_dsm_hora_usu_thv_resp_sexo = hvi_cal_dsm_hora_usu_thv_resp[hvi_cal_dsm_hora_usu_thv_resp.sexo_resp == hv_sexo_opciones]
+
+        #Filtro por edad
+        hvi_cal_dsm_hora_usu_thv_resp_sexo_edad = hvi_cal_dsm_hora_usu_thv_resp_sexo[(hvi_cal_dsm_hora_usu_thv_resp_sexo['edad_resp_mid']>=slider_edad[0])&(hvi_cal_dsm_hora_usu_thv_resp_sexo['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hvi_cal_dsm_hora_usu_thv_resp_sexo_edad_tveh = hvi_cal_dsm_hora_usu_thv_resp_sexo_edad[hvi_cal_dsm_hora_usu_thv_resp_sexo_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hvi_cal_dsm_hora_usu_thv_resp_sexo_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+
+
+    # -------------------------------------------
+
+
+
+    # HECHOS VIALES LESIONADOS -- Todos -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+       
+    # HECHOS VIALES LESIONADOS -- Afectados -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hv_les_usu_thv_afect = hv_les_usu_thv[hv_les_usu_thv.tipo_v_afec != 0]
+
+        #Filtro por edad
+        hv_les_usu_thv_afect_edad = hv_les_usu_thv_afect[(hv_les_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_les_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
+    
+        # Filtro por tipo de vehículo
+        hv_les_usu_thv_afect_edad_tveh = hv_les_usu_thv_afect_edad[hv_les_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv_afect_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+    
+    # HECHOS VIALES LESIONADOS -- Responsables -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hv_les_usu_thv_resp = hv_les_usu_thv[hv_les_usu_thv.tipo_v_resp != 0]
+
+        #Filtro por edad
+        hv_les_usu_thv_resp_edad = hv_les_usu_thv_resp[(hv_les_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_les_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hv_les_usu_thv_resp_edad_tveh = hv_les_usu_thv_resp_edad[hv_les_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv_resp_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+
+    # ----------------
+
+    
+    # HECHOS VIALES LESIONADOS -- Todos -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+    
+    # HECHOS VIALES LESIONADOS -- Afectados -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hv_les_usu_thv_afect = hv_les_usu_thv[hv_les_usu_thv.tipo_v_afec != 0]
+
+        #Filtro por edad
+        hv_les_usu_thv_afect_edad = hv_les_usu_thv_afect[(hv_les_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_les_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
+
+        # Filtro por sexo
+        hv_les_usu_thv_afect_edad_sexo = hv_les_usu_thv_afect_edad[hv_les_usu_thv_afect_edad.sexo_afect == hv_sexo_opciones]
+
+        # Filtro por tipo de vehículo
+        hv_les_usu_thv_afect_edad_sexo_tveh = hv_les_usu_thv_afect_edad_sexo[hv_les_usu_thv_afect_edad_sexo["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv_afect_edad_sexo_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+    
+    # HECHOS VIALES LESIONADOS -- Responsables -- Masculino o Femenino
+
+    # Si hay algún día seleccionado, los hechos viales con lesionados seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'lesionados' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con lesionados
+        hv_les = hvi_cal_dsm_hora[hvi_cal_dsm_hora.lesionados != 0]
+
+        # Filtro por usuario
+        hv_les_usu = hv_les[(hv_les['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_les_usu_thv = hv_les_usu[(hv_les_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hv_les_usu_thv_resp = hv_les_usu_thv[hv_les_usu_thv.tipo_v_resp != 0]
+
+        #Filtro por edad
+        hv_les_usu_thv_resp_edad = hv_les_usu_thv_resp[(hv_les_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_les_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por sexo
+        hv_les_usu_thv_resp_edad_sexo = hv_les_usu_thv_resp_edad[hv_les_usu_thv_resp_edad.sexo_resp == hv_sexo_opciones]
+
+        # Filtro por tipo de vehículo
+        hv_les_usu_thv_resp_edad_sexo_tveh = hv_les_usu_thv_resp_edad_sexo[hv_les_usu_thv_resp_edad_sexo["tipo_v_resp"].isin(checklist_tipo_veh)]        
+
+        # Cambiar nombre
+        mapa_data = hv_les_usu_thv_resp_edad_sexo_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+
+
+    # -------------------------------------------
+
+
+
+    # HECHOS VIALES FALLECIDOS -- Todos -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'todos' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+    
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+   
+    # HECHOS VIALES FALLECIDOS -- Afectados -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'afectados' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hv_fall_usu_thv_afect = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_afec != 0]
+    
+        #Filtro por edad
+        hv_fall_usu_thv_afect_edad = hv_fall_usu_thv_afect[(hv_fall_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hv_fall_usu_thv_afect_edad_tveh = hv_fall_usu_thv_afect_edad[hv_fall_usu_thv_afect_edad["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv_afect_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # HECHOS VIALES FALLECIDOS -- Responsables
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones == 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hv_fall_usu_thv_resp = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_resp != 0]
+    
+        #Filtro por edad
+        hv_fall_usu_thv_resp_edad = hv_fall_usu_thv_resp[(hv_fall_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por tipo de vehículo
+        hv_fall_usu_thv_resp_edad_tveh = hv_fall_usu_thv_resp_edad[hv_fall_usu_thv_resp_edad["tipo_v_resp"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv_resp_edad_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+
+    # ----------------
+
+
+    # HECHOS VIALES FALLECIDOS -- Todos -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'todos' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+    
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # HECHOS VIALES FALLECIDOS -- Afectados -- Todos (M/F)
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'afectados' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por afectado
+        hv_fall_usu_thv_afect = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_afec != 0]
+    
+        #Filtro por edad
+        hv_fall_usu_thv_afect_edad = hv_fall_usu_thv_afect[(hv_fall_usu_thv_afect['edad_afect_mid']>=slider_edad[0])&(hv_fall_usu_thv_afect['edad_afect_mid']<=slider_edad[1])]
+
+        # Filtro por sexo
+        hv_fall_usu_thv_afect_edad_sexo = hv_fall_usu_thv_afect_edad[hv_fall_usu_thv_afect_edad.sexo_afect == hv_sexo_opciones]
+
+        # Filtro por tipo de vehículo
+        hv_fall_usu_thv_afect_edad_sexo_tveh = hv_fall_usu_thv_afect_edad_sexo[hv_fall_usu_thv_afect_edad_sexo["tipo_v_afec"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv_afect_edad_sexo_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+    
+    # HECHOS VIALES FALLECIDOS -- Responsables
+
+    # Si hay algún día seleccionado, los hechos viales con fallecidos seleccionados, con todos los usuarios vulnerables
+    elif checklist_dias != [] and hv_graves_opciones == 'fallecidos' and hv_afres_opciones == 'responsables' and hv_sexo_opciones != 'todos':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi["fecha2"] = hvi["fecha"]
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        #Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        #Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Filtro por hechos viales con fallecidos
+        hv_fall = hvi_cal_dsm_hora[hvi_cal_dsm_hora.fallecidos != 0]
+
+        # Filtro por usuario
+        hv_fall_usu = hv_fall[(hv_fall['tipo_usu'].isin(hv_usu_opciones))]
+
+        # Filtro por tipo de hecho vial
+        hv_fall_usu_thv = hv_fall_usu[(hv_fall_usu['tipo_accidente'].isin(checklist_tipo_hv))]
+
+        # Filtro por responsable
+        hv_fall_usu_thv_resp = hv_fall_usu_thv[hv_fall_usu_thv.tipo_v_resp != 0]
+    
+        #Filtro por edad
+        hv_fall_usu_thv_resp_edad = hv_fall_usu_thv_resp[(hv_fall_usu_thv_resp['edad_resp_mid']>=slider_edad[0])&(hv_fall_usu_thv_resp['edad_resp_mid']<=slider_edad[1])]
+
+        # Filtro por sexo
+        hv_fall_usu_thv_resp_edad_sexo = hv_fall_usu_thv_resp_edad[hv_fall_usu_thv_resp_edad.sexo_resp == hv_sexo_opciones]
+
+        # Filtro por tipo de vehículo
+        hv_fall_usu_thv_resp_edad_sexo_tveh = hv_fall_usu_thv_resp_edad_sexo[hv_fall_usu_thv_resp_edad_sexo["tipo_v_resp"].isin(checklist_tipo_veh)]
+
+        # Cambiar nombre
+        mapa_data = hv_fall_usu_thv_resp_edad_sexo_tveh
+
+        # Dejar fechas como texto
+        mapa_data = mapa_data.reset_index()
+        mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', '', '', '',],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', 'Gravedad', 'Usuario', 'Tipo hecho vial',], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,hv_graves_opciones,hv_usu_opciones,checklist_tipo_hv,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        mapa_data = pd.concat([mapa_data, filtros], axis=1, join="outer")
+
+        # Cambiar a JSON
+        mapa_data = mapa_data.to_json(orient='columns')
+
+        return mapa_data
+
+    # Cambiar a JSON
+    mapa_data = mapa_data.reset_index()
+    mapa_data = mapa_data.to_json(orient='columns')
+
+    return mapa_data
+
+    # -------------------------------------------
+
 
 # Número de hechos viales totales
 def render_hv_totales(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
@@ -6099,6 +7316,21 @@ def hv_intersecciones():
                         ),
                     style={'padding':'0px'},
                     ),
+                    dbc.CardBody([
+                        dcc.Store(id='datos_interseccion'),
+                        html.Button([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                    style={'width':'1.5%','float':'left'},
+                                    className="pt-1"),
+                            Download(id="download_data_int"),
+                            html.B("Descargar datos en CSV"),
+                            ], 
+                            id="btn_perso_csv_inter",
+                            className="btn btn-block",
+                            n_clicks=None,
+                            style={'float':'right','background-color':'#00b55b','color':'white'}
+                        ),
+                    ], className='p-0', style={'background-color':'transparent'}),
 
                 ], className="text-white bg-dark", style={'height':'70vh'}), 
 
@@ -6197,7 +7429,8 @@ def hv_intersecciones():
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader('Tipos de Hechos Viales'),
-                    dbc.CardBody(
+                    dbc.CardBody([
+                        dcc.Store(id='tabla_data'),
                         dcc.Graph(
                             id = 'tabla',
                             figure = {},
@@ -6210,9 +7443,26 @@ def hv_intersecciones():
                                     'select2d',],
                                     'displaylogo': False
                                 },
-                            ),
-                    style={'padding':'0px'}
-                    )
+                            )
+                    ],
+                    style={'padding':'0px'}),
+
+                    dbc.CardHeader([
+
+                        html.Button([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                    style={'width':'1.5%','float':'left'},
+                                    className="pt-1"),
+                            Download(id="download-tipos-csv"),
+                            html.B("Descargar datos en CSV"),
+                            ], 
+                            id="btn_tipos_csv",
+                            className="btn btn-block",
+                            n_clicks=None,
+                            style={'float':'right','background-color':'#00b55b','color':'white'}
+                        ),
+                    ], className='p-0'),
+
                 ], style={'height':'550px'})
             ]),
             
@@ -6294,8 +7544,9 @@ def hv_intersecciones():
                         ])
 
                     ], className='d-flex align-items-center'),
-
-                    dbc.CardBody(
+                    
+                    dbc.CardBody([
+                        dcc.Store(id='treemap_data'),
                         dcc.Graph(
                             id = 'treemap',
                             figure = {},
@@ -6309,46 +7560,28 @@ def hv_intersecciones():
                                     'select2d',],
                                     'displaylogo': False
                                 },
-                            ),
-                    style={'padding':'0px'}
-                    )
+                            )],
+                    style={'padding':'0px'}),
+
+                    dbc.CardHeader([
+
+                        html.Button([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                    style={'width':'1.5%','float':'left'},
+                                    className="pt-1"),
+                            Download(id="download-tiposyc-csv"),
+                            html.B("Descargar datos en CSV"),
+                            ], 
+                            id="btn_tiposyc_csv",
+                            className="btn btn-block",
+                            n_clicks=None,
+                            style={'float':'right','background-color':'#00b55b','color':'white'}
+                        ),
+                    ], className='p-0'),
+
                 ], style={'height':'550px'}),
             ])
         ]),
-
-        # Inner Footer info extra
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader('Datos'),
-                    dbc.CardBody(
-                        dbc.Row([
-                            dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
-                                html.Br(),
-                                html.I('(Última actualización: Julio 2021)')
-                                ], style={'display':'inline-block'},lg=9, md=9),
-                            dbc.Col(
-                                html.Div([
-                                    html.Button([
-                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                                style={'width':'8%','float':'left'},
-                                                className="pt-1"),
-                                        html.B("Descargar"),
-                                        ], 
-                                        id="btn_csv",
-                                        className="btn",
-                                        n_clicks=None,
-                                        style={'float':'right','background-color':'#545B62','color':'white'}
-                                    ),
-                                    Download(id="download-dataframe-csv")
-                                ], className='d-flex justify-content-center'), lg=3, md=3, style={'display':'inline-block'}, className='align-self-center',
-                            )
-                        ])
-
-                    )
-                ])
-            ])
-        ], className="pt-4")
 
     ])
 
@@ -6854,6 +8087,82 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
 
         return interseccion_hv_tiempo
 
+# Hechos Viales por 
+def render_interseccion_hv_tiempo_data(clickData, start_date, end_date, slider_hora, checklist_dias):
+
+    # Tab de Día
+    if clickData is None:
+
+        datos_interseccion = {'x':[1, 2, 3],'y':[1, 2, 3],}
+
+        return datos_interseccion
+
+    elif clickData is not None:
+
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+
+        # Filter interseccion
+        hvi = hvi[hvi['interseccion'] == 
+        clickData['points'][0]['hovertext']]
+        
+        # Cambiar variables a string
+        hvi["año"] = hvi["año"].astype(str)
+        hvi["mes"] = hvi["mes"].astype(str)
+        hvi["dia"] = hvi["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+        hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
+
+        # Duplicar columna de fecha y set index
+        hvi = hvi.set_index("fecha")
+        hvi = hvi.sort_index()
+
+        # Filtro por calendario
+        hvi_cal = hvi.loc[start_date:end_date]
+
+        # Filtro por día de la semana
+        hvi_cal_dsm = hvi_cal[hvi_cal["dia_semana"].isin(checklist_dias)]
+
+        # Filtro por hora
+        hvi_cal_dsm_hora = hvi_cal_dsm[(hvi_cal_dsm['hora']>=slider_hora[0])&(hvi_cal_dsm['hora']<=slider_hora[1])]
+
+        # Cambiar nombre
+        datos_interseccion = hvi_cal_dsm_hora
+
+        # Dejar fechas como texto
+        datos_interseccion = datos_interseccion.reset_index()
+        datos_interseccion['fecha'] = datos_interseccion['fecha'].astype(str)
+
+        # DataFrame de Filtros
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '', ],'Filtros seleccionados': ['Fechas', 'Días de la semana', 'Horario', ], 'Valores': [hvi_cal_f,checklist_dias,slider_hora_f,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        datos_interseccion = pd.concat([datos_interseccion, filtros], axis=1, join="outer")
+
+        datos_interseccion = pd.DataFrame(datos_interseccion)
+
+        # Cambiar a JSON
+        datos_interseccion = datos_interseccion.to_json(orient='columns')
+
+        return datos_interseccion
+
+ 
+# Descargar CSV
+def render_down_data_inter(n_clicks, datos_interseccion):
+    
+    #data = json.dumps(datos_interseccion)
+    a_json = json.loads(datos_interseccion)
+    df = pd.DataFrame.from_dict(a_json, orient="columns")
+
+    csv = send_data_frame(df.to_csv, "hechos_viales_interseccion_query.csv", index=False, encoding='ISO-8859-1')
+
+    return csv
+
 # Tabla de Tipos de hechos viales
 def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
     
@@ -6885,7 +8194,9 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         fig.update_traces(marker_color="white",
                     unselected_marker_opacity=1, hoverinfo='skip',hovertemplate=None)
 
-        return fig
+        tabla_data = {'x':[1, 2, 3],'y':[1, 2, 3],}
+
+        return fig, tabla_data
 
     # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
     elif clickData is not None:
@@ -6923,6 +8234,19 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
         # Crear una tabla por tipo de accidente que tenga la suma del número de hechos viales, lesionados y fallecidos ordenados de mayor a menor por número de hechos viales
         tipo_hv = hvi_cal_dsm_hora.pivot_table(index="tipo_accidente", values=["hechos_viales","lesionados","fallecidos"], aggfunc=np.sum).reset_index().rename_axis(None, axis=1).sort_values(by=['hechos_viales'], ascending=[0]) 
 
+        # DataFrame de Filtros
+        interseccion_f = clickData['points'][0]['hovertext']
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '','',],'Filtros seleccionados': ['Intersección','Fechas', 'Días de la semana', 'Horario',], 'Valores': [interseccion_f,hvi_cal_f,checklist_dias,slider_hora_f,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        tabla_data = pd.concat([tipo_hv, filtros], axis=1, join="outer")
+
+        # Pasar a JSON
+        tabla_data = tabla_data.to_json(orient='columns')
+
         # Tabla
         tabla = go.Figure(
             [go.Table(
@@ -6937,7 +8261,18 @@ def render_tabla(clickData, start_date, end_date, slider_hora, checklist_dias):
             ])
         tabla.update_layout(margin = dict(t=20, l=20, r=20, b=10))
     
-    return tabla
+    return tabla, tabla_data
+
+# Descargar CSV
+def render_down_data_tabla(n_clicks, tabla_data):
+    
+    a_json = json.loads(tabla_data)
+    df = pd.DataFrame.from_dict(a_json, orient="columns")
+
+    csv = send_data_frame(df.to_csv, "tipos_de_hechos_viales_query.csv", index=False, encoding='ISO-8859-1')
+
+    return csv
+
 
 # Treemap Hechos Viales por Tipo y Causa
 def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias):
@@ -6970,7 +8305,9 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
         fig.update_traces(marker_color="white",
                     unselected_marker_opacity=1, hoverinfo='skip',hovertemplate=None)
 
-        return fig
+        treemap_data = {'x':[1, 2, 3],'y':[1, 2, 3],}
+
+        return fig, treemap_data
 
     # Si le ha hecho click a una intersección en el mapa pon lo siguiente:
     elif clickData is not None:
@@ -7018,6 +8355,35 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
         df_causas = pd.DataFrame(st_causas, columns=['hechos_viales']).reset_index()
         df_causas['Total'] = df_causas['hechos_viales'].count()*['Total']
 
+        # Quitar índice
+        causa_hv = causa_hv.reset_index()
+
+        # Cambiar nombre columnas
+        causa_hv.columns = [" ".join(a) for a in causa_hv.columns.to_flat_index()]
+        strings = causa_hv.columns.values
+        new_strings = []
+
+        for string in strings:
+            new_string = string.replace("hechos_viales ", '')
+            new_strings.append(new_string)
+
+        treemap_data = causa_hv.set_axis(new_strings, axis=1)
+
+
+        # DataFrame de Filtros
+        interseccion_f = clickData['points'][0]['hovertext']
+        hvi_cal_f = [start_date,' a ',end_date]
+        slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
+        filtros = {'': ['', '', '','',],'Filtros seleccionados': ['Intersección','Fechas', 'Días de la semana', 'Horario',], 'Valores': [interseccion_f,hvi_cal_f,checklist_dias,slider_hora_f,],}        
+        filtros = pd.DataFrame(filtros)
+
+        # Juntar Datos con filtros
+        treemap_data = pd.concat([treemap_data, filtros], axis=1, join="outer")
+
+
+        # Pasar a JSON
+        treemap_data = treemap_data.to_json(orient='columns')
+
         # Treemap
         treemap = px.treemap(df_causas, 
                         path=['tipo_accidente', 'causa_accidente'], 
@@ -7027,12 +8393,115 @@ def render_treemap(clickData, start_date, end_date, slider_hora, checklist_dias)
         treemap.update_layout(margin = dict(t=20, l=20, r=20, b=10))
         treemap.data[0].hovertemplate = '%{label}<br>%{value}'
 
-        return treemap
+        return treemap, treemap_data
+
+# Descargar CSV
+def render_down_data_treemap(n_clicks, treemap_data):
+    
+    a_json = json.loads(treemap_data)
+    df = pd.DataFrame.from_dict(a_json, orient="columns")
+
+    csv = send_data_frame(df.to_csv, "tipos_causas_de_hechos_viales_query.csv", index=False, encoding='ISO-8859-1')
+
+    return csv
 
 # Cerrar la ventana de información de los tipos de hechos viales
 def toggle_modal(open1, close1, modal):
     if open1 or close1:
         return not modal
     return modal
+
+# Layout - General
+def hv_datos():
+
+    return html.Div([
+
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader('Datos'),
+                    dbc.CardBody(
+                        dbc.Row([
+                            dbc.Col(['Datos de hechos viales del 2015 en adelante proporcionados por la Secretaría de Seguridad Pública y procesados mensualmente por el IMPLANG.',
+                                html.I(' Última actualización: Julio 2021')
+                                ], style={'display':'inline-block'},lg=7, md=7),
+                            dbc.Col([
+
+                                dbc.Row([
+
+                                    dbc.Col([
+                                    
+                                        html.Div([
+
+                                            html.Span(
+                                                
+                                                html.Button([
+                                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                            style={'width':'8%','float':'left'},
+                                                            className="pt-1"),
+                                                    html.B("Descargar Excel"),
+                                                    ], 
+                                                    id="btn_csv",
+                                                    className="btn",
+                                                    n_clicks=None,
+                                                    style={'float':'right','background-color':'#016E38','color':'white'}
+                                                ),
+
+                                                id="tooltip-target-descbd",
+                                            ),
+
+                                            dbc.Tooltip(
+                                                "Descarga toda la base de datos",
+                                                target="tooltip-target-descbd",
+                                            ),
+
+                                            
+                                            Download(id="download-dataframe-csv")
+                                        ], className='d-flex justify-content-center'),
+
+                                    ]),
+
+                                    dbc.Col([
+
+                                        html.Div([
+
+                                            html.Span(
+
+                                                html.Button([
+                                                    html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                            style={'width':'8%','float':'left'},
+                                                            className="pt-1"),
+                                                    html.B("Descargar SHP"),
+                                                    ], 
+                                                    id="btn_csv",
+                                                    className="btn",
+                                                    n_clicks=None,
+                                                    style={'float':'right','background-color':'#636EFA','color':'white'}
+                                                ),
+                                                        
+
+                                                id="tooltip-target-shp",
+                                            ),
+
+                                            dbc.Tooltip(
+                                                "Descarga toda la base de datos en SHP",
+                                                target="tooltip-target-shp",
+                                            ),
+
+                                            Download(id="download-dataframe-csv")
+                                        ], className='d-flex justify-content-center')
+
+                                    ])
+                                ])
+
+                            ], lg=5, md=5, style={'display':'inline-block'}, className='align-self-center',)
+                        ])
+
+                    )
+                ])
+            ])
+        ], className="pt-4")
+
+    ])
 
 #----------
