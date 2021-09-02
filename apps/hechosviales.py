@@ -7348,10 +7348,15 @@ def hv_intersecciones():
                             config={
                             'displayModeBar': False
                             },
-                            style={'height':'100%'}
+                            className='h-100'
                         ),
                     style={'padding':'0px'},
                     ),
+
+                ], className="text-white bg-dark", style={'height':'70vh'}), 
+                
+                dbc.Card([
+
                     dbc.CardBody([
                         dcc.Store(id='datos_interseccion'),
                         html.Button([
@@ -7367,8 +7372,7 @@ def hv_intersecciones():
                             style={'float':'right','background-color':'#00b55b','color':'white'}
                         ),
                     ], className='p-0', style={'background-color':'transparent'}),
-
-                ], className="text-white bg-dark", style={'height':'70vh'}), 
+                ])
 
             ],lg=8, md=8)
 
