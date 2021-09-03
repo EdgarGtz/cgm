@@ -67,7 +67,6 @@ def hechosviales():
                         dbc.Tabs([
                             dbc.Tab(label='Inicio', tab_id='hv_general'), #, disabled=True
                             dbc.Tab(label='Intersecciones', tab_id='hv_intersecciones'),
-                            dbc.Tab(label='Status', tab_id='hv_status', disabled=True),
                             dbc.Tab(label='Datos', tab_id='hv_datos'),
                         ],
                         id='tabs',
@@ -101,9 +100,6 @@ def render_hechosviales(tab):
 
     elif tab == 'hv_datos':
         return hv_datos()
-
-    elif tab == 'hv_status':
-        return hv_status()
 
 # Descargar Excel
 def render_down_data(n_clicks):
@@ -2494,7 +2490,6 @@ def render_down_data_csv(n_clicks, data):
 
     return csv
 
-
 # Mapa interactivo
 def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_graves_opciones, hv_usu_opciones, checklist_tipo_hv, hv_afres_opciones, hv_sexo_opciones, checklist_tipo_veh, slider_edad):
     
@@ -2564,6 +2559,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -2625,6 +2623,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
 
         # Cambiar nombre
         mapa_data = hvi_cal_dsm_hora_usu_thv_afect_edad_tveh
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
@@ -2691,6 +2692,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
 
         # Cambiar nombre
         mapa_data = hvi_cal_dsm_hora_usu_thv_resp_edad_tveh
+        
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
@@ -2756,6 +2760,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -2826,6 +2833,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -2895,6 +2905,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -2960,6 +2973,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -3030,6 +3046,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3099,6 +3118,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3162,6 +3184,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -3235,6 +3260,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3307,6 +3335,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3372,6 +3403,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -3442,6 +3476,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3511,6 +3548,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3524,7 +3564,7 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.to_json(orient='columns')
 
         return mapa_data
-
+ 
 
     # ----------------
 
@@ -3574,6 +3614,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -3647,6 +3690,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
 
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -3718,6 +3764,9 @@ def render_mapa_data(start_date, end_date, slider_hora, checklist_dias, hv_grave
         # Dejar fechas como texto
         mapa_data = mapa_data.reset_index()
         mapa_data['fecha'] = mapa_data['fecha'].astype(str)
+
+        # Quitar columnas
+        mapa_data = mapa_data.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
 
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
@@ -7358,25 +7407,6 @@ def hv_intersecciones():
                     ),
 
                 ], className="text-white bg-dark", style={'height':'70vh'}), 
-                
-                dbc.Card([
-
-                    dbc.CardBody([
-                        dcc.Store(id='datos_interseccion'),
-                        html.Button([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                    style={'width':'1.5%','float':'left'},
-                                    className="pt-1"),
-                            Download(id="download_data_int"),
-                            html.B("Descargar datos en CSV"),
-                            ], 
-                            id="btn_perso_csv_inter",
-                            className="btn btn-block",
-                            n_clicks=None,
-                            style={'float':'right','background-color':'#00b55b','color':'white'}
-                        ),
-                    ], className='p-0', style={'background-color':'transparent'}),
-                ])
 
             ],lg=8, md=8)
 
@@ -7390,9 +7420,9 @@ def hv_intersecciones():
 
             dbc.Col([
 
-                # Hechos viales por año
                 dbc.Row([
 
+                    # Hechos viales por año
                     dbc.Col([
                         dbc.Card([
                             dbc.CardHeader([
@@ -7428,9 +7458,10 @@ def hv_intersecciones():
                         ])
                     ],lg=9, md=9),
 
+                    
+                    # Tarjetas Indicadores
                     dbc.Col([
 
-                        # Tarjetas Indicadores
                         dbc.Card([
 
                             dbc.CardHeader('Hechos Viales Totales'),
@@ -7454,6 +7485,44 @@ def hv_intersecciones():
                             dbc.CardHeader('Fallecidos'),
                             dbc.CardBody(id = 'interseccion_fal'),
 
+                        ]),
+
+                        html.Br(),
+
+                        dbc.Card([
+
+                            dbc.CardBody([
+                                dcc.Store(id='datos_interseccion'),
+                                html.Span(
+                                    
+                                    html.Button([
+                                        html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                                style={'width':'3%','float':'left'},
+                                                className="pt-1"),
+                                        Download(id="download_data_int"),
+                                        html.B("Descargar datos en CSV"),
+                                        ], 
+                                        id="btn_perso_csv_inter",
+                                        className="btn btn-block",
+                                        n_clicks=None,
+                                        style={'float':'right','background-color':'#00b55b','color':'white'}
+                                    ),
+
+
+                                    id="tooltip-descarga-int",
+                                    style={"textDecoration": "underline", "cursor": "pointer"},
+                                ),
+
+                                dbc.Tooltip(
+                                    "Haz click en una intersección para descargar los datos",
+                                    target="tooltip-descarga-int",
+                                ),
+
+
+
+
+
+                            ], className='p-0', style={'background-color':'transparent'}),
                         ])
 
                     ],lg=3, md=3, style={'text-align':'center'})
@@ -7532,7 +7601,7 @@ def hv_intersecciones():
                                     n_clicks=0, 
                                     style={'display':'inline-block',
                                             'float':'right','padding':'0', 
-                                            'width':'50%','background-color':'transparent',
+                                            'width':'22%','background-color':'transparent',
                                             'border-color':'transparent','padding-top':'2px'},
                                     className='rounded-circle'
 
@@ -7585,7 +7654,7 @@ def hv_intersecciones():
                                 size="lg",
                                 is_open=False,
                             ),
-                        ], style={'width':'5%'})
+                        ], style={'width':'9%'})
 
                     ], className='d-flex align-items-center'),
                     
@@ -8179,6 +8248,9 @@ def render_interseccion_hv_tiempo_data(clickData, start_date, end_date, slider_h
         datos_interseccion = datos_interseccion.reset_index()
         datos_interseccion['fecha'] = datos_interseccion['fecha'].astype(str)
 
+                # Quitar columnas
+        datos_interseccion = datos_interseccion.drop(['tipo_usu_afect', 'tipo_usu_resp', 'tipo_usu', 'tipo_v_afec', 'tipo_v_resp', 'edad_afect_rango', 'edad_afect_mid', 'edad_resp_rango', 'edad_resp_mid', 'sexo_afect', 'sexo_resp','hechos_viales'], axis=1)
+
         # DataFrame de Filtros
         hvi_cal_f = [start_date,' a ',end_date]
         slider_hora_f = [slider_hora[0],' a ', slider_hora[1]]
@@ -8551,7 +8623,6 @@ def hv_datos():
         html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
 
     ])
-
 
 # Layout - Status
 def hv_status():
