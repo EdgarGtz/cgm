@@ -67,11 +67,11 @@ def hechosviales():
                         dbc.Tabs([
                             dbc.Tab(label='Inicio', tab_id='hv_general'), #, disabled=True
                             dbc.Tab(label='Intersecciones', tab_id='hv_intersecciones'),
-                            dbc.Tab(label='Status', tab_id='hv_status'),
+                            dbc.Tab(label='Status', tab_id='hv_status', disabled=True),
                             dbc.Tab(label='Datos', tab_id='hv_datos'),
                         ],
                         id='tabs',
-                        active_tab="hv_status",
+                        active_tab="hv_general",
                         card=True
                         )
                     ),
