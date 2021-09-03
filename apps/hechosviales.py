@@ -67,10 +67,11 @@ def hechosviales():
                         dbc.Tabs([
                             dbc.Tab(label='Inicio', tab_id='hv_general'), #, disabled=True
                             dbc.Tab(label='Intersecciones', tab_id='hv_intersecciones'),
+                            dbc.Tab(label='Status', tab_id='hv_status'),
                             dbc.Tab(label='Datos', tab_id='hv_datos'),
                         ],
                         id='tabs',
-                        active_tab="hv_general",
+                        active_tab="hv_status",
                         card=True
                         )
                     ),
@@ -100,6 +101,9 @@ def render_hechosviales(tab):
 
     elif tab == 'hv_datos':
         return hv_datos()
+
+    elif tab == 'hv_status':
+        return hv_status()
 
 # Descargar Excel
 def render_down_data(n_clicks):
@@ -792,9 +796,9 @@ def hv_general():
                         dcc.Store(id='mapa_data'),
                         Download(id="download-personal-csv"),
                         html.Button([
-                            #html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                            #        style={'width':'8%','float':'left'},
-                            #        className="pt-1"),
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                    style={'width':'1.5%','float':'left'},
+                                    className="pt-1"),
                             html.B("Descargar datos en CSV"),
                             ], 
                             id="btn_perso_csv",
@@ -7528,7 +7532,7 @@ def hv_intersecciones():
                                     n_clicks=0, 
                                     style={'display':'inline-block',
                                             'float':'right','padding':'0', 
-                                            'width':'5%','background-color':'transparent',
+                                            'width':'50%','background-color':'transparent',
                                             'border-color':'transparent','padding-top':'2px'},
                                     className='rounded-circle'
 
@@ -7581,7 +7585,7 @@ def hv_intersecciones():
                                 size="lg",
                                 is_open=False,
                             ),
-                        ])
+                        ], style={'width':'5%'})
 
                     ], className='d-flex align-items-center'),
                     
@@ -8451,7 +8455,7 @@ def toggle_modal(open1, close1, modal):
         return not modal
     return modal
 
-# Layout - General
+# Layout - Datos
 def hv_datos():
 
     return html.Div([
@@ -8540,8 +8544,166 @@ def hv_datos():
                     )
                 ])
             ])
-        ], className="pt-4")
+        ], className="pt-4"),
+
+        html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
+        html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
+        html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
 
     ])
 
+
+# Layout - Status
+def hv_status():
+
+    return html.Div([
+
+        html.Br(),
+
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Hechos Viales']),
+                    dbc.CardBody([]),
+                ])
+
+            ]),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Lesionados']),
+                    dbc.CardBody([]),
+                ])
+
+            ]),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Fallecidos']),
+                    dbc.CardBody([]),
+                ])
+
+            ]),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Peatones']),
+                    dbc.CardBody([]),
+                ])
+
+            ]),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Ciclistas']),
+                    dbc.CardBody([]),
+                ])
+
+            ]),
+
+
+        ]),
+        
+        html.Br(),
+
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.RadioItems(
+                    id = 'status_grvedad',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'todos',
+                    options = [
+                        {'label': 'Hechos Viales', 'value': 'todos'},
+                        {'label': 'Lesionados', 'value': 'lesionados'},
+                        {'label': 'Fallecidos', 'value': 'fallecidos'},
+                    ]
+                ),
+
+            ]),
+
+            dbc.Col([
+
+                dbc.RadioItems(
+                    id = 'status_tiempo',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'YTD',
+                    options = [
+                        {'label': '1S', 'value': '1S'},
+                        {'label': '1M', 'value': '1M'},
+                        {'label': '6M', 'value': '6M'},
+                        {'label': 'YTD', 'value': 'YTD'},
+                        {'label': '1A', 'value': '1A'},
+                        {'label': '5A', 'value': '5A'},
+                        {'label': 'Max', 'value': 'Max'},
+                    ]
+                ),
+
+            ]),
+
+            dbc.Col([
+
+                dcc.Dropdown(
+                    id='demo-dropdown',
+                    options=[
+                        {'label': 'Periodo pasado', 'value': 'last'},
+                        {'label': 'Año pasado', 'value': 'last'},
+                    ],
+                    value='yoy'
+                ),
+
+            ]),
+
+        ]),
+
+        html.Br(),
+
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    # Nombre Intersección
+                    dbc.CardHeader([
+                        
+                        ],id='interseccion_nombre',
+                        style={'textAlign': 'center'},
+                        ),
+
+                    dbc.CardBody(
+                        dcc.Graph(
+                            id = 'mapa',
+                            figure = mapa,
+                            config={
+                            'displayModeBar': False
+                            },
+                            className='h-100'
+                        ),
+                    style={'padding':'0px'},
+                    ),
+
+                ], className="text-white bg-dark", style={'height':'70vh'}), 
+
+            ])
+
+        ])
+
+    ])
 #----------
