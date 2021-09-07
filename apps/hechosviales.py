@@ -8800,11 +8800,11 @@ def hv_publico():
 
                         dcc.Graph(
                             id = 'pub_tipycau',
-                            figure = {},
+                            figure = pub_tipycau,
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                'zoomIn2d', 'zoomOut2d', 
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
                                 'select2d',],
@@ -8813,7 +8813,7 @@ def hv_publico():
                         )
 
                     ]),
-                ])
+                ], className='p-0')
 
             ], lg=6, md=6),
 
@@ -8826,7 +8826,7 @@ def hv_publico():
 
                         dcc.Graph(
                             id = 'pub_vulne',
-                            figure = {},
+                            figure = pub_vulne,
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d',
@@ -8839,7 +8839,7 @@ def hv_publico():
                         )
 
                     ]),
-                ])
+                ], className='p-0')
 
             ], lg=6, md=6),
 
@@ -8862,7 +8862,7 @@ def hv_publico():
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                'zoomIn2d', 'zoomOut2d',
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
                                 'select2d',],
@@ -8871,7 +8871,7 @@ def hv_publico():
                         )
 
                     ]),
-                ])
+                ], className='p-0')
 
             ], lg=6, md=6),
 
@@ -8888,7 +8888,7 @@ def hv_publico():
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                'zoomIn2d', 'zoomOut2d', 
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
                                 'select2d',],
@@ -8897,7 +8897,7 @@ def hv_publico():
                         )
 
                     ]),
-                ])
+                ], className='p-0')
 
             ], lg=6, md=6),
 
@@ -8981,11 +8981,12 @@ pub_tiempo.update_yaxes(showgrid = False,
     title_text='Hechos Viales', 
     rangebreaks=[dict(bounds=[0,10])],
     )
-pub_tiempo.update_layout(dragmode = False, 
+pub_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
             hoverlabel_align = 'right',
             plot_bgcolor='white',
-            yaxis_range=[0,45]
+            yaxis_range=[0,45],
+            margin = dict(t=30, l=10, r=10, b=30)
         )
 pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales") #+lines
 
@@ -9025,14 +9026,261 @@ df = df.set_axis(new_strings, axis=1)
 df = df[['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo']]
 df = df.reset_index()
 df = df.rename(columns={"index": "Hora"})
-df_hp = [df.loc[df.Hora == 0].drop(columns=['Hora']).squeeze()],[df.loc[df.Hora == 1].drop(columns=['Hora']).squeeze()],[df.loc[df.Hora == 2].drop(columns=['Hora']).squeeze()]
-
 df_hp = [df.iloc[0,1:8],df.iloc[1,1:8],df.iloc[2,1:8],df.iloc[3,1:8],df.iloc[4,1:8],df.iloc[5,1:8],df.iloc[6,1:8],df.iloc[7,1:8],df.iloc[8,1:8],df.iloc[9,1:8],df.iloc[10,1:8],df.iloc[11,1:8],df.iloc[12,1:8],df.iloc[13,1:8],df.iloc[14,1:8],df.iloc[15,1:8],df.iloc[16,1:8],df.iloc[17,1:8],df.iloc[18,1:8],df.iloc[19,1:8],df.iloc[20,1:8],df.iloc[21,1:8],df.iloc[21,1:8],df.iloc[23,1:8]]
 
 pub_sem_hora = go.Figure(data=go.Heatmap(
+                   name='',
                    z=df_hp,
                    x=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
                    y=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','18','19','20','21','22','23',], 
                    hoverongaps = False,
                    colorscale='Sunset'))
+pub_sem_hora.update_traces(hovertemplate="<b>%{x} a las %{y} horas:</b> <br>%{z} hechos viales")
+pub_sem_hora.update_layout(barmode='stack',
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right',
+            plot_bgcolor='white',
+            margin = dict(t=30, l=10, r=10, b=30))
+
+
+
+# TIPOS DE HECHOS VIALES Y CAUSAS
+
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+hvi_pub = hvi
+
+df = hvi_pub.pivot_table(index="tipo_accidente", columns=["causa_accidente"], values=["hechos_viales"], aggfunc=np.sum).fillna(0).reset_index()
+
+# Cambiar nombre columnas
+df.columns = [" ".join(a) for a in df.columns.to_flat_index()]
+
+strings = df.columns.values
+new_strings = []
+
+for string in strings:
+    new_string = string.replace("hechos_viales ", '')
+    new_strings.append(new_string)
+
+df = df.set_axis(new_strings, axis=1)
+
+df_new = pd.concat([pd.DataFrame(df.iloc[0,1:]/df.iloc[0,1:].sum()*100,).T,pd.DataFrame(df.iloc[1,1:]/df.iloc[1,1:].sum()*100,).T,pd.DataFrame(df.iloc[2,1:]/df.iloc[2,1:].sum()*100,).T,
+           pd.DataFrame(df.iloc[3,1:]/df.iloc[3,1:].sum()*100,).T,pd.DataFrame(df.iloc[4,1:]/df.iloc[4,1:].sum()*100,).T,pd.DataFrame(df.iloc[5,1:]/df.iloc[5,1:].sum()*100,).T,
+           pd.DataFrame(df.iloc[6,1:]/df.iloc[6,1:].sum()*100,).T,pd.DataFrame(df.iloc[7,1:]/df.iloc[7,1:].sum()*100,).T,pd.DataFrame(df.iloc[8,1:]/df.iloc[8,1:].sum()*100,).T,
+           pd.DataFrame(df.iloc[9,1:]/df.iloc[9,1:].sum()*100,).T,pd.DataFrame(df.iloc[10,1:]/df.iloc[10,1:].sum()*100,).T])
+
+df_new = df_new[::-1].astype(float).round(1)
+
+pub_tipycau = go.Figure()
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Viro indevidamente'],
+            name='Viro indevidamente',
+            orientation='h',
+            marker=dict(
+            color='#90c6e1',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Sin causa registrada'],
+            name='Sin causa registrada',
+            orientation='h',
+            marker=dict(
+            color='#e190d9',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Otros'],
+            name='Otros',
+            orientation='h',
+            marker=dict(
+            color='#90e19b',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['No respeto semáforo'],
+            name='No respeto semáforo',
+            orientation='h',
+            marker=dict(
+            color='#e1e090',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['No respeto alto'],
+            name='No respeto alto',
+            orientation='h',
+            marker=dict(
+            color='#e19090',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['No guardo distancia'],
+            name='No guardo distancia',
+            orientation='h',
+            marker=dict(
+            color='#909be1',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Mal Estacionado'],
+            name='Mal Estacionado',
+            orientation='h',
+            marker=dict(
+            color='#e1a86c',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Invadir carril'],
+            name='Invadir carril',
+            orientation='h',
+            marker=dict(
+            color='#a6a6a6',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Exceso de velocidad'],
+            name='Exceso de velocidad',
+            orientation='h',
+            marker=dict(
+            color='#598b4c',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Exceso de dimensiones'],
+            name='Exceso de dimensiones',
+            orientation='h',
+            marker=dict(
+            color='#926b58',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Estado alcohólico'],
+            name='Estado alcohólico',
+            orientation='h',
+            marker=dict(
+            color='#8f548d',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Dormitando'],
+            name='Dormitando',
+            orientation='h',
+            marker=dict(
+                color='#5250af',
+            )
+))
+pub_tipycau.add_trace(go.Bar(
+            y=['Volcadura','Incendio','Estrellamiento','Choque de Reversa','Choque de Crucero','Choque de Frente','Choque Lateral','Choque Diverso','Caida de Persona','Atropello','Alcance'],
+            x=df_new['Distracción'],
+            name='Distracción',
+            orientation='h',
+            marker=dict(
+            color='#af5555',
+            )
+))
+pub_tipycau.update_xaxes(showgrid = False, 
+            showline = False, 
+            title_text='Porcentaje (%)', 
+            tickmode="auto")
+pub_tipycau.update_yaxes(showgrid = False, 
+            showline = False, 
+            title_text='Tipo de hecho vial', 
+            )
+pub_tipycau.update_layout(barmode='stack',
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right',
+            plot_bgcolor='white',
+            margin = dict(t=30, l=10, r=10, b=30),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                x=-0.05,
+                itemclick = 'toggleothers',
+                )
+            )
+pub_tipycau.update_traces(hovertemplate="<b>%{y}</b><br> %{x}%")
+
+
+# VULNERABILIDAD DE USUARIOS
+
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+hvi_pub = hvi
+
+df = hvi_pub.pivot_table(index="tipo_accidente", values=['hechos_viales',"lesionados","fallecidos"], aggfunc=np.sum).fillna(0).reset_index()
+df
+# Cambiar nombre columnas
+df.columns = ["".join(a) for a in df.columns.to_flat_index()]
+
+strings = df.columns.values
+new_strings = []
+
+for string in strings:
+    new_string = string.replace("hechos_viales", '')
+    new_strings.append(new_string)
+
+df
+r_les = df.lesionados/df.hechos_viales
+r_fall = df.fallecidos/df.hechos_viales
+r_iles = 1 - r_les + r_fall
+dif = r_les + r_fall + r_iles -1
+r_iles = r_iles - dif
+
+df_new = pd.concat([pd.DataFrame(df.iloc[:,0]),pd.DataFrame(r_les).rename(columns={0:'lesionados'})*100,pd.DataFrame(r_fall).rename(columns={0:'fallecidos'})*100,pd.DataFrame(r_iles).rename(columns={0:'sin_les_fall'})*100],axis=1)
+df_new = df_new[::-1].round(1)
+df_new = df_new.sort_values(by='fallecidos', ascending=True)
+
+pub_vulne = go.Figure()
+pub_vulne.add_trace(go.Bar(
+    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    x=df_new.fallecidos,
+    name='Fallecidos',
+    orientation='h',
+    marker=dict(
+        color='#5d42f5',
+    ),
+))
+pub_vulne.add_trace(go.Bar(
+    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    x=df_new.lesionados,
+    name='Lesionados',
+    orientation='h',
+    marker=dict(
+        color='#428df5',
+    )
+))
+pub_vulne.add_trace(go.Bar(
+    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    x=df_new.sin_les_fall,
+    name='Sin lesiones ni fallecimientos',
+    orientation='h',
+    marker=dict(
+        color='#42c2f5',
+    )
+))
+pub_vulne.update_layout(barmode='stack',
+            hoverlabel = dict(font_size = 16),
+            hoverlabel_align = 'right',
+            plot_bgcolor='white',
+            margin = dict(t=30, l=10, r=10, b=30),
+            legend=dict(
+                orientation="h",
+                yanchor="top",
+                y=-0.2,
+                x=0.15,
+                itemclick = 'toggleothers',
+                )
+)
+pub_vulne.update_traces(hovertemplate="<b>%{y}</b><br> %{x}%")
+
 #----------
