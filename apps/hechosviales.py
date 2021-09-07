@@ -7451,7 +7451,7 @@ def hv_intersecciones():
                                     config={
                                         'modeBarButtonsToRemove':
                                         ['lasso2d', 'pan2d',
-                                        'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                        'zoomIn2d', 'zoomOut2d',
                                         'resetScale2d', 'hoverClosestCartesian',
                                         'hoverCompareCartesian', 'toggleSpikelines',
                                         'select2d',],
@@ -8015,7 +8015,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             dtick = 1,
             autorange=True, 
             rangemode="normal")
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
+        interseccion_hv_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
             hoverlabel_align = 'right'
         )
@@ -8107,7 +8107,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             title_text='', 
             tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
+        interseccion_hv_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
             hoverlabel_align = 'right'
         )
@@ -8198,7 +8198,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             title_text='', 
             tickmode="auto")
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
-        interseccion_hv_tiempo.update_layout(dragmode = False, 
+        interseccion_hv_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
             hoverlabel_align = 'right')
 
@@ -9242,7 +9242,7 @@ df_new = df_new.sort_values(by='fallecidos', ascending=True)
 
 pub_vulne = go.Figure()
 pub_vulne.add_trace(go.Bar(
-    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
     x=df_new.fallecidos,
     name='Fallecidos',
     orientation='h',
@@ -9251,7 +9251,7 @@ pub_vulne.add_trace(go.Bar(
     ),
 ))
 pub_vulne.add_trace(go.Bar(
-    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
     x=df_new.lesionados,
     name='Lesionados',
     orientation='h',
@@ -9260,7 +9260,7 @@ pub_vulne.add_trace(go.Bar(
     )
 ))
 pub_vulne.add_trace(go.Bar(
-    y=['Alcance','Caida de Persona','Choque Lateral','Choque de Reversa','Incendio','Choque Diverso','Choque de Crucero','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
+    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
     x=df_new.sin_les_fall,
     name='Sin lesiones ni fallecimientos',
     orientation='h',
