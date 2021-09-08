@@ -8787,6 +8787,62 @@ def hv_publico():
 
     return html.Div([
 
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Fallecidos por tipo de hecho vial']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_radar',
+                            figure = pub_radar,
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d',
+                                'zoomIn2d', 'zoomOut2d', 
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Vulnerabilidad de Usuarios']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_nueva',
+                            figure = {},
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d',
+                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+        ]),
+
         html.Br(),
 
         dbc.Row([
@@ -9282,5 +9338,74 @@ pub_vulne.update_layout(barmode='stack',
                 )
 )
 pub_vulne.update_traces(hovertemplate="<b>%{y}</b><br> %{x}%")
+
+
+
+# RADAR
+
+hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+hvi_pub = hvi
+
+df = hvi_pub.pivot_table(index="tipo_accidente", values=["lesionados","fallecidos"], aggfunc=np.sum).fillna(0).reset_index()
+df
+# Cambiar nombre columnas
+df.columns = ["".join(a) for a in df.columns.to_flat_index()]
+
+strings = df.columns.values
+new_strings = []
+
+for string in strings:
+    new_string = string.replace("hechos_viales", '')
+    new_strings.append(new_string)
+
+df = df.set_axis(new_strings, axis=1)
+df_fall = pd.concat([df.tipo_accidente, df.fallecidos], axis=1)
+df_fall['les_fall'] = ['fallecidos']*11
+df_fall = df_fall.rename(columns={'fallecidos':'valor'})
+df_fall = df_fall.sort_values(by='valor', ascending=False)
+
+df_les = pd.concat([df.tipo_accidente, df.lesionados], axis=1)
+df_les['les_fall'] = ['lesionados']*11
+df_les = df_les.rename(columns={'lesionados':'valor'})
+df_les = df_les.sort_values(by='valor', ascending=False)
+
+df = pd.concat([df_les, df_fall], axis=0)
+df_c = df
+
+
+df_180 = pd.concat([df, df_c])
+df_180.iloc[22:,0] = ['z1','z2','z3','z4','z5','z6','z7','z8','z9','z10','z1','z1','z2','z3','z4','z5','z6','z7','z8','z9','z10','z1']
+pub_radar = go.Figure(go.Scatterpolar(
+    r=list(df_les.valor),
+    theta=list(df_les.tipo_accidente),
+    mode = 'markers',
+    marker = dict(
+        color = "#0dfc4e",
+        size = 15
+      ),
+))
+
+pub_radar.update_layout(
+    template=None,
+    hoverlabel = dict(font_size = 16),
+    polar = dict(
+        radialaxis = dict(range=[0, 280], 
+                          showticklabels=False, 
+                          linecolor='#0dfc4e',
+                          gridcolor = "#0dfc4e",
+                          ticks=''
+                          ),
+        angularaxis = dict(showticklabels=True, 
+                           linecolor='#0dfc4e',
+                           tickfont=dict(size=14,family='Arial'),
+                           gridcolor = '#0dfc4e',
+                           ticks=''),
+        ),
+    margin = dict(t=30, l=10, r=10, b=30)
+)
+pub_radar.update_traces(
+    name='',
+    hovertemplate="<b>%{theta}</b><br>%{r} lesionados"
+)
 
 #----------
