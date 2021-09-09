@@ -13,6 +13,7 @@ from datetime import datetime as dt
 from dash_extensions import Download
 from dash_extensions.snippets import send_file
 from dash_extensions.snippets import send_data_frame
+from plotly.subplots import make_subplots
 
 import base64
 
@@ -7564,22 +7565,6 @@ def hv_intersecciones():
                     ],
                     style={'padding':'0px'}),
 
-                    dbc.CardHeader([
-
-                        html.Button([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                    style={'width':'1.5%','float':'left'},
-                                    className="pt-1"),
-                            Download(id="download-tipos-csv"),
-                            html.B("Descargar datos en CSV"),
-                            ], 
-                            id="btn_tipos_csv",
-                            className="btn btn-block",
-                            n_clicks=None,
-                            style={'float':'right','background-color':'#00b55b','color':'white'}
-                        ),
-                    ], className='p-0'),
-
                 ], style={'height':'550px'})
             ]),
             
@@ -7679,22 +7664,6 @@ def hv_intersecciones():
                                 },
                             )],
                     style={'padding':'0px'}),
-
-                    dbc.CardHeader([
-
-                        html.Button([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                    style={'width':'1.5%','float':'left'},
-                                    className="pt-1"),
-                            Download(id="download-tiposyc-csv"),
-                            html.B("Descargar datos en CSV"),
-                            ], 
-                            id="btn_tiposyc_csv",
-                            className="btn btn-block",
-                            n_clicks=None,
-                            style={'float':'right','background-color':'#00b55b','color':'white'}
-                        ),
-                    ], className='p-0'),
 
                 ], style={'height':'550px'}),
             ])
@@ -8787,22 +8756,22 @@ def hv_publico():
 
     return html.Div([
 
+        # Tarjetas Indicadores
         dbc.Row([
 
             dbc.Col([
 
                 dbc.Card([
 
-                    dbc.CardHeader(['Fallecidos por tipo de hecho vial']),
                     dbc.CardBody([
 
                         dcc.Graph(
-                            id = 'pub_radar',
-                            figure = pub_radar,
+                            id = 'indic',
+                            figure = indic,
                             config={
                                 'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
                                 'select2d',],
@@ -8810,114 +8779,59 @@ def hv_publico():
                             },
                         )
 
-                    ]),
-                ], className='p-0')
+                    ])
+                ])
 
-            ], lg=6, md=6),
+            ]),
 
             dbc.Col([
 
                 dbc.Card([
 
-                    dbc.CardHeader(['Vulnerabilidad de Usuarios']),
-                    dbc.CardBody([
+                    dbc.CardBody([])
+                ])
 
-                        dcc.Graph(
-                            id = 'pub_nueva',
-                            figure = {},
-                            config={
-                                'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
-                                'resetScale2d', 'hoverClosestCartesian',
-                                'hoverCompareCartesian', 'toggleSpikelines',
-                                'select2d',],
-                                'displaylogo': False
-                            },
-                        )
+            ]),
 
-                    ]),
-                ], className='p-0')
+            dbc.Col([
 
-            ], lg=6, md=6),
+                dbc.Card([
 
+                    dbc.CardBody([])
+                ])
+
+            ]),
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardBody([])
+                ])
+
+            ]),
+        
         ]),
 
         html.Br(),
 
+        # Periodo // Vulnerabilidad
         dbc.Row([
 
+            # Periodo
             dbc.Col([
 
                 dbc.Card([
 
-                    dbc.CardHeader(['Tipos de Hechos Viales y sus Causas']),
+                    dbc.CardHeader(['Periodo']),
                     dbc.CardBody([
 
                         dcc.Graph(
-                            id = 'pub_tipycau',
-                            figure = pub_tipycau,
+                            id = 'pub_time',
+                            figure = pub_time,
                             config={
                                 'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 
-                                'resetScale2d', 'hoverClosestCartesian',
-                                'hoverCompareCartesian', 'toggleSpikelines',
-                                'select2d',],
-                                'displaylogo': False
-                            },
-                        )
-
-                    ]),
-                ], className='p-0')
-
-            ], lg=6, md=6),
-
-            dbc.Col([
-
-                dbc.Card([
-
-                    dbc.CardHeader(['Vulnerabilidad de Usuarios']),
-                    dbc.CardBody([
-
-                        dcc.Graph(
-                            id = 'pub_vulne',
-                            figure = pub_vulne,
-                            config={
-                                'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 'autoScale2d',
-                                'resetScale2d', 'hoverClosestCartesian',
-                                'hoverCompareCartesian', 'toggleSpikelines',
-                                'select2d',],
-                                'displaylogo': False
-                            },
-                        )
-
-                    ]),
-                ], className='p-0')
-
-            ], lg=6, md=6),
-
-        ]),
-
-        html.Br(),
-
-        dbc.Row([
-
-            dbc.Col([
-
-                dbc.Card([
-
-                    dbc.CardHeader(['Días del Año']),
-                    dbc.CardBody([
-
-                        dcc.Graph(
-                            id = 'pub_tiempo',
-                            figure = pub_tiempo,
-                            config={
-                                'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
+                                ['lasso2d', 'pan2d','zoom2d',
                                 'zoomIn2d', 'zoomOut2d',
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
@@ -8931,20 +8845,22 @@ def hv_publico():
 
             ], lg=6, md=6),
 
+            # Vulnerabilidad
             dbc.Col([
 
                 dbc.Card([
 
-                    dbc.CardHeader(['Día de la Semana y Hora']),
                     dbc.CardBody([
+                        html.B(['Vulnerabilidad de Usuarios']),
+                        html.Hr(),
 
                         dcc.Graph(
-                            id = 'pub_sem_hora',
-                            figure = pub_sem_hora,
+                            id = 'pub_vulne',
+                            figure = pub_vulne,
                             config={
                                 'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d',
-                                'zoomIn2d', 'zoomOut2d', 
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
                                 'resetScale2d', 'hoverClosestCartesian',
                                 'hoverCompareCartesian', 'toggleSpikelines',
                                 'select2d',],
@@ -8958,6 +8874,151 @@ def hv_publico():
             ], lg=6, md=6),
 
         ]),
+
+        html.Br(),
+
+        # Promedios // Heatmap
+        dbc.Row([
+
+            # Promedios
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Días del Año']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_tiempo',
+                            figure = pub_tiempo,
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+            # Heatmap
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Día de la Semana y Hora']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_sem_hora',
+                            figure = pub_sem_hora,
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+        ]),
+
+        html.Br(),
+
+        # Tipos y causas // Pending
+        dbc.Row([
+
+            # Tipos y causas
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Tipos de Hechos Viales y sus Causas']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_tipycau',
+                            figure = pub_tipycau,
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+            # Pending
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Pending']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_radar',
+                            figure = {},
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+        ]),
+
+        html.Br(),
+
+        # Mapa
+        dbc.Row([
+
+            dbc.Col([
+
+                dbc.Card([
+
+                    dcc.Graph(
+                        id = 'mapa',
+                        figure = mapa,
+                        config={
+                        'displayModeBar': False
+                        },
+                        style={'height':'85vh'}
+                    ),
+
+                ])
+            ])
+
+        ])
 
 
     ])
@@ -9268,13 +9329,15 @@ pub_tipycau.update_layout(barmode='stack',
 pub_tipycau.update_traces(hovertemplate="<b>%{y}</b><br> %{x}%")
 
 
+# DONAS
+
 # VULNERABILIDAD DE USUARIOS
 
 hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 hvi_pub = hvi
 
-df = hvi_pub.pivot_table(index="tipo_accidente", values=['hechos_viales',"lesionados","fallecidos"], aggfunc=np.sum).fillna(0).reset_index()
-df
+df = hvi_pub.pivot_table(index="tipo_usu", values=['hechos_viales',"lesionados","fallecidos"], aggfunc=np.sum).fillna(0).reset_index()
+
 # Cambiar nombre columnas
 df.columns = ["".join(a) for a in df.columns.to_flat_index()]
 
@@ -9285,7 +9348,6 @@ for string in strings:
     new_string = string.replace("hechos_viales", '')
     new_strings.append(new_string)
 
-df
 r_les = df.lesionados/df.hechos_viales
 r_fall = df.fallecidos/df.hechos_viales
 r_iles = 1 - r_les + r_fall
@@ -9296,116 +9358,106 @@ df_new = pd.concat([pd.DataFrame(df.iloc[:,0]),pd.DataFrame(r_les).rename(column
 df_new = df_new[::-1].round(1)
 df_new = df_new.sort_values(by='fallecidos', ascending=True)
 
-pub_vulne = go.Figure()
-pub_vulne.add_trace(go.Bar(
-    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
-    x=df_new.fallecidos,
-    name='Fallecidos',
-    orientation='h',
-    marker=dict(
-        color='#5d42f5',
-    ),
-))
-pub_vulne.add_trace(go.Bar(
-    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
-    x=df_new.lesionados,
-    name='Lesionados',
-    orientation='h',
-    marker=dict(
-        color='#428df5',
-    )
-))
-pub_vulne.add_trace(go.Bar(
-    y=['Incendio','Choque de Reversa','Choque Lateral','Caida de Persona','Alcance','Choque de Crucero','Choque Diverso','Estrellamiento','Choque de Frente','Volcadura','Atropello',],
-    x=df_new.sin_les_fall,
-    name='Sin lesiones ni fallecimientos',
-    orientation='h',
-    marker=dict(
-        color='#42c2f5',
-    )
-))
-pub_vulne.update_layout(barmode='stack',
-            hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            plot_bgcolor='white',
-            margin = dict(t=30, l=10, r=10, b=30),
-            legend=dict(
+labels = ["Lesionados","Fallecidos","Sin lesiones"]
+marker_colors = ['#428DF5','#5D42F5','#42C2F5']
+# Create subplots: use 'domain' type for Pie subplot
+pub_vulne = make_subplots(rows=2, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}],[{'type':'domain'}, {'type':'domain'}]])
+pub_vulne.add_trace(go.Pie(labels=labels, 
+                     values=df_new.iloc[3,1:], 
+                     name="",
+                     marker_colors = marker_colors),
+                      1, 1)
+pub_vulne.add_trace(go.Pie(labels=labels, 
+                     values=df_new.iloc[2,1:], 
+                     name="",
+                     marker_colors = marker_colors),
+                      1, 2)
+pub_vulne.add_trace(go.Pie(labels=labels, 
+                     values=df_new.iloc[1,1:], 
+                     name="",
+                     marker_colors = marker_colors),
+                      2, 1)
+pub_vulne.add_trace(go.Pie(labels=labels, 
+                     values=df_new.iloc[0,1:], 
+                     name="",
+                     marker_colors = marker_colors),
+                      2, 2)
+
+pub_vulne.update_traces(hole=.7, hoverinfo="label+percent+name")
+pub_vulne.update_layout(
+    annotations=[dict(text='Peatón', x=0.18, y=0.82, font=dict(family='Arial'), font_size=18, showarrow=False),
+                 dict(text='Ciclista', x=0.82, y=0.82, font=dict(family='Arial'), font_size=18, showarrow=False),
+                 dict(text='Motociclista', x=0.16, y=0.18, font=dict(family='Arial'), font_size=18, showarrow=False),
+                 dict(text='Motorizado', x=0.84, y=0.18, font=dict(family='Arial'), font_size=18, showarrow=False),
+                 ],
+    legend=dict(
                 orientation="h",
                 yanchor="top",
-                y=-0.2,
-                x=0.15,
-                itemclick = 'toggleothers',
-                )
+                y=-0.01,
+                x=0.25,
+                itemclick = False,
+                ),
+    margin = dict(t=30, l=0, r=0, b=30)
 )
-pub_vulne.update_traces(hovertemplate="<b>%{y}</b><br> %{x}%")
 
+# TIEMPO
 
-
-# RADAR
-
+# Leer csv
 hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-hvi_pub = hvi
 
-df = hvi_pub.pivot_table(index="tipo_accidente", values=["lesionados","fallecidos"], aggfunc=np.sum).fillna(0).reset_index()
-df
-# Cambiar nombre columnas
-df.columns = ["".join(a) for a in df.columns.to_flat_index()]
+# Cambiar variables a string
+hvi["año"] = hvi["año"].astype(str)
+hvi["mes"] = hvi["mes"].astype(str)
+hvi["dia"] = hvi["dia"].astype(str)
+#hvi["hora"] = hvi["hora"].astype(str)
 
-strings = df.columns.values
-new_strings = []
+# Crear variable datetime
+hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
+# +" - "+ hvi["hora"]                # - %H
+hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
 
-for string in strings:
-    new_string = string.replace("hechos_viales", '')
-    new_strings.append(new_string)
+# Duplicar columna de fecha y set index
+hvi["fecha2"] = hvi["fecha"]
+hvi = hvi.set_index("fecha")
+hvi = hvi.sort_index()
+hvi_cal = hvi
 
-df = df.set_axis(new_strings, axis=1)
-df_fall = pd.concat([df.tipo_accidente, df.fallecidos], axis=1)
-df_fall['les_fall'] = ['fallecidos']*11
-df_fall = df_fall.rename(columns={'fallecidos':'valor'})
-df_fall = df_fall.sort_values(by='valor', ascending=False)
+#Transformar datos en dias
+hvi_cal_res = hvi_cal.resample("M").sum()
+hvi_cal_res
 
-df_les = pd.concat([df.tipo_accidente, df.lesionados], axis=1)
-df_les['les_fall'] = ['lesionados']*11
-df_les = df_les.rename(columns={'lesionados':'valor'})
-df_les = df_les.sort_values(by='valor', ascending=False)
-
-df = pd.concat([df_les, df_fall], axis=0)
-df_c = df
-
-
-df_180 = pd.concat([df, df_c])
-df_180.iloc[22:,0] = ['z1','z2','z3','z4','z5','z6','z7','z8','z9','z10','z1','z1','z2','z3','z4','z5','z6','z7','z8','z9','z10','z1']
-pub_radar = go.Figure(go.Scatterpolar(
-    r=list(df_les.valor),
-    theta=list(df_les.tipo_accidente),
-    mode = 'markers',
-    marker = dict(
-        color = "#0dfc4e",
-        size = 15
-      ),
-))
-
-pub_radar.update_layout(
-    template=None,
+#Agregar fecha
+hvi_cal_res["fecha_dos"] = hvi_cal_res.index
+hvi_cal_res
+# Graph
+pub_time = px.scatter(hvi_cal_res, 
+    x='fecha_dos',
+    y='hechos_viales', 
+    labels = {'fecha_dos': ''}, 
+    template = 'plotly_white')
+pub_time.update_traces(mode="markers+lines", 
+    fill='tozeroy', 
+    hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales")
+pub_time.update_xaxes(showgrid = False, 
+    showline = False, 
+    title_text='', 
+    tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
+pub_time.update_yaxes(title_text='Hechos viales', 
+    autorange=True, 
+    rangemode="normal")
+pub_time.update_layout(
     hoverlabel = dict(font_size = 16),
-    polar = dict(
-        radialaxis = dict(range=[0, 280], 
-                          showticklabels=False, 
-                          linecolor='#0dfc4e',
-                          gridcolor = "#0dfc4e",
-                          ticks=''
-                          ),
-        angularaxis = dict(showticklabels=True, 
-                           linecolor='#0dfc4e',
-                           tickfont=dict(size=14,family='Arial'),
-                           gridcolor = '#0dfc4e',
-                           ticks=''),
-        ),
-    margin = dict(t=30, l=10, r=10, b=30)
-)
-pub_radar.update_traces(
-    name='',
-    hovertemplate="<b>%{theta}</b><br>%{r} lesionados"
+    hoverlabel_align = 'right'
 )
 
+
+indic = go.Figure(go.Indicator(
+    mode = "number+delta",
+    value = 2950,
+    delta = {'position': "bottom", 'reference': 4097,'decreasing':dict(color="green"),'increasing':dict(color="red")},
+    domain = {'x': [0, 1], 'y': [0, 1]},
+    title = {"text": "Hechos Viales<br><span style='font-size:0.8em;color:gray'>"}
+))
+indic.update_layout(
+     margin = dict(t=0, l=0, r=0, b=0))
 #----------
