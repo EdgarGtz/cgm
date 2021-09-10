@@ -14,8 +14,13 @@ from dash_extensions import Download
 from dash_extensions.snippets import send_file
 from dash_extensions.snippets import send_data_frame
 from plotly.subplots import make_subplots
-
 import base64
+import locale
+
+locale.getlocale()
+('en_US', 'UTF-8')
+
+locale.setlocale(locale.LC_TIME, 'es_ES') # this sets the date time formats to es_ES, there are many other options for currency, numbers etc. 
 
 #----------
 
@@ -718,6 +723,30 @@ def hv_general():
                         
                     ], lg=12, md=12),
 
+                ]),
+
+                html.Br(),
+
+                # Botón de descargar datos
+                dbc.Row([
+
+                    dbc.Col([
+                        dbc.CardBody([
+                            dcc.Store(id='mapa_data'),
+                            Download(id="download-personal-csv"),
+                            html.Button([
+                                html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
+                                        style={'width':'1.5%','float':'left'},
+                                        className="pt-1"),
+                                html.B("Descargar datos en CSV"),
+                                ], 
+                                id="btn_perso_csv",
+                                className="btn btn-block",
+                                n_clicks=None,
+                                style={'float':'right','background-color':'#00b55b','color':'white'}
+                            ),
+                        ], className='p-0', style={'background-color':'transparent'}),
+                    ])
                 ])
 
 
@@ -792,22 +821,6 @@ def hv_general():
                         color="#42f581", type="cube"),
 
                     style={'padding':'0px'},),
-
-                    dbc.CardBody([
-                        dcc.Store(id='mapa_data'),
-                        Download(id="download-personal-csv"),
-                        html.Button([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_img3), 
-                                    style={'width':'1.5%','float':'left'},
-                                    className="pt-1"),
-                            html.B("Descargar datos en CSV"),
-                            ], 
-                            id="btn_perso_csv",
-                            className="btn btn-block",
-                            n_clicks=None,
-                            style={'float':'right','background-color':'#00b55b','color':'white'}
-                        ),
-                    ], className='p-0', style={'background-color':'transparent'}),
 
                 ], className='tarjeta_map'), 
 
@@ -7519,13 +7532,9 @@ def hv_intersecciones():
                                 ),
 
                                 dbc.Tooltip(
-                                    "Haz click en una intersección para descargar los datos",
+                                    "Haz click en un punto para descargar los datos de esa intersección.",
                                     target="tooltip-descarga-int",
                                 ),
-
-
-
-
 
                             ], className='p-0', style={'background-color':'transparent'}),
                         ])
@@ -7590,7 +7599,7 @@ def hv_intersecciones():
                                     n_clicks=0, 
                                     style={'display':'inline-block',
                                             'float':'right','padding':'0', 
-                                            'width':'20%','background-color':'transparent',
+                                            'width':'30%','background-color':'transparent',
                                             'border-color':'transparent','padding-top':'2px'},
                                     className='rounded-circle'
 
@@ -8061,6 +8070,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         
         #Agregar fecha
         hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
+        hv_tiempo_data_cal_dsm_hora_res['fecha_2'] = hv_tiempo_data_cal_dsm_hora_res['fecha_2'].dt.strftime('%b %Y')
 
         # Graph
         interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, 
@@ -8070,11 +8080,11 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
             template = 'plotly_white')
         interseccion_hv_tiempo.update_traces(mode="markers+lines", 
             fill='tozeroy', 
-            hovertemplate="<b>%{x|%m/%Y}</b><br> %{y} hechos viales")
+            hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
         interseccion_hv_tiempo.update_xaxes(showgrid = False, 
             showline = False, 
             title_text='', 
-            tickmode="auto")
+            tickvals=hv_tiempo_data_cal_dsm_hora_res['fecha_2'])
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
@@ -8153,6 +8163,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         
         #Agregar fecha
         hv_tiempo_data_cal_dsm_hora_res["fecha_2"] = hv_tiempo_data_cal_dsm_hora_res.index
+        hv_tiempo_data_cal_dsm_hora_res['fecha_2'] = hv_tiempo_data_cal_dsm_hora_res['fecha_2'].dt.strftime('%Y')
 
         # Graph
         interseccion_hv_tiempo = px.scatter(hv_tiempo_data_cal_dsm_hora_res, 
@@ -8165,7 +8176,7 @@ def render_interseccion_hv_tiempo(clickData, periodo_hv, start_date, end_date, s
         interseccion_hv_tiempo.update_xaxes(showgrid = False, 
             showline = False, 
             title_text='', 
-            tickmode="auto")
+            tickvals=hv_tiempo_data_cal_dsm_hora_res['fecha_2'])
         interseccion_hv_tiempo.update_yaxes(title_text='Hechos viales')
         interseccion_hv_tiempo.update_layout(
             hoverlabel = dict(font_size = 16),
