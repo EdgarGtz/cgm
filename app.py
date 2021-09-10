@@ -56,7 +56,8 @@ from apps.hechosviales import (hechosviales, render_hechosviales, render_interse
 	toggle_modal, toggle_modal_sev, toggle_modal_usaf, toggle_modal_thv, toggle_modal_afres,
     render_hv_totales, render_hv_les_totales, render_hv_fall_totales,
     render_opciones_dos, render_opciones_dos_dos, render_mapa_data,  render_down_data_csv,
-    render_down_data_tabla, render_down_data_treemap, render_interseccion_hv_tiempo_data, render_down_data_inter
+    render_down_data_tabla, render_down_data_treemap, render_interseccion_hv_tiempo_data, render_down_data_inter,
+    render_pub_periodo,
 	)
 
 # Connect to config
@@ -539,7 +540,13 @@ def get_opciones_dos_dos(hv_usu_opciones, hv_graves_opciones):
 def func(n_clicks):
     return render_down_data(n_clicks)
 
+#-- Público - Periodo
 
+@app.callback(Output('pub_periodo', 'figure'),
+    [Input('periodo_pub_tabs', 'active_tab')])
+
+def update_output(periodo_pub_tabs):
+    return render_pub_periodo(periodo_pub_tabs)
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

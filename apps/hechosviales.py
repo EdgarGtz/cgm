@@ -8827,17 +8827,90 @@ def hv_publico():
         # Periodo // Vulnerabilidad
         dbc.Row([
 
+            # Promedios
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        dbc.Tabs([
+                            dbc.Tab(label='Día del año', tab_id='dia_año',
+                                disabled = False),
+                            dbc.Tab(label = 'Mes', tab_id = 'mes',
+                                disabled = False),
+                            dbc.Tab(label='Día de la semana', tab_id='dia_semana',
+                                disabled = False),
+                            dbc.Tab(label='Hora', tab_id='hora',
+                                disabled = False),
+                            
+                        ],
+                        id='periodo_pub_tabs',
+                        active_tab="dia_año",
+                        card=True
+                        )
+                    ]),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_periodo',
+                            figure = {},
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+                    ], className='p-0'),
+                ])
+            ],lg=6, md=6),
+
             # Periodo
             dbc.Col([
 
                 dbc.Card([
 
-                    dbc.CardHeader(['Periodo']),
+                    dbc.CardHeader([html.B(['Periodo'])]),
                     dbc.CardBody([
 
                         dcc.Graph(
                             id = 'pub_time',
                             figure = pub_time,
+                            config={
+                                'modeBarButtonsToRemove':
+                                ['lasso2d', 'pan2d','zoom2d',
+                                'zoomIn2d', 'zoomOut2d',
+                                'resetScale2d', 'hoverClosestCartesian',
+                                'hoverCompareCartesian', 'toggleSpikelines',
+                                'select2d',],
+                                'displaylogo': False
+                            },
+                        )
+
+                    ]),
+                ], className='p-0')
+
+            ], lg=6, md=6),
+
+        ]),
+
+        html.Br(),
+
+        # Promedios // Heatmap
+        dbc.Row([
+
+            # Heatmap
+            dbc.Col([
+
+                dbc.Card([
+
+                    dbc.CardHeader(['Día de la Semana y Hora']),
+                    dbc.CardBody([
+
+                        dcc.Graph(
+                            id = 'pub_sem_hora',
+                            figure = pub_sem_hora,
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d','zoom2d',
@@ -8866,67 +8939,6 @@ def hv_publico():
                         dcc.Graph(
                             id = 'pub_vulne',
                             figure = pub_vulne,
-                            config={
-                                'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d','zoom2d',
-                                'zoomIn2d', 'zoomOut2d',
-                                'resetScale2d', 'hoverClosestCartesian',
-                                'hoverCompareCartesian', 'toggleSpikelines',
-                                'select2d',],
-                                'displaylogo': False
-                            },
-                        )
-
-                    ]),
-                ], className='p-0')
-
-            ], lg=6, md=6),
-
-        ]),
-
-        html.Br(),
-
-        # Promedios // Heatmap
-        dbc.Row([
-
-            # Promedios
-            dbc.Col([
-
-                dbc.Card([
-
-                    dbc.CardHeader(['Días del Año']),
-                    dbc.CardBody([
-
-                        dcc.Graph(
-                            id = 'pub_tiempo',
-                            figure = pub_tiempo,
-                            config={
-                                'modeBarButtonsToRemove':
-                                ['lasso2d', 'pan2d','zoom2d',
-                                'zoomIn2d', 'zoomOut2d',
-                                'resetScale2d', 'hoverClosestCartesian',
-                                'hoverCompareCartesian', 'toggleSpikelines',
-                                'select2d',],
-                                'displaylogo': False
-                            },
-                        )
-
-                    ]),
-                ], className='p-0')
-
-            ], lg=6, md=6),
-
-            # Heatmap
-            dbc.Col([
-
-                dbc.Card([
-
-                    dbc.CardHeader(['Día de la Semana y Hora']),
-                    dbc.CardBody([
-
-                        dcc.Graph(
-                            id = 'pub_sem_hora',
-                            figure = pub_sem_hora,
                             config={
                                 'modeBarButtonsToRemove':
                                 ['lasso2d', 'pan2d','zoom2d',
@@ -9006,116 +9018,245 @@ def hv_publico():
 
         ]),
 
-        html.Br(),
-
-        # Mapa
-        dbc.Row([
-
-            dbc.Col([
-
-                dbc.Card([
-
-                    dcc.Graph(
-                        id = 'mapa',
-                        figure = mapa,
-                        config={
-                        'displayModeBar': False
-                        },
-                        style={'height':'85vh'}
-                    ),
-
-                ])
-            ])
-
-        ])
-
-
     ])
 
+# Hechos Viales por 
+def render_pub_periodo(periodo_pub_tabs):
+
+    if periodo_pub_tabs == 'dia_año':
     
-# DIAS DEL AÑO
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        hvi_pub = hvi
 
-hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
-hvi_pub = hvi
+        # Cambiar variables a string
+        hvi_pub["año"] = hvi_pub["año"].astype(str)
+        hvi_pub["mes"] = hvi_pub["mes"].astype(str)
+        hvi_pub["dia"] = hvi_pub["dia"].astype(str)
 
-# Cambiar variables a string
-hvi_pub["año"] = hvi_pub["año"].astype(str)
-hvi_pub["mes"] = hvi_pub["mes"].astype(str)
-hvi_pub["dia"] = hvi_pub["dia"].astype(str)
+        # Crear variable datetime
+        hvi_pub["fecha"] = hvi_pub["dia"] +"/"+ hvi_pub["mes"] + "/"+ hvi_pub["año"]
+        hvi_pub["fecha"]  = pd.to_datetime(hvi_pub["fecha"], dayfirst = True, format ='%d/%m/%Y')
 
-# Crear variable datetime
-hvi_pub["fecha"] = hvi_pub["dia"] +"/"+ hvi_pub["mes"] + "/"+ hvi_pub["año"]
-hvi_pub["fecha"]  = pd.to_datetime(hvi_pub["fecha"], dayfirst = True, format ='%d/%m/%Y')
+        # Duplicar columna de fecha y set index
+        hvi_pub = hvi_pub.set_index("fecha")
+        hvi_pub = hvi_pub.sort_index()
 
-# Duplicar columna de fecha y set index
-hvi_pub = hvi_pub.set_index("fecha")
-hvi_pub = hvi_pub.sort_index()
+        #Transformar datos en dias
+        hvi_pub = hvi_pub.resample("D").sum()
 
-#Transformar datos en dias
-hvi_pub = hvi_pub.resample("D").sum()
+        hvi_pub['fecha_ind'] = hvi_pub.index 
+        hvi_pub["fecha2"] = hvi_pub["fecha_ind"].dt.strftime('%m/%d')
+        hvi_pub = hvi_pub.reset_index()
+        hvi_pub = hvi_pub.set_index("fecha2")
+        hvi_pub['fecha_ind'] = hvi_pub.index 
 
-hvi_pub['fecha_ind'] = hvi_pub.index 
-hvi_pub["fecha2"] = hvi_pub["fecha_ind"].dt.strftime('%m/%d')
-hvi_pub = hvi_pub.reset_index()
-hvi_pub = hvi_pub.set_index("fecha2")
-hvi_pub['fecha_ind'] = hvi_pub.index 
+        fecha = hvi_pub['fecha_ind'].drop_duplicates().sort_index()
+        hvi_prom = hvi_pub.groupby(hvi_pub.index)['hechos_viales'].mean().sort_index().round(0)
 
-fecha = hvi_pub['fecha_ind'].drop_duplicates().sort_index()
-hvi_prom = hvi_pub.groupby(hvi_pub.index)['hechos_viales'].mean().sort_index().round(0)
-hvi_sd = hvi_pub.groupby(hvi_pub.index)['hechos_viales'].std().sort_index().round(0)
-hvi_upper = hvi_prom + hvi_sd
-hvi_lower = hvi_prom - hvi_sd
+        pub_tiempo = go.Figure([
+            go.Bar(
+                name='',
+                x=fecha,
+                y=hvi_prom,
+                #mode='lines',
+                #line=dict(color='rgb(54, 117, 101)'),
+                showlegend=False
+            ),
+        ])
+        pub_tiempo.update_xaxes(showgrid = False, 
+            showline = False, 
+            title_text='Día del Año', 
+            tickmode="auto")
+        pub_tiempo.update_yaxes(showgrid = False, 
+            showline = False, 
+            title_text='Hechos Viales', 
+            rangebreaks=[dict(bounds=[0,10])],
+            )
+        pub_tiempo.update_layout(
+                    hoverlabel = dict(font_size = 16),
+                    hoverlabel_align = 'right',
+                    plot_bgcolor='white',
+                    yaxis_range=[0,45],
+                    margin = dict(t=30, l=10, r=10, b=30)
+                )
+        pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales") #+lines
 
-pub_tiempo = go.Figure([
-    go.Scatter(
-        name='',
-        x=fecha,
-        y=hvi_prom,
-        mode='lines',
-        line=dict(color='rgb(54, 117, 101)'),
-        showlegend=False
-    ),
-    go.Scatter(
-        name='',
-        x=fecha,
-        y=hvi_upper,
-        marker=dict(color="#444"),
-        line=dict(width=0),
-        mode='lines',
-        fillcolor='rgba(63, 209, 172, 0.3)',
-        fill='tonexty',
-        showlegend=False
-    ),
-    go.Scatter(
-        name='',
-        x=fecha,
-        y=hvi_lower,
-        marker=dict(color="#444"),
-        line=dict(width=0),
-        mode='lines',
-        fillcolor='rgba(63, 209, 172, 0.3)',
-        fill='tonexty',
-        showlegend=False
-    ),
-])
-pub_tiempo.update_xaxes(showgrid = False, 
-    showline = False, 
-    title_text='Día del Año', 
-    tickmode="auto")
-pub_tiempo.update_yaxes(showgrid = False, 
-    showline = False, 
-    title_text='Hechos Viales', 
-    rangebreaks=[dict(bounds=[0,10])],
-    )
-pub_tiempo.update_layout(
-            hoverlabel = dict(font_size = 16),
-            hoverlabel_align = 'right',
-            plot_bgcolor='white',
-            yaxis_range=[0,45],
-            margin = dict(t=30, l=10, r=10, b=30)
-        )
-pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales") #+lines
+        return pub_tiempo
 
+    elif periodo_pub_tabs == 'mes':
+
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        hvi_pub = hvi
+        
+        # Cambiar variables a string
+        hvi_pub["año"] = hvi_pub["año"].astype(str)
+        hvi_pub["mes"] = hvi_pub["mes"].astype(str)
+        hvi_pub["dia"] = hvi_pub["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi_pub["fecha"] = hvi_pub["dia"] +"/"+ hvi_pub["mes"] + "/"+ hvi_pub["año"]
+        hvi_pub["fecha"]  = pd.to_datetime(hvi_pub["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi_pub = hvi_pub.set_index("fecha")
+        hvi_pub = hvi_pub.sort_index()
+
+        #Transformar datos en dias
+        hvi_pub = hvi_pub.resample("M").sum()
+
+        hvi_pub['fecha_ind'] = hvi_pub.index 
+        hvi_pub["fecha2"] = hvi_pub["fecha_ind"].dt.strftime('%B')
+        hvi_pub = hvi_pub.reset_index()
+        hvi_pub = hvi_pub.set_index("fecha2")
+        hvi_pub['fecha_ind'] = hvi_pub.index 
+
+        fecha = hvi_pub['fecha_ind'].drop_duplicates()
+        hvi_prom = hvi_pub.groupby(hvi_pub.index)['hechos_viales'].mean().sort_index().round(0)
+
+        pub_tiempo = go.Figure([
+            go.Bar(
+                name='',
+                x=fecha,
+                y=hvi_prom,
+                #mode='lines',
+                #line=dict(color='rgb(54, 117, 101)'),
+                showlegend=False
+            ),
+        ])
+        pub_tiempo.update_xaxes(showgrid = False, 
+            showline = False, 
+            title_text='Meses', 
+            tickmode="auto")
+        pub_tiempo.update_yaxes(showgrid = False, 
+            showline = False, 
+            title_text='Hechos Viales', 
+            rangebreaks=[dict(bounds=[0,10])],
+            )
+        pub_tiempo.update_layout(dragmode = False, 
+                    hoverlabel = dict(font_size = 16),
+                    hoverlabel_align = 'right',
+                    plot_bgcolor='white',
+            )
+        pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
+
+        return pub_tiempo
+
+    elif periodo_pub_tabs == 'dia_semana':
+
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        hvi_pub = hvi
+
+        # Cambiar variables a string
+        hvi_pub["año"] = hvi_pub["año"].astype(str)
+        hvi_pub["mes"] = hvi_pub["mes"].astype(str)
+        hvi_pub["dia"] = hvi_pub["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi_pub["fecha"] = hvi_pub["dia"] +"/"+ hvi_pub["mes"] + "/"+ hvi_pub["año"]
+        hvi_pub["fecha"]  = pd.to_datetime(hvi_pub["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi_pub = hvi_pub.set_index("fecha")
+        hvi_pub = hvi_pub.pivot_table(index="dia_semana", values=["hechos_viales"], aggfunc=np.sum)
+        hvi_pub = hvi_pub.reset_index()
+
+        hvi_pub = hvi_pub.reindex([2,3,4,1,6,5,0])
+
+        # Cambiar nombre columnas
+        hvi_pub.columns = ["".join(a) for a in hvi_pub.columns.to_flat_index()]
+
+        strings = hvi_pub.columns.values
+        new_strings = []
+
+        for string in strings:
+            new_string = string.replace("hechos_viales ", '')
+            new_strings.append(new_string)
+
+        pub_tiempo = go.Figure([
+            go.Bar(
+                name='',
+                x=hvi_pub.dia_semana,
+                y=hvi_pub.hechos_viales,
+                #mode='lines',
+                #line=dict(color='rgb(54, 117, 101)'),
+                showlegend=False
+            ),
+        ])
+        pub_tiempo.update_xaxes(showgrid = False, 
+            showline = False, 
+            title_text='Meses')
+        pub_tiempo.update_yaxes(showgrid = False, 
+            showline = False, 
+            title_text='Hechos Viales', 
+            rangebreaks=[dict(bounds=[0,10])],
+            )
+        pub_tiempo.update_layout(dragmode = False, 
+                    hoverlabel = dict(font_size = 16),
+                    hoverlabel_align = 'right',
+                    plot_bgcolor='white',
+            )
+        pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
+
+        return pub_tiempo
+
+    elif periodo_pub_tabs == 'hora':
+
+        # Leer csv
+        hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
+        hvi_pub = hvi
+
+        # Cambiar variables a string
+        hvi_pub["año"] = hvi_pub["año"].astype(str)
+        hvi_pub["mes"] = hvi_pub["mes"].astype(str)
+        hvi_pub["dia"] = hvi_pub["dia"].astype(str)
+
+        # Crear variable datetime
+        hvi_pub["fecha"] = hvi_pub["dia"] +"/"+ hvi_pub["mes"] + "/"+ hvi_pub["año"]
+        hvi_pub["fecha"]  = pd.to_datetime(hvi_pub["fecha"], dayfirst = True, format ='%d/%m/%Y')
+
+        # Duplicar columna de fecha y set index
+        hvi_pub = hvi_pub.set_index("fecha")
+        hvi_pub = hvi_pub.sort_index()
+        hvi_pub = hvi_pub.pivot_table(index="hora", values=["hechos_viales"], aggfunc=np.sum)
+        hvi_pub = hvi_pub.reset_index()
+
+        # Cambiar nombre columnas
+        hvi_pub.columns = ["".join(a) for a in hvi_pub.columns.to_flat_index()]
+
+        strings = hvi_pub.columns.values
+        new_strings = []
+
+        for string in strings:
+            new_string = string.replace("hechos_viales ", '')
+            new_strings.append(new_string)
+
+        pub_tiempo = go.Figure([
+            go.Bar(
+                name='',
+                x=hvi_pub.hora,
+                y=hvi_pub.hechos_viales,
+                #mode='lines',
+                #line=dict(color='rgb(54, 117, 101)'),
+                showlegend=False
+            ),
+        ])
+        pub_tiempo.update_xaxes(showgrid = False, 
+            showline = False, 
+            title_text='Meses')
+        pub_tiempo.update_yaxes(showgrid = False, 
+            showline = False, 
+            title_text='Hechos Viales', 
+            rangebreaks=[dict(bounds=[0,10])],
+            )
+        pub_tiempo.update_layout(dragmode = False, 
+                    hoverlabel = dict(font_size = 16),
+                    hoverlabel_align = 'right',
+                    plot_bgcolor='white',
+            )
+        pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
+
+        return pub_tiempo
 
 # HEATMAP
 
@@ -9418,47 +9559,65 @@ hvi = pd.read_csv("assets/hechosviales_lite.csv", encoding='ISO-8859-1')
 hvi["año"] = hvi["año"].astype(str)
 hvi["mes"] = hvi["mes"].astype(str)
 hvi["dia"] = hvi["dia"].astype(str)
-#hvi["hora"] = hvi["hora"].astype(str)
 
 # Crear variable datetime
 hvi["fecha"] = hvi["dia"] +"/"+ hvi["mes"] + "/"+ hvi["año"]
-# +" - "+ hvi["hora"]                # - %H
-hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y')
+hvi["fecha"]  = pd.to_datetime(hvi["fecha"], dayfirst = True, format ='%d/%m/%Y') # - %H
 
 # Duplicar columna de fecha y set index
 hvi["fecha2"] = hvi["fecha"]
 hvi = hvi.set_index("fecha")
 hvi = hvi.sort_index()
-hvi_cal = hvi
 
-#Transformar datos en dias
-hvi_cal_res = hvi_cal.resample("M").sum()
-hvi_cal_res
+hvi_p = hvi.loc[hvi.tipo_usu == 'Peaton']
+hvi_m = hvi.loc[hvi.tipo_usu == 'Motorizado']
+hvi_b = hvi.loc[hvi.tipo_usu == 'Bicicleta']
+hvi_mc = hvi.loc[hvi.tipo_usu == 'Motocicleta']
 
-#Agregar fecha
-hvi_cal_res["fecha_dos"] = hvi_cal_res.index
-hvi_cal_res
+#Transformar datos en meses
+hvi_peaton = hvi_p.resample("M").sum().drop(['hora','Lat','Lon','les_fall','num_resp','num_afect','edad_afect_mid','edad_resp_mid'], axis=1)
+hvi_motorizado = hvi_m.resample("M").sum().drop(['hora','Lat','Lon','les_fall','num_resp','num_afect','edad_afect_mid','edad_resp_mid'], axis=1)
+hvi_bici = hvi_b.resample("M").sum().drop(['hora','Lat','Lon','les_fall','num_resp','num_afect','edad_afect_mid','edad_resp_mid'], axis=1)
+hvi_moto = hvi_mc.resample("M").sum().drop(['hora','Lat','Lon','les_fall','num_resp','num_afect','edad_afect_mid','edad_resp_mid'], axis=1)
+
+# Cambiar nombre columnas
+hvi_peaton.columns = ["".join(a) for a in hvi_peaton.columns.to_flat_index()]
+hvi_peaton = hvi_peaton.reset_index()
+hvi_peaton = hvi_peaton.rename(columns={"lesionados": "lesionados_p","fallecidos": "fallecidos_p","hechos_viales": "hechos_viales_p"})
+
+
+hvi_motorizado.columns = ["".join(a) for a in hvi_motorizado.columns.to_flat_index()]
+hvi_motorizado = hvi_motorizado.reset_index()
+hvi_motorizado = hvi_motorizado.rename(columns={"lesionados": "lesionados_m","fallecidos": "fallecidos_m","hechos_viales": "hechos_viales_m"})
+
+hvi_bici.columns = ["".join(a) for a in hvi_bici.columns.to_flat_index()]
+hvi_bici = hvi_bici.reset_index()
+hvi_bici = hvi_bici.rename(columns={"lesionados": "lesionados_b","fallecidos": "fallecidos_b","hechos_viales": "hechos_viales_b"})
+
+hvi_moto.columns = ["".join(a) for a in hvi_moto.columns.to_flat_index()]
+hvi_moto = hvi_moto.reset_index()
+hvi_moto = hvi_moto.rename(columns={"lesionados": "lesionados_mc","fallecidos": "fallecidos_mc","hechos_viales": "hechos_viales_mc"})
+
+df = pd.concat([hvi_peaton.fecha, hvi_peaton.hechos_viales_p,hvi_bici.hechos_viales_b,hvi_moto.hechos_viales_mc,hvi_motorizado.hechos_viales_m], axis=1)
+
+
 # Graph
-pub_time = px.scatter(hvi_cal_res, 
-    x='fecha_dos',
-    y='hechos_viales', 
-    labels = {'fecha_dos': ''}, 
+pub_time = px.bar(df, 
+    x='fecha',
+    y=["hechos_viales_m","hechos_viales_p", "hechos_viales_b", "hechos_viales_mc"], 
+    labels = {'fecha': ''}, 
     template = 'plotly_white')
-pub_time.update_traces(mode="markers+lines", 
-    fill='tozeroy', 
-    hovertemplate="<b>%{x|%d/%m/%Y}</b><br> %{y} hechos viales")
+pub_time.update_traces(
+    hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
 pub_time.update_xaxes(showgrid = False, 
-    showline = False, 
     title_text='', 
-    tickmode="auto") #, rangemode="normal",rangebreaks=[dict(pattern="day of week")]
-pub_time.update_yaxes(title_text='Hechos viales', 
-    autorange=True, 
-    rangemode="normal")
+    ticktext=df['fecha'],
+    ticklabelmode='period'
+    )
+pub_time.update_yaxes(title_text='Hechos viales')
 pub_time.update_layout(
     hoverlabel = dict(font_size = 16),
-    hoverlabel_align = 'right'
-)
-
+    hoverlabel_align = 'right')
 
 indic = go.Figure(go.Indicator(
     mode = "number+delta",
