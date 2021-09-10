@@ -17,10 +17,10 @@ from plotly.subplots import make_subplots
 import base64
 import locale
 
-locale.getlocale()
-('en_US', 'UTF-8')
+#locale.getlocale()
+#('en_US', 'UTF-8')
 
-locale.setlocale(locale.LC_TIME, 'es_ES') # this sets the date time formats to es_ES, there are many other options for currency, numbers etc. 
+#locale.setlocale(locale.LC_TIME, 'es_ES') # this sets the date time formats to es_ES, there are many other options for currency, numbers etc. 
 
 #----------
 
