@@ -29,8 +29,6 @@ app = dash.Dash(__name__, title='Centro de Gestión de Movilidad',
                 meta_tags=[{'name': 'viewport',
                              'content': 'width=device-width, initial-scale=1.0'},])
 
-
-
 app.index_string = '''
 <!DOCTYPE html>
 <html>
@@ -7599,7 +7597,7 @@ def hv_intersecciones():
                                     n_clicks=0, 
                                     style={'display':'inline-block',
                                             'float':'right','padding':'0', 
-                                            'width':'30%','background-color':'transparent',
+                                            'width':'33%','background-color':'transparent',
                                             'border-color':'transparent','padding-top':'2px'},
                                     className='rounded-circle'
 
