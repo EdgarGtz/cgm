@@ -16,6 +16,8 @@ from dash_extensions.snippets import send_data_frame
 from plotly.subplots import make_subplots
 import base64
 import locale
+import geopandas as gpd
+import shapely.geometry
 
 #locale.getlocale()
 #('en_US', 'UTF-8')
@@ -72,10 +74,11 @@ def hechosviales():
                             dbc.Tab(label='Inicio', tab_id='hv_general'), #, disabled=True
                             dbc.Tab(label='Intersecciones', tab_id='hv_intersecciones'),
                             dbc.Tab(label='Datos', tab_id='hv_datos'),
-                            dbc.Tab(label='Publico', tab_id='hv_publico'),
+                            dbc.Tab(label='Pub - Inicio', tab_id='pub_inicio'),
+                            dbc.Tab(label='Pub - Visualizaciones', tab_id='pub_viz'),
                         ],
                         id='tabs',
-                        active_tab="hv_publico",
+                        active_tab="pub_inicio",
                         card=True
                         )
                     ),
@@ -106,8 +109,11 @@ def render_hechosviales(tab):
     elif tab == 'hv_datos':
         return hv_datos()
 
-    elif tab == 'hv_publico':
-        return hv_publico()
+    elif tab == 'pub_inicio':
+        return pub_inicio()
+
+    elif tab == 'pub_viz':
+        return pub_viz()
 
 # Descargar Excel
 def render_down_data(n_clicks):
@@ -8761,7 +8767,138 @@ def hv_status():
     ])
 
 # Layout - Publico
-def hv_publico():
+def pub_inicio():
+
+    return html.Div([
+
+        # Tarjetas Indicadores
+        dbc.Row([
+
+            dbc.Col([
+
+                html.Br(),
+
+                html.Div([
+
+                    dcc.DatePickerRange(
+                        id = 'calendario',
+                        min_date_allowed = dt(2015, 1, 1),
+                        max_date_allowed = dt(2020, 12, 31),
+                        start_date = dt(2015, 1, 1),
+                        end_date = dt(2020, 12, 31),
+                        first_day_of_week = 1,
+                        className="d-flex justify-content-center"
+                    ),
+
+                ], className='d-flex align-items-center justify-content-center'),
+
+                html.Br(),
+
+                
+
+                dbc.Checklist(
+                    id = 'checklist_dias',
+                    className = 'radio-group btn-group d-flex justify-content-center',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    options=[
+                        {'label': ' LU', 'value': 'Lunes'},
+                        {'label': ' MA', 'value': 'Martes'},
+                        {'label': ' MI', 'value': 'Miércoles'},
+                        {'label': ' JU', 'value': 'Jueves'},
+                        {'label': ' VI', 'value': 'Viernes'},
+                        {'label': ' SA', 'value': 'Sábado'},
+                        {'label': ' DO', 'value': 'Domingo'},
+                    ],
+                    value=['Lunes', 'Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+                    style={'display':'inline-block'}
+                ),
+
+                html.Br(),
+
+                dcc.RangeSlider(
+                    id='slider_hora',
+                    min=0,
+                    max=23,
+                    value=[0, 23],
+                    marks={
+                        0: {'label': '0'},
+                        3: {'label': '3'},
+                        6: {'label': '6'},
+                        9: {'label': '9'},
+                        12: {'label': '12'},
+                        15: {'label': '15'},
+                        18: {'label': '18'},
+                        21: {'label': '21'},
+                        23: {'label': '23'}
+                    },
+                    allowCross=False,
+                    dots=True,
+                    tooltip={'always_visible': False , "placement":"bottom"},
+                    updatemode='mouseup'
+                ),
+
+                html.Br(),
+
+                dbc.Checklist(
+                    id = 'checklist_tipo_veh',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    options=[
+                        {'label': ' Auto', 'value': 'Auto'},
+                        {'label': ' Bicicleta', 'value': 'Bicicleta'},
+                        {'label': ' Camión de pasajeros', 'value': 'Camión de pasajeros'},
+                        {'label': ' Camioneta', 'value': 'Camioneta'},
+                        {'label': ' Carga pesada', 'value': 'Carga pesada'},
+                        {'label': ' Mini Van', 'value': 'Mini Van'},
+                        {'label': ' Motocicleta', 'value': 'Motocicleta'},
+                        {'label': ' Pick Up', 'value': 'Pick Up'},
+                        {'label': ' Tracción animal', 'value': 'Tracción animal'},
+                        {'label': ' Trailer', 'value': 'Trailer'},
+                        {'label': ' Tren', 'value': 'Tren'},
+                    ],
+                    value=['Auto', 'Bicicleta','Camión de pasajeros','Camioneta','Carga pesada','Mini Van','Motocicleta','Pick Up','Tracción animal','Trailer','Tren'],
+                    style={'display':'inline-block'}
+                ),
+
+                html.Br(),html.Br(),html.Br(),
+
+                dbc.RadioItems(
+                    id = 'hv_graves_opciones',
+                    className = 'radio-group btn-group',
+                    labelClassName = 'btn btn-secondary',
+                    labelCheckedClassName = 'active',
+                    value = 'todos',
+                    options = [
+                        {'label': 'Todos', 'value': 'todos'},
+                        {'label': 'Lesionados', 'value': 'lesionados'},
+                        {'label': 'Fallecidos', 'value': 'fallecidos'},
+                    ]
+                ),
+
+
+            ], lg=3, md=3),
+
+            dbc.Col([
+
+                dcc.Graph(
+                    id = 'mapa_pub',
+                    figure = mapa_pub,
+                    config={
+                    'displayModeBar': False
+                    },
+                    style={'height':'85vh'}
+                ),
+
+            ], lg=9, md=9),
+        
+        ]),
+
+    ])
+
+# Layout - Publico
+def pub_viz():
 
     return html.Div([
 
@@ -9257,6 +9394,149 @@ def render_pub_periodo(periodo_pub_tabs):
         pub_tiempo.update_traces(hovertemplate="<b>%{x}</b><br> %{y} hechos viales")
 
         return pub_tiempo
+
+# HIGH INJURY NETWORK
+
+hni_p1 = gpd.read_file('assets/hin/calles_segmentos_p1.geojson')
+hni_p2 = gpd.read_file('assets/hin/calles_segmentos_p2.geojson')
+hni_p3 = gpd.read_file('assets/hin/calles_segmentos_p3.geojson')
+hni_p4 = gpd.read_file('assets/hin/calles_segmentos_p4.geojson')
+hin_puntos = pd.read_csv("assets/hin/hin_puntos.csv", encoding='ISO-8859-1')
+
+lats_p1 = []
+lons_p1 = []
+names_p1 = []
+prioridades_p1 = []
+
+for feature, name, prioridad in zip(hni_p1.geometry, hni_p1.NOMBRE, hni_p1.prioridad):
+    if isinstance(feature, shapely.geometry.linestring.LineString):
+        linestrings = [feature]
+    elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+        linestrings = feature.geoms
+    else:
+        continue
+    for linestring in linestrings:
+        x, y = linestring.xy
+        lats_p1 = np.append(lats_p1, y)
+        lons_p1 = np.append(lons_p1, x)
+        names_p1 = np.append(names_p1, [name]*len(y))
+        prioridades_p1 = np.append(prioridades_p1, [prioridad]*len(y))
+        
+        lats_p1 = np.append(lats_p1, None)
+        lons_p1 = np.append(lons_p1, None)
+        names_p1 = np.append(names_p1, None)
+        prioridades_p1 = np.append(prioridades_p1, None)
+
+lats_p2 = []
+lons_p2 = []
+names_p2 = []
+prioridades_p2 = []
+
+for feature, name, prioridad in zip(hni_p2.geometry, hni_p2.NOMBRE, hni_p2.prioridad):
+    if isinstance(feature, shapely.geometry.linestring.LineString):
+        linestrings = [feature]
+    elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+        linestrings = feature.geoms
+    else:
+        continue
+    for linestring in linestrings:
+        x, y = linestring.xy
+        lats_p2 = np.append(lats_p2, y)
+        lons_p2 = np.append(lons_p2, x)
+        names_p2 = np.append(names_p2, [name]*len(y))
+        prioridades_p2 = np.append(prioridades_p2, [prioridad]*len(y))
+        
+        lats_p2 = np.append(lats_p2, None)
+        lons_p2 = np.append(lons_p2, None)
+        names_p2 = np.append(names_p2, None)
+        prioridades_p2 = np.append(prioridades_p2, None)
+        
+lats_p3 = []
+lons_p3 = []
+names_p3 = []
+prioridades_p3 = []
+
+for feature, name, prioridad in zip(hni_p3.geometry, hni_p3.NOMBRE, hni_p3.prioridad):
+    if isinstance(feature, shapely.geometry.linestring.LineString):
+        linestrings = [feature]
+    elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+        linestrings = feature.geoms
+    else:
+        continue
+    for linestring in linestrings:
+        x, y = linestring.xy
+        lats_p3 = np.append(lats_p3, y)
+        lons_p3 = np.append(lons_p3, x)
+        names_p3 = np.append(names_p3, [name]*len(y))
+        prioridades_p3 = np.append(prioridades_p3, [prioridad]*len(y))
+        
+        lats_p3 = np.append(lats_p3, None)
+        lons_p3 = np.append(lons_p3, None)
+        names_p3 = np.append(names_p3, None)
+        prioridades_p3 = np.append(prioridades_p3, None)
+        
+lats_p4 = []
+lons_p4 = []
+names_p4 = []
+prioridades_p4 = []
+
+for feature, name, prioridad in zip(hni_p4.geometry, hni_p4.NOMBRE, hni_p4.prioridad):
+    if isinstance(feature, shapely.geometry.linestring.LineString):
+        linestrings = [feature]
+    elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+        linestrings = feature.geoms
+    else:
+        continue
+    for linestring in linestrings:
+        x, y = linestring.xy
+        lats_p4 = np.append(lats_p4, y)
+        lons_p4 = np.append(lons_p4, x)
+        names_p4 = np.append(names_p4, [name]*len(y))
+        prioridades_p4 = np.append(prioridades_p4, [prioridad]*len(y))
+        
+        lats_p4 = np.append(lats_p4, None)
+        lons_p4 = np.append(lons_p4, None)
+        names_p4 = np.append(names_p4, None)
+        prioridades_p4 = np.append(prioridades_p4, None)
+        
+mapa_pub = go.Figure(go.Scattermapbox(
+    lat=lats_p1, 
+    lon=lons_p1, 
+    mode="lines",
+    line = {'color': '#942f34','width':5},
+    ))
+mapa_pub.add_traces(go.Scattermapbox(
+    mode = "lines",
+    lon = lons_p2,
+    lat = lats_p2,
+    line = {'color': '#ff000d','width':4}))
+mapa_pub.add_traces(go.Scattermapbox(
+    mode = "lines",
+    lon = lons_p3,
+    lat = lats_p3,
+    line = {'color': '#ffb700','width':3}))
+mapa_pub.add_traces(go.Scattermapbox(
+    mode = "lines",
+    lon = lons_p4,
+    lat = lats_p4,
+    line = {'color': '#fff200','width':2},
+    #hovertext=['text'],)
+    ))
+mapa_pub.add_traces(go.Scattermapbox(
+    mode = "markers",
+    lon = hin_puntos.Lon,
+    lat = hin_puntos.Lat,
+    marker = {'size': list(hin_puntos.tamaño),'color': list(hin_puntos.color),'opacity':1},
+    ))
+mapa_pub.update_layout(
+    mapbox=dict(
+        center=dict(lat=25.6572, lon=-100.3689),
+        accesstoken=mapbox_access_token,
+        zoom=12.8,
+        style="dark"),
+    showlegend=False,
+    margin = dict(t=0, l=0, r=0, b=0)
+)
 
 # HEATMAP
 
