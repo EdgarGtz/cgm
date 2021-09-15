@@ -18,6 +18,7 @@ import base64
 import locale
 import geopandas as gpd
 import shapely.geometry
+import dash_daq as daq
 
 #locale.getlocale()
 #('en_US', 'UTF-8')
@@ -8771,6 +8772,16 @@ def pub_inicio():
 
     return html.Div([
 
+        dbc.Row(
+
+            dbc.Col([
+                
+                html.H2('Radar Vial', className='py-1 pl-3')
+
+            ], className='d-flex align-items-center p-0'),
+            style={'background-color':'#32a852','color':'white','height':'5vh','padding':'0'},
+        ),
+
         # Tarjetas Indicadores
         dbc.Row([
 
@@ -8793,8 +8804,6 @@ def pub_inicio():
                 ], className='d-flex align-items-center justify-content-center'),
 
                 html.Br(),
-
-                
 
                 dbc.Checklist(
                     id = 'checklist_dias',
@@ -8877,8 +8886,19 @@ def pub_inicio():
                     ]
                 ),
 
+                html.Br(),html.Br(),html.Br(),
 
-            ], lg=3, md=3),
+                    html.Div([
+                        html.H4('Red Vial de Lesiones Graves', style={'float':'left','border':'solid'}),
+                        daq.PowerButton(
+                                on='True',
+                                color='#FF5E5E',
+                                style={'border':'solid','width':'20%','float':'left'}
+                            )
+                    ])
+
+
+            ], lg=4, md=4),
 
             dbc.Col([
 
@@ -8888,12 +8908,13 @@ def pub_inicio():
                     config={
                     'displayModeBar': False
                     },
-                    style={'height':'85vh'}
-                ),
+                    style={'height':'85vh', 'padding':'0'}
+                )
 
-            ], lg=9, md=9),
+            ], style={'padding':'0'}
+            , lg=8, md=8),
         
-        ]),
+        ], className='p-0'),
 
     ])
 
@@ -9397,10 +9418,10 @@ def render_pub_periodo(periodo_pub_tabs):
 
 # HIGH INJURY NETWORK
 
-hni_p1 = gpd.read_file('assets/hin/calles_segmentos_p1.geojson')
-hni_p2 = gpd.read_file('assets/hin/calles_segmentos_p2.geojson')
-hni_p3 = gpd.read_file('assets/hin/calles_segmentos_p3.geojson')
-hni_p4 = gpd.read_file('assets/hin/calles_segmentos_p4.geojson')
+hni_p1 = gpd.read_file('assets/hin/seg_p1.geojson')
+hni_p2 = gpd.read_file('assets/hin/seg_p2.geojson')
+hni_p3 = gpd.read_file('assets/hin/seg_p3.geojson')
+hni_p4 = gpd.read_file('assets/hin/seg_p4.geojson')
 hin_puntos = pd.read_csv("assets/hin/hin_puntos.csv", encoding='ISO-8859-1')
 
 lats_p1 = []
@@ -9499,43 +9520,55 @@ for feature, name, prioridad in zip(hni_p4.geometry, hni_p4.NOMBRE, hni_p4.prior
         names_p4 = np.append(names_p4, None)
         prioridades_p4 = np.append(prioridades_p4, None)
         
-mapa_pub = go.Figure(go.Scattermapbox(
-    lat=lats_p1, 
-    lon=lons_p1, 
-    mode="lines",
-    line = {'color': '#942f34','width':5},
+mapa_pub = go.Figure(px.scatter_mapbox(hin_puntos, lat="Lat", lon="Lon",
+            size = 'tamaño_2', 
+            size_max = 10,
+            color_discrete_sequence = [hin_puntos.color],
+            custom_data=['Intersecciones','orden'],
+            hover_data={'orden':False, 'Lat':False, 'Lon':False, 'color':False, 'tamaño':False, 'Intersecciones':True},
+            opacity=1))
+mapa_pub.update_traces(hovertemplate="<b>%{customdata[1]}° lugar: %{customdata[0]}</b><br>")
+mapa_pub.add_traces(go.Scattermapbox(
+    hoverinfo="skip",
+    mode = "lines",
+    lon = lons_p4,
+    lat = lats_p4,
+    line = {'color': '#ffe600','width':4},
     ))
 mapa_pub.add_traces(go.Scattermapbox(
+    hoverinfo="skip",
+    mode = "lines",
+    lon = lons_p3,
+    lat = lats_p3,
+    line = {'color': '#ffa600','width':4}))
+mapa_pub.add_traces(go.Scattermapbox(
+    hoverinfo="skip",
     mode = "lines",
     lon = lons_p2,
     lat = lats_p2,
     line = {'color': '#ff000d','width':4}))
 mapa_pub.add_traces(go.Scattermapbox(
-    mode = "lines",
-    lon = lons_p3,
-    lat = lats_p3,
-    line = {'color': '#ffb700','width':3}))
-mapa_pub.add_traces(go.Scattermapbox(
-    mode = "lines",
-    lon = lons_p4,
-    lat = lats_p4,
-    line = {'color': '#fff200','width':2},
-    #hovertext=['text'],)
+    hoverinfo="skip",
+    lat=lats_p1, 
+    lon=lons_p1, 
+    mode="lines",
+    line = {'color': '#8f1209','width':4},
     ))
 mapa_pub.add_traces(go.Scattermapbox(
+    hoverinfo="skip",
     mode = "markers",
     lon = hin_puntos.Lon,
     lat = hin_puntos.Lat,
-    marker = {'size': list(hin_puntos.tamaño),'color': list(hin_puntos.color),'opacity':1},
+    marker = {'size': list(hin_puntos.tamaño_2.astype(int)*1.3),'color': list(hin_puntos.color),'opacity':1},
     ))
 mapa_pub.update_layout(
     mapbox=dict(
         center=dict(lat=25.6572, lon=-100.3689),
         accesstoken=mapbox_access_token,
-        zoom=12.8,
+        zoom=12.5,
         style="dark"),
     showlegend=False,
-    margin = dict(t=0, l=0, r=0, b=0)
+    margin = dict(t=0, l=0, r=0, b=0),
 )
 
 # HEATMAP

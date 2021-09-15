@@ -1,31 +1,31 @@
-Intersecciones,Lat,Lon,hin,prioridad,tamaño,color
-Morones Prieto con Canteras,25.6712,-100.3962,2746,1,28,#8f1209
-Morones Prieto con Humberto Lobo,25.6677,-100.3798,2042.3,1,28,#8f1209
-Jose Vasconcelos con Montes Rocallosos,25.6537,-100.3419,1144.7,1,28,#8f1209
-Morones Prieto con Benito Juarez,25.671,-100.398,1139.5,1,28,#8f1209
-Diaz Ordaz con Maria Cantu,25.6748,-100.4071,1097,1,28,#8f1209
-Diaz Ordaz con Oro,25.6755,-100.4177,1021,1,28,#8f1209
-Calzada San Pedro con Rio Missouri,25.6625,-100.3685,1017.3,1,28,#8f1209
-Cobalto con Platino,25.6833,-100.4158,946.5,2,20,#ff1100
-Lazaro Cardenas con Dr Atl,25.6482,-100.3284,928.8,2,20,#ff1100
-Ricardo Margain con Roble,25.6502,-100.3528,927.3,2,20,#ff1100
-Jose Vasconcelos con Los Rosales,25.6534,-100.3506,921.8,2,20,#ff1100
-Morones Prieto con Rio Bravo,25.6677,-100.3763,908,2,20,#ff1100
-Calzada Del Rosario con Privada Esperanza,25.654,-100.386,901.2,2,20,#ff1100
-Lazaro Cardenas con Diego Rivera,25.6516,-100.3339,521.7,2,20,#ff1100
-Jose Vasconcelos con Benito Juarez,25.6625,-100.4035,423.7,3,15,#ffa600
-Diaz Ordaz con Corregidora,25.6747,-100.4029,393,3,15,#ffa600
-Lazaro Cardenas con Montes Celestes,25.6548,-100.339,337.5,3,15,#ffa600
-Ricardo Margain con Valle Sol,25.6629,-100.3525,305.3,3,15,#ffa600
-Calzada Del Valle con Calzada San Pedro,25.6573,-100.3703,273.2,3,15,#ffa600
-Gomez Morin con Roberto Garza Sada,25.6353,-100.3634,242.3,4,10,#ffe600
-Batallon De San Patricio con Diego Rivera,25.6486,-100.3351,193.5,4,10,#ffe600
-Lazaro Cardenas con Lomas Del Mar,25.6569,-100.3417,185.3,4,10,#ffe600
-Morones Prieto con Jimenez,25.6668,-100.4082,183.8,4,10,#ffe600
-Jose Vasconcelos con Bosques De Canada,25.6514,-100.3735,175.2,4,10,#ffe600
-Calzada San Pedro con Rio Mississippi,25.6595,-100.3695,172.3,4,10,#ffe600
-Jose Vasconcelos con Rio Suchiate,25.6526,-100.3789,166.7,4,10,#ffe600
-Morones Prieto con Santa Barbara,25.669,-100.3835,164.7,4,10,#ffe600
-Jose Vasconcelos con Humberto Lobo,25.6553,-100.3853,158.8,4,10,#ffe600
-Lazaro Cardenas con Pedro Ramirez Vazquez,25.6412,-100.3173,154.8,4,10,#ffe600
-Morones Prieto con Francisco Villa,25.6658,-100.4164,154.2,4,10,#ffe600
+orden,Intersecciones,Lat,Lon,hin,prioridad,tamaño,tamaño_2,color
+1,Morones Prieto con Canteras,25.6712,-100.3962,2746,1,28,30,#8f1209
+2,Morones Prieto con Humberto Lobo,25.6677,-100.3798,2042.3,1,28,29,#8f1209
+3,Jose Vasconcelos con Montes Rocallosos,25.6537,-100.3419,1144.7,1,28,28,#8f1209
+4,Morones Prieto con Benito Juarez,25.671,-100.398,1139.5,1,28,27,#8f1209
+5,Diaz Ordaz con Maria Cantu,25.6748,-100.4071,1097,1,28,26,#8f1209
+6,Diaz Ordaz con Oro,25.6755,-100.4177,1021,1,28,25,#8f1209
+7,Calzada San Pedro con Rio Missouri,25.6625,-100.3685,1017.3,1,28,24,#8f1209
+8,Cobalto con Platino,25.6833,-100.4158,946.5,2,20,23,#ff1100
+9,Lazaro Cardenas con Dr Atl,25.6482,-100.3284,928.8,2,20,22,#ff1100
+10,Ricardo Margain con Roble,25.6502,-100.3528,927.3,2,20,21,#ff1100
+11,Jose Vasconcelos con Los Rosales,25.6534,-100.3506,921.8,2,20,20,#ff1100
+12,Morones Prieto con Rio Bravo,25.6677,-100.3763,908,2,20,19,#ff1100
+13,Calzada Del Rosario con Privada Esperanza,25.654,-100.386,901.2,2,20,18,#ff1100
+14,Lazaro Cardenas con Diego Rivera,25.6516,-100.3339,521.7,2,20,17,#ff1100
+15,Jose Vasconcelos con Benito Juarez,25.6625,-100.4035,423.7,3,15,16,#ffa600
+16,Diaz Ordaz con Corregidora,25.6747,-100.4029,393,3,15,15,#ffa600
+17,Lazaro Cardenas con Montes Celestes,25.6548,-100.339,337.5,3,15,14,#ffa600
+18,Ricardo Margain con Valle Sol,25.6629,-100.3525,305.3,3,15,13,#ffa600
+19,Calzada Del Valle con Calzada San Pedro,25.6573,-100.3703,273.2,3,15,12,#ffa600
+20,Gomez Morin con Roberto Garza Sada,25.6353,-100.3634,242.3,4,10,11,#ffe600
+21,Batallon De San Patricio con Diego Rivera,25.6486,-100.3351,193.5,4,10,10,#ffe600
+22,Lazaro Cardenas con Lomas Del Mar,25.6569,-100.3417,185.3,4,10,9,#ffe600
+23,Morones Prieto con Jimenez,25.6668,-100.4082,183.8,4,10,8,#ffe600
+24,Jose Vasconcelos con Bosques De Canada,25.6514,-100.3735,175.2,4,10,7,#ffe600
+25,Calzada San Pedro con Rio Mississippi,25.6595,-100.3695,172.3,4,10,6,#ffe600
+26,Jose Vasconcelos con Rio Suchiate,25.6526,-100.3789,166.7,4,10,5,#ffe600
+27,Morones Prieto con Santa Barbara,25.669,-100.3835,164.7,4,10,4,#ffe600
+28,Jose Vasconcelos con Humberto Lobo,25.6553,-100.3853,158.8,4,10,3,#ffe600
+29,Lazaro Cardenas con Pedro Ramirez Vazquez,25.6412,-100.3173,154.8,4,10,2,#ffe600
+30,Morones Prieto con Francisco Villa,25.6658,-100.4164,154.2,4,10,1,#ffe600
