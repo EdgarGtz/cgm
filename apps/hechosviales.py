@@ -8888,14 +8888,7 @@ def pub_inicio():
 
                 html.Br(),html.Br(),html.Br(),
 
-                    html.Div([
-                        html.H4('Red Vial de Lesiones Graves', style={'float':'left','border':'solid'}),
-                        daq.PowerButton(
-                                on='True',
-                                color='#FF5E5E',
-                                style={'border':'solid','width':'20%','float':'left'}
-                            )
-                    ])
+                
 
 
             ], lg=4, md=4),
